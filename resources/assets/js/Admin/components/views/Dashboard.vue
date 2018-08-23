@@ -411,7 +411,7 @@
           <br/>
           <b-table class="mb-0 table-outline" responsive="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
             <div slot="avatar" class="avatar" slot-scope="item">
-              <img :src="item.value.url" class="img-avatar" alt="">
+              <img :src="asset(item.value.url)" class="img-avatar" alt="">
               <span class="avatar-status" v-bind:class="{ 'bg-success': item.value.status == 'success',  'bg-warning': item.value.status == 'warning', 'bg-danger': item.value.status == 'danger', 'bg-secondary': item.value.status == '' }"></span>
             </div>
             <div slot="user" slot-scope="item">
@@ -457,9 +457,11 @@ import MainChartExample from './dashboard/MainChartExample'
 import SocialBoxChartExample from './dashboard/SocialBoxChartExample'
 import CalloutChartExample from './dashboard/CalloutChartExample'
 import { Callout } from '@coreui/vue'
+import Helper from '../../mixins/helper';
 
 export default {
   name: 'dashboard',
+    mixins:[Helper],
   components: {
     Callout,
     CardLine1ChartExample,

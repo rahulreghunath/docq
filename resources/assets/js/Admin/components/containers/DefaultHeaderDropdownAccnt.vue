@@ -2,7 +2,7 @@
   <AppHeaderDropdown right no-caret>
     <template slot="header">
       <img
-        src="img/avatars/6.jpg"
+        :src="asset('img/avatars/6.jpg')"
         class="img-avatar"
         alt="admin@bootstrapmaster.com" />
     </template>\
@@ -42,8 +42,10 @@
 
 <script>
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
+import Helper from '../../mixins/helper';
 export default {
   name: 'DefaultHeaderDropdownAccnt',
+  mixins:[Helper],
   components: {
     AppHeaderDropdown
   },

@@ -16,3 +16,11 @@ Route::get('/', [
     'as' => 'home'
 ]);
 
+Route::group([
+    'prefix' => 'admin'
+], function () {
+    Route::get('/', [
+        'uses' => 'AdminController@getHome',
+        'as' => 'home'
+    ]);
+});
