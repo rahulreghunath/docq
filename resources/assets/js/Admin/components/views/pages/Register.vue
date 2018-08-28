@@ -63,9 +63,6 @@
 
 <script>
     export default {
-        name: 'Register',
-        mounted(){
-            alert('dfs');
-        }
+        name: 'Register'
     }
 </script>

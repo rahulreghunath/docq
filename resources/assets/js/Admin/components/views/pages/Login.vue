@@ -9,23 +9,26 @@
                                 <b-form>
                                     <h1>Login</h1>
                                     <p class="text-muted">Sign In to your account</p>
+                                    <b-alert :show="loginError" variant="danger">Oops! Login failed</b-alert>
                                     <b-input-group class="mb-3">
                                         <b-input-group-prepend>
                                             <b-input-group-text><i class="icon-user"></i></b-input-group-text>
                                         </b-input-group-prepend>
-                                        <b-form-input type="text" class="form-control" placeholder="Username"
+                                        <b-form-input v-model="username" type="text" class="form-control"
+                                                      placeholder="Username"
                                                       autocomplete="username email"/>
                                     </b-input-group>
                                     <b-input-group class="mb-4">
                                         <b-input-group-prepend>
                                             <b-input-group-text><i class="icon-lock"></i></b-input-group-text>
                                         </b-input-group-prepend>
-                                        <b-form-input type="password" class="form-control" placeholder="Password"
+                                        <b-form-input v-model="password" type="password" class="form-control"
+                                                      placeholder="Password"
                                                       autocomplete="current-password"/>
                                     </b-input-group>
                                     <b-row>
                                         <b-col cols="6">
-                                            <b-button variant="primary" class="px-4">Login</b-button>
+                                            <b-button @click="login" variant="primary" class="px-4">Login</b-button>
                                         </b-col>
                                         <b-col cols="6" class="text-right">
                                             <b-button variant="link" class="px-0">Forgot password?</b-button>
@@ -52,10 +55,27 @@
 </template>
 
 <script>
+
     export default {
         name: 'Login',
-        mounted() {
-            alert('dfs');
-        }
+        data() {
+            return {
+                username: '',
+                password: '',
+                loginError: false,
+            };
+        },
+        methods: {
+            login() {
+                this.$store.dispatch('retrieveToken', {
+                    username: this.username,
+                    password: this.password
+                }).then(response => {
+                    this.$router.push({name: 'Home'});
+                }).catch(error => {
+                    this.loginError = true;
+                });
+            }
+        },
     }
 </script>

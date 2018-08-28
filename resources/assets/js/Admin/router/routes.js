@@ -58,6 +58,9 @@ const Register = () => import('../components/views/pages/Register');
 const Users = () => import('../components/views/users/Users');
 const User = () => import('../components/views/users/User');
 
+// Actions
+const Logout = () => import('../components/views/actions/Logout');
+
 Vue.use(Router);
 
 export default new Router({
@@ -70,6 +73,9 @@ export default new Router({
             redirect: '/dashboard',
             name: 'Home',
             component: DefaultContainer,
+            meta:{
+                requiresAuth: true
+            },
             children: [
                 {
                     path: 'dashboard',
@@ -345,6 +351,17 @@ export default new Router({
                     component: Register
                 }
             ]
+        },
+        {
+            path: '/login',
+            name: 'adminLogin',
+            component: Login,
+        },
+        {
+            path: '/logout',
+            name: 'adminLogout',
+            component: Logout,
         }
     ]
-})
+});
+
