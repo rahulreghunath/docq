@@ -17,8 +17,13 @@ class CreateLoginsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('user_id')->unsigned();
-            $table->string('username')->unique();
-            $table->string('password');
+            $table->string('email', 100)->comment('User E-mail');
+            $table->bigInteger('phone')->nullable()->comment('User Phone');
+            $table->integer('social_provider_id')->unsigned();
+            $table->string('access_token', 300)->comment('Access Token');
+            $table->string('username',100)->unique();
+            $table->string('password',250);
+            $table->integer('user_category_id')->unsigned();
             $table->rememberToken();
         });
     }
@@ -28,6 +33,7 @@ class CreateLoginsTable extends Migration
      *
      * @return void
      */
+
     public function down()
     {
         Schema::dropIfExists('logins');
