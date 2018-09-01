@@ -45,11 +45,11 @@
 
 <script>
     import {HeaderDropdown as AppHeaderDropdown} from '@coreui/vue'
-    import Helper from '../../mixins/helper';
+    import {asset} from "../../mixins/helper";
 
     export default {
         name: 'DefaultHeaderDropdownAccnt',
-        mixins: [Helper],
+        mixins: [asset],
         components: {
             AppHeaderDropdown
         },

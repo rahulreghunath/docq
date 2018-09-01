@@ -457,11 +457,11 @@ import MainChartExample from './dashboard/MainChartExample'
 import SocialBoxChartExample from './dashboard/SocialBoxChartExample'
 import CalloutChartExample from './dashboard/CalloutChartExample'
 import { Callout } from '@coreui/vue'
-import Helper from '../../mixins/helper';
+import {asset} from "../../mixins/helper";
 
 export default {
   name: 'dashboard',
-    mixins:[Helper],
+    mixins:[asset],
   components: {
     Callout,
     CardLine1ChartExample,

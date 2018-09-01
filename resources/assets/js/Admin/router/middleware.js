@@ -1,5 +1,11 @@
 import {store} from "../store/store";
 
+/**
+ * Authentication middleware
+ * @param to
+ * @param from
+ * @param next
+ */
 export default (to, from, next) => {
 
     if (to.matched.some(record => record.meta.requiresAuth)) {

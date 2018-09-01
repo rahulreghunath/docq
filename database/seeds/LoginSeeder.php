@@ -13,8 +13,9 @@ class LoginSeeder extends Seeder
     {
         $login = new \App\Models\Login();
         $login->user_id = 1;
-        $login->username = 'rahul';
+        $login->email = 'rahul';
         $login->password = bcrypt('password');
+        $login->user_category_id=0;
         $login->save();
     }
 }

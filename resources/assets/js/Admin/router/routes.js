@@ -53,6 +53,9 @@ const Page404 = () => import('../components/views/pages/Page404');
 const Page500 = () => import('../components/views/pages/Page500');
 const Login = () => import('../components/views/pages/Login');
 const Register = () => import('../components/views/pages/Register');
+const DoctorSpecialization = () => import('../components/views/pages/DoctorSpecialization');
+const DoctorQualifications = () => import('../components/views/pages/DoctorQualifications');
+const AddDoctor = () => import('../components/views/pages/AddDoctor');
 
 // Users
 const Users = () => import('../components/views/users/Users');
@@ -73,10 +76,39 @@ export default new Router({
             redirect: '/dashboard',
             name: 'Home',
             component: DefaultContainer,
-            meta:{
+            meta: {
                 requiresAuth: true
             },
             children: [
+                {
+                    path: 'doctor',
+                    name: 'doctor',
+                    component: {
+                        render(c) {
+                            return c('router-view')
+                        }
+                    },
+                    children: [
+                        {
+                            path: 'specialization',
+                            name: 'doctorSpecialization',
+                            component: DoctorSpecialization,
+                            meta: {label: 'Specializations'},
+                        },
+                        {
+                            path: 'qualifications',
+                            name: 'doctorQualification',
+                            component: DoctorQualifications,
+                            meta: {label: 'Qualifications'},
+                        },
+                        {
+                            path: 'add-new',
+                            name: 'addDoctor',
+                            component: AddDoctor,
+                            meta: {label: 'Add Doctor'},
+                        }
+                    ]
+                },
                 {
                     path: 'dashboard',
                     name: 'Dashboard',

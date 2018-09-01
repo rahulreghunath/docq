@@ -6,7 +6,7 @@
                     <b-card-group>
                         <b-card no-body class="p-4">
                             <b-card-body>
-                                <b-form>
+                                <b-form @submit.prevent="login">
                                     <h1>Login</h1>
                                     <p class="text-muted">Sign In to your account</p>
                                     <b-alert :show="loginError" variant="danger">Oops! Login failed</b-alert>
@@ -28,7 +28,7 @@
                                     </b-input-group>
                                     <b-row>
                                         <b-col cols="6">
-                                            <b-button @click="login" variant="primary" class="px-4">Login</b-button>
+                                            <b-button type="submit" variant="primary" class="px-4">Login</b-button>
                                         </b-col>
                                         <b-col cols="6" class="text-right">
                                             <b-button variant="link" class="px-0">Forgot password?</b-button>

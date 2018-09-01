@@ -1,42 +1,105 @@
 import axios from "axios/index";
 import {store} from "../store/store";
+import Form from '../shared/form';
+import swal from 'sweetalert';
 
-export default function submit({type, url, data = null, config: config = null}) {
 
+/**
+ * Http Request
+ * @param type
+ * @param url
+ * @param data
+ * @param config
+ * @param form
+ * @returns {Promise<any>}
+ */
+export default function submit({type, url, data = null, config = null, form = false}) {
 
-    if (config == null) {
-        config = {
-            headers: {
-                Authorization: 'Bearer ' + store.getters.getToken //the token is a variable which holds the token
-            }
-        };
-    } else if (typeof config.headers !== "undefined") {
-        config.headers.push({
-            Authorization: 'Bearer ' + store.getters.getToken //the token is a variable which holds the token
-        });
-    } else {
-        config.push({
-            headers: {
-                Authorization: 'Bearer ' + store.getters.getToken //the token is a variable which holds the token
-            }
-        });
-    }
+    /**
+     * Setting authoriseation header for all request
+     * @type {string}
+     */
 
-    if (!url.includes("http")) { // if relative url is given
-        if (location.hostname === 'localhost') {
-            url = window.location.protocol + '//' + location.hostname + ':' + location.port + '/' + url;
-        } else {
-            url = window.location.protocol + '//' + location.hostname + '/' + url;
-        }
-    }
+    axios.defaults.baseURL = 'http://localhost:8000/api/admin';
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.getters.getToken;
+
     return new Promise((resolve, reject) => {
         /*
         * Axios post request
          */
-        if (type === 'post') {
+
+        store.commit('changeStatus');
+
+        /**
+         * If current request is a form submit
+         */
+        if (type === 'post' && form === true) {
+            axios.post(url, data.data(), config)
+                .then(response => {
+
+                    /**
+                     * Handle form submit success in form class
+                     */
+                    data.onSuccess(response.data);
+
+                    /**
+                     * Showing status message
+                     */
+                    showMessage({
+                        title: response.data.status === "success" ? "Done" : "Oops!",
+                        text: response.data.message,
+                        icon: response.data.status,
+                    });
+
+                    /**
+                     * Reset form
+                     */
+                    data.reset();
+
+                    /**
+                     * Change loading spinner
+                     */
+                    store.commit('changeStatus');
+
+                    resolve(response);
+                }).catch(error => {
+
+                /**
+                 * Handling validation errors in form class
+                 */
+                data.onFail(error.response.data.errors);
+
+                /**
+                 * Change loading spinner
+                 */
+                store.commit('changeStatus');
+                reject(error.response);
+            });
+        } else if (type === 'post') {
             axios.post(url, data, config)
-                .then(response => resolve(response))
-                .catch(error => reject(error.response));
+                .then(response => {
+                    if (response.data.status === 'success') {
+                        /**
+                         * Change loading spinner
+                         */
+                        store.commit('changeStatus');
+                        resolve(response);
+                    } else {
+                        /**
+                         * Change loading spinner
+                         */
+                        store.commit('changeStatus');
+                        reject(response.data);
+                    }
+
+                }).catch(error => {
+
+                /**
+                 * Change loading spinner
+                 */
+                store.commit('changeStatus');
+                reject(error.response);
+            });
         }
         else if (type === 'get') {
 
@@ -44,14 +107,61 @@ export default function submit({type, url, data = null, config: config = null}) 
                 axios.get(url, {
                     params: data
                 }, config)
-                    .then(response => resolve(response))
-                    .catch(error => reject(error.response));
+                    .then(response => {
+                        if (response.data.status === 'success') {
+
+                            /**
+                             * Change loading spinner
+                             */
+                            store.commit('changeStatus');
+                            resolve(response);
+                        } else {
+
+                            /**
+                             * Change loading spinner
+                             */
+                            store.commit('changeStatus');
+                            reject(response.data);
+                        }
+                    }).catch(error => {
+
+                    /**
+                     * Change loading spinner
+                     */
+                    store.commit('changeStatus');
+                    reject(error.response);
+                });
             } else {
                 axios.get(url, config)
-                    .then(response => resolve(response))
-                    .catch(error => reject(error.response));
+                    .then(response => {
+                        if (response.data.status === 'success') {
+
+                            /**
+                             * Change loading spinner
+                             */
+                            store.commit('changeStatus');
+                            resolve(response);
+                        } else {
+                            /**
+                             * Change loading spinner
+                             */
+                            store.commit('changeStatus');
+                            reject(response.data);
+                        }
+                    }).catch(error => {
+
+                    /**
+                     * Change loading spinner
+                     */
+                    store.commit('changeStatus');
+                    reject(error.response);
+                });
             }
         }
 
     });
 }
+
+let showMessage = (message) => {
+    swal(message);
+};

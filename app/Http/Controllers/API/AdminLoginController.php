@@ -15,7 +15,7 @@ class AdminLoginController extends Controller
      */
     public function login(Request $request)
     {
-        if (Auth::attempt(['username' => $request['username'], 'password' => $request['password']])) {
+        if (Auth::attempt(['email' => $request['username'], 'password' => $request['password']])) {
             $user = Auth::user();
             $success['token'] = $user->createToken('MyApp')->accessToken;
             return response()->json($success);

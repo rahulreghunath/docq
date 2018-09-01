@@ -1,6 +1,9 @@
 import axios from "axios";
 import submit from '../../http/http';
 
+/**
+ * Store - authentication module
+ */
 const state = {
     token: localStorage.getItem('access_token') || null,
 };
@@ -8,7 +11,7 @@ const getters = {
     loggedIn(state) {
         return state.token !== null;
     },
-    getToken(state){
+    getToken(state) {
         return state.token;
     }
 };
@@ -16,8 +19,8 @@ const mutations = {
     retrieveToken(state, token) {
         state.token = token;
     },
-    removeToken(state){
-        state.token=null;
+    removeToken(state) {
+        state.token = null;
     }
 
 };
@@ -26,7 +29,7 @@ const actions = {
 
         return new Promise((resolve, reject) => {
 
-            axios.post('api/login', credentials)
+            axios.post('http://localhost:8000/api/admin/login', credentials)
                 .then((response) => {
                     let token = response.data.token;
                     localStorage.setItem('access_token', token);
@@ -38,10 +41,10 @@ const actions = {
                 })
         });
     },
-    removeToken(context){
+    removeToken(context) {
         return new Promise((resolve, reject) => {
 
-            submit({type:'post',url:'api/logout'})
+            submit({type: 'post', url: 'logout'})
                 .then((response) => {
                     localStorage.removeItem('access_token');
                     context.commit('removeToken');

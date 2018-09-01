@@ -79,10 +79,10 @@
     } from '@coreui/vue'
     import DefaultAside from './DefaultAside'
     import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
-    import Helper from '../../mixins/helper';
+    import {asset} from "../../mixins/helper";
     export default {
         name: 'full',
-        mixins: [Helper],
+        mixins: [asset],
         components: {
             AsideToggler,
             AppHeader,

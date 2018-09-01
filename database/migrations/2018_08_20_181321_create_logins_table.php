@@ -19,10 +19,9 @@ class CreateLoginsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('email', 100)->comment('User E-mail');
             $table->bigInteger('phone')->nullable()->comment('User Phone');
-            $table->integer('social_provider_id')->unsigned();
-            $table->string('access_token', 300)->comment('Access Token');
-            $table->string('username',100)->unique();
-            $table->string('password',250);
+            $table->integer('social_provider_id')->nullable()->unsigned();
+            $table->string('access_token', 300)->nullable()->comment('Access Token');
+            $table->string('password',250)->nullable();
             $table->integer('user_category_id')->unsigned();
             $table->rememberToken();
         });

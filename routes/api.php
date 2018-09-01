@@ -13,9 +13,29 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('login', 'API\AdminLoginController@login');
+Route::post('admin/login', 'API\AdminLoginController@login');
 Route::post('register', 'API\UserController@register');
-Route::group(['middleware' => 'auth:api'], function(){
-    Route::post('details', 'API\UserController@details');
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix' => 'admin'
+], function () {
     Route::post('logout', 'API\AdminLoginController@logout');
+    /**
+     * Specialisation
+     */
+    Route::post('add-specialisation', 'API\AdminController@addSpecialisation');
+    Route::get('get-specialisations', 'API\AdminController@getSpecialisations');
+
+    /**
+     * Qualification
+     */
+    Route::post('add-qualification', 'API\AdminController@addQualification');
+    Route::get('get-qualifications', 'API\AdminController@getQualifications');
+
+    /**
+     * Add Doctor
+     */
+    Route::get('get-doctor-form-details', 'API\AdminController@getDoctorFormDetails');
+    Route::post('add-doctor', 'API\AdminController@addDoctor');
+
 });

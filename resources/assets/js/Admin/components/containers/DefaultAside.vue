@@ -242,10 +242,11 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import Helper from '../../mixins/helper';
+import {asset} from "../../mixins/helper";
+
 export default {
   name: 'DefaultAside',
-  mixins:[Helper],
+  mixins:[asset],
   components: {
     cSwitch
   }
