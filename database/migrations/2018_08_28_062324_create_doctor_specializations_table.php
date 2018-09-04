@@ -16,13 +16,8 @@ class CreateDoctorSpecializationsTable extends Migration
         Schema::create('doctor_specializations', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('doctor_id')->unsigned();
+            $table->integer('doctor_details_id')->unsigned();
             $table->integer('specialization_id')->unsigned();
-        });
-        Schema::table('doctor_specializations', function (Blueprint $table) {
-
-            $table->foreign('doctor_id')->references('id')->on('registers');
-
         });
     }
 

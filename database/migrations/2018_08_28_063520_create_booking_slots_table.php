@@ -20,11 +20,6 @@ class CreateBookingSlotsTable extends Migration
             $table->time('start_time')->comment('Start Time');
             $table->time('end_time')->comment('Start Time');
         });
-        Schema::table('booking_slots', function (Blueprint $table) {
-
-            $table->foreign('working_session_id')->references('id')->on('working_sessions');
-
-        });
     }
 
     /**

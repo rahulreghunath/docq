@@ -16,16 +16,10 @@ class CreateDoctorDetailsTable extends Migration
         Schema::create('doctor_details', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('doctor_id')->unsigned();
-            $table->string('reg_no', 150)->comment('Medical registration number');
+            $table->integer('registration_id')->unsigned();
+            $table->string('medical_registration_number', 150)->comment('Medical registration number');
             $table->string('experience', 100)->comment('Doctors experience');
             $table->float('consulting_fee')->comment('Consulting fee');
-            $table->string('profile_picture', 300)->comment('Doctors profile picture');
-
-        });
-        Schema::table('doctor_details', function (Blueprint $table) {
-
-            $table->foreign('doctor_id')->references('id')->on('registers');
 
         });
     }

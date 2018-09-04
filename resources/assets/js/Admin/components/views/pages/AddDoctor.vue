@@ -1,6 +1,6 @@
 <template>
     <div class="animated fadeIn">
-        <spinner v-if="loading" class="spinner"></spinner>
+        <spinner v-if="loading"></spinner>
         <b-row>
             <b-col sm="12">
                 <b-form @submit.prevent="addDoctor">
@@ -54,7 +54,7 @@
                                         :invalid-feedback="form.errors.get('location')"
                                         :state="form.has('location')"
                                 >
-                                    <b-form-input id="location" placeholder="Location"
+                                    <b-form-input @focus="geolocate()" id="autocomplete" placeholder="Location"
                                                   :state="form.has('location')"
                                                   v-model.trim="form.location"></b-form-input>
                                 </b-form-group>
@@ -97,7 +97,7 @@
                             </b-col>
                             <b-col sm="4">
                                 <b-form-group
-                                        label="Enter Email"
+                                        label="Enter Email Id"
                                         label-for="email"
                                         :invalid-feedback="form.errors.get('email')"
                                         :state="form.has('email')"
@@ -114,10 +114,49 @@
                                         :invalid-feedback="form.errors.get('specialisation')"
                                         :state="form.has('specialisation')"
                                 >
-                                    <b-form-select id="specialisation" v-model="form.specialisation"
-                                                   :state="form.has('specialisation')"
-                                                   :options="specialisations"
+                                    <b-form-select
+                                            multiple
+                                            :select-size="4"
+                                            id="specialisation" v-model="form.specialisation"
+                                            :state="form.has('specialisation')"
+                                            :options="specialisations"
                                     ></b-form-select>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm="4">
+                                <b-form-group
+                                        label="Enter Medical Registration Number"
+                                        label-for="mediReg"
+                                        :invalid-feedback="form.errors.get('medicalRegistrationNumber')"
+                                        :state="form.has('medicalRegistrationNumber')"
+                                >
+                                    <b-form-input id="mediReg" placeholder="Medical Registration Number"
+                                                  :state="form.has('medicalRegistrationNumber')"
+                                                  v-model.trim="form.medicalRegistrationNumber"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm="4">
+                                <b-form-group
+                                        label="Experience"
+                                        label-for="experience"
+                                        :invalid-feedback="form.errors.get('experience')"
+                                        :state="form.has('experience')"
+                                >
+                                    <b-form-input id="experience" placeholder="Experience"
+                                                  :state="form.has('experience')"
+                                                  v-model.trim="form.experience"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm="4">
+                                <b-form-group
+                                        label="Consulting Fees"
+                                        label-for="consultingFee"
+                                        :invalid-feedback="form.errors.get('consultingFees')"
+                                        :state="form.has('consultingFees')"
+                                >
+                                    <b-form-input id="consultingFee" placeholder="Consulting Fees"
+                                                  :state="form.has('consultingFees')"
+                                                  v-model.trim="form.consultingFees"></b-form-input>
                                 </b-form-group>
                             </b-col>
                         </b-row>
@@ -155,6 +194,9 @@
                     email: '',
                     gender: '',
                     specialisation: '',
+                    medicalRegistrationNumber: '',
+                    experience: '',
+                    consultingFees: '',
                 }),
                 genders: [
                     {value: 'male', text: 'Male'},
@@ -170,6 +212,9 @@
                     url: 'add-doctor',
                     data: this.form,
                     form: true
+                }).then(({data}) => {
+                    console.table(data);
+                    this.$router.push({name: 'addDoctorImage', params: {id: data.data.user}});
                 });
             },
             getFormDetails() {

@@ -16,13 +16,8 @@ class CreateDoctorQualificationsTable extends Migration
         Schema::create('doctor_qualifications', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('doctor_id')->unsigned();
+            $table->integer('doctor_details_id')->unsigned();
             $table->integer('qualification_id')->unsigned();
-        });
-        Schema::table('doctor_qualifications', function (Blueprint $table) {
-
-            $table->foreign('doctor_id')->references('id')->on('registers');
-
         });
     }
 

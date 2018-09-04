@@ -1,6 +1,6 @@
 <template>
     <div class="animated fadeIn">
-        <spinner class="spinner" v-if="loading"></spinner>
+        <spinner v-if="loading"></spinner>
         <b-row>
             <b-col sm="6">
                 <b-form @submit.prevent="addSpecialization">
@@ -49,10 +49,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(specialization,index) in specializations.data">
-                                <td>{{ (specializations.current_page * specializations.per_page) - specializations.per_page + index + 1}}</td>
-                                <td>{{specialization.specialization_value}}</td>
-                                <td></td>
+                            <template v-if="specializations.data.length">
+                                <tr v-for="(specialization,index) in specializations.data">
+                                    <td>{{ (specializations.current_page * specializations.per_page) -
+                                        specializations.per_page + index + 1}}
+                                    </td>
+                                    <td>{{specialization.specialization_value}}</td>
+                                    <td></td>
+                                </tr>
+                            </template>
+                            <tr class="text-center" v-else>
+                                <td colspan="3">No Specialization Added</td>
                             </tr>
                             </tbody>
                         </table>
@@ -81,7 +88,7 @@
             pagination,
             listCount
         },
-        mixins:[spinner],
+        mixins: [spinner],
         data() {
             return {
                 form: new Form({

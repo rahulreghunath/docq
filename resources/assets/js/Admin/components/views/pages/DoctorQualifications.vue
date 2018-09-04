@@ -1,6 +1,6 @@
 <template>
     <div class="animated fadeIn">
-        <spinner class="spinner" v-if="loading"></spinner>
+        <spinner v-if="loading"></spinner>
         <b-row>
             <b-col sm="6">
                 <b-form @submit.prevent="addQualification">
@@ -49,10 +49,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(specialization,index) in qualifications.data">
-                                <td>{{ (qualifications.current_page * qualifications.per_page) - qualifications.per_page + index + 1}}</td>
-                                <td>{{specialization.qualification_value}}</td>
-                                <td></td>
+                            <template v-if="qualifications.data.length">
+                                <tr v-for="(qualification,index) in qualifications.data">
+                                    <td>{{ (qualifications.current_page * qualifications.per_page) -
+                                        qualifications.per_page + index + 1}}
+                                    </td>
+                                    <td>{{qualification.qualification_value}}</td>
+                                    <td></td>
+                                </tr>
+                            </template>
+                            <tr v-else>
+                                <td colspan="3" class="text-center">
+                                    No qualification added
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -81,7 +90,7 @@
             pagination,
             listCount,
         },
-        mixins:[spinner],
+        mixins: [spinner],
         data() {
             return {
                 form: new Form({

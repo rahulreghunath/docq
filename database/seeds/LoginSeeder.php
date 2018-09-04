@@ -11,8 +11,20 @@ class LoginSeeder extends Seeder
      */
     public function run()
     {
+        $user = new \App\Models\Registration();
+        $user->full_name = 'Admin';
+        $user->age = '00';
+        $user->location = '00';
+        $user->address = '00';
+        $user->pin = '00';
+        $user->phone = '00';
+        $user->email = '00';
+        $user->gender = '00';
+        $user->status = '1';
+        $user->save();
+
         $login = new \App\Models\Login();
-        $login->user_id = 1;
+        $login->registration_id = $user->id;
         $login->email = 'rahul';
         $login->password = bcrypt('password');
         $login->user_category_id=0;

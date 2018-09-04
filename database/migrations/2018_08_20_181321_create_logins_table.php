@@ -16,7 +16,7 @@ class CreateLoginsTable extends Migration
         Schema::create('logins', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('user_id')->unsigned();
+            $table->integer('registration_id')->unsigned();
             $table->string('email', 100)->comment('User E-mail');
             $table->bigInteger('phone')->nullable()->comment('User Phone');
             $table->integer('social_provider_id')->nullable()->unsigned();

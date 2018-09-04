@@ -21,11 +21,6 @@ class CreateRemarksTable extends Migration
             $table->date('follow_up_date')->comment('Next visit date');
             $table->string('followup_description', 1000)->comment('Followup Remarks');
         });
-        Schema::table('remarks', function (Blueprint $table) {
-
-            $table->foreign('booking_id')->references('id')->on('bookings');
-
-        });
     }
 
     /**

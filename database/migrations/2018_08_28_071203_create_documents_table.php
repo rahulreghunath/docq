@@ -16,16 +16,13 @@ class CreateDocumentsTable extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('doctor_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('doctor_details_id')->unsigned();
+            $table->integer('registration_id')->unsigned();
+            $table->string('notes')->nullable();
             $table->string('document_location', 650)->comment('Document Storage Location');
         });
-        Schema::table('documents', function (Blueprint $table) {
 
-            $table->foreign('doctor_id')->references('id')->on('registers');
-            $table->foreign('user_id')->references('id')->on('registers');
 
-        });
     }
 
     /**

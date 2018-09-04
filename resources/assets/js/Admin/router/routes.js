@@ -2,67 +2,68 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 // Containers
-const DefaultContainer = () => import('../components/containers/DefaultContainer');
+const DefaultContainer = () => import(/* webpackChunkName: "admin/components/containers/DefaultContainer" */ '../components/containers/DefaultContainer');
 
 // Views
-const Dashboard = () => import('../components/views/Dashboard');
+const Dashboard = () => import(/* webpackChunkName: "admin/components/views/Dashboard" */ '../components/views/Dashboard');
 
-const Colors = () => import('../components/views/theme/Colors');
-const Typography = () => import('../components/views/theme/Typography');
+const Colors = () => import(/* webpackChunkName: "admin/components/views/theme/Colors" */ '../components/views/theme/Colors');
+const Typography = () => import(/* webpackChunkName: "admin/components/views/theme/Typography" */ '../components/views/theme/Typography');
 
-const Charts = () => import('../components/views/Charts');
-const Widgets = () => import('../components/views/Widgets');
+const Charts = () => import(/* webpackChunkName: "admin/components/views/Charts" */ '../components/views/Charts');
+const Widgets = () => import(/* webpackChunkName: "admin/components/views/Widgets" */ '../components/views/Widgets');
 
-// Views - Components
-const Cards = () => import('../components/views/base/Cards');
-const Forms = () => import('../components/views/base/Forms');
-const Switches = () => import('../components/views/base/Switches');
-const Tables = () => import('../components/views/base/Tables');
-const Tabs = () => import('../components/views/base/Tabs');
-const Breadcrumbs = () => import('../components/views/base/Breadcrumbs');
-const Carousels = () => import('../components/views/base/Carousels');
-const Collapses = () => import('../components/views/base/Collapses');
-const Jumbotrons = () => import('../components/views/base/Jumbotrons');
-const ListGroups = () => import('../components/views/base/ListGroups');
-const Navs = () => import('../components/views/base/Navs');
-const Navbars = () => import('../components/views/base/Navbars');
-const Paginations = () => import('../components/views/base/Paginations');
-const Popovers = () => import('../components/views/base/Popovers');
-const ProgressBars = () => import('../components/views/base/ProgressBars');
-const Tooltips = () => import('../components/views/base/Tooltips');
+// Views / Components
+const Cards = () => import(/* webpackChunkName: "admin/components/views/base/Cards" */ '../components/views/base/Cards');
+const Forms = () => import(/* webpackChunkName: "admin/components/views/base/Forms" */ '../components/views/base/Forms');
+const Switches = () => import(/* webpackChunkName: "admin/components/views/base/Switches" */ '../components/views/base/Switches');
+const Tables = () => import(/* webpackChunkName: "admin/components/views/base/Tables" */ '../components/views/base/Tables');
+const Tabs = () => import(/* webpackChunkName: "admin/components/views/base/Tabs" */ '../components/views/base/Tabs');
+const Breadcrumbs = () => import(/* webpackChunkName: "admin/components/views/base/Breadcrumbs" */ '../components/views/base/Breadcrumbs');
+const Carousels = () => import(/* webpackChunkName: "admin/components/views/base/Carousels" */ '../components/views/base/Carousels');
+const Collapses = () => import(/* webpackChunkName: "admin/components/views/base/Collapses" */ '../components/views/base/Collapses');
+const Jumbotrons = () => import(/* webpackChunkName: "admin/components/views/base/Jumbotrons" */ '../components/views/base/Jumbotrons');
+const ListGroups = () => import(/* webpackChunkName: "admin/components/views/base/ListGroups" */ '../components/views/base/ListGroups');
+const Navs = () => import(/* webpackChunkName: "admin/components/views/base/Navs" */ '../components/views/base/Navs');
+const Navbars = () => import(/* webpackChunkName: "admin/components/views/base/Navbars" */ '../components/views/base/Navbars');
+const Paginations = () => import(/* webpackChunkName: "admin/components/views/base/Paginations" */ '../components/views/base/Paginations');
+const Popovers = () => import(/* webpackChunkName: "admin/components/views/base/Popovers" */ '../components/views/base/Popovers');
+const ProgressBars = () => import(/* webpackChunkName: "admin/components/views/base/ProgressBars" */ '../components/views/base/ProgressBars');
+const Tooltips = () => import(/* webpackChunkName: "admin/components/views/base/Tooltips" */ '../components/views/base/Tooltips');
 
 // Views - Buttons
-const StandardButtons = () => import('../components/views/buttons/StandardButtons');
-const ButtonGroups = () => import('../components/views/buttons/ButtonGroups');
-const Dropdowns = () => import('../components/views/buttons/Dropdowns');
-const BrandButtons = () => import('../components/views/buttons/BrandButtons');
+const StandardButtons = () => import(/* webpackChunkName: "admin/components/views/buttons/StandardButtons" */ '../components/views/buttons/StandardButtons');
+const ButtonGroups = () => import(/* webpackChunkName: "admin/components/views/buttons/ButtonGroups" */ '../components/views/buttons/ButtonGroups');
+const Dropdowns = () => import(/* webpackChunkName: "admin/components/views/buttons/Dropdowns" */ '../components/views/buttons/Dropdowns');
+const BrandButtons = () => import(/* webpackChunkName: "admin/components/views/buttons/BrandButtons" */ '../components/views/buttons/BrandButtons');
 
 // Views - Icons
-const Flags = () => import('../components/views/icons/Flags');
-const FontAwesome = () => import('../components/views/icons/FontAwesome');
-const SimpleLineIcons = () => import('../components/views/icons/SimpleLineIcons');
-const CoreUIIcons = () => import('../components/views/icons/CoreUIIcons');
+const Flags = () => import(/* webpackChunkName: "admin/components/views/icons/Flags" */ '../components/views/icons/Flags');
+const FontAwesome = () => import(/* webpackChunkName: "admin/components/views/icons/FontAwesome" */ '../components/views/icons/FontAwesome');
+const SimpleLineIcons = () => import(/* webpackChunkName: "admin/components/views/icons/SimpleLineIcons" */ '../components/views/icons/SimpleLineIcons');
+const CoreUIIcons = () => import(/* webpackChunkName: "admin/components/views/icons/CoreUIIcons" */ '../components/views/icons/CoreUIIcons');
 
 // Views - Notifications
-const Alerts = () => import('../components/views/notifications/Alerts');
-const Badges = () => import('../components/views/notifications/Badges');
-const Modals = () => import('../components/views/notifications/Modals');
+const Alerts = () => import(/* webpackChunkName: "admin/components/views/notifications/Alerts" */ '../components/views/notifications/Alerts');
+const Badges = () => import(/* webpackChunkName: "admin/components/views/notifications/Badges" */ '../components/views/notifications/Badges');
+const Modals = () => import(/* webpackChunkName: "admin/components/views/notifications/Modals" */ '../components/views/notifications/Modals');
 
 // Views - Pages
-const Page404 = () => import('../components/views/pages/Page404');
-const Page500 = () => import('../components/views/pages/Page500');
-const Login = () => import('../components/views/pages/Login');
-const Register = () => import('../components/views/pages/Register');
-const DoctorSpecialization = () => import('../components/views/pages/DoctorSpecialization');
-const DoctorQualifications = () => import('../components/views/pages/DoctorQualifications');
-const AddDoctor = () => import('../components/views/pages/AddDoctor');
+const Page404 = () => import(/* webpackChunkName: "admin/components/views/pages/Page404" */ '../components/views/pages/Page404');
+const Page500 = () => import(/* webpackChunkName: "admin/components/views/pages/Page500" */ '../components/views/pages/Page500');
+const Login = () => import(/* webpackChunkName: "admin/components/views/pages/Login" */ '../components/views/pages/Login');
+const Register = () => import(/* webpackChunkName: "admin/components/views/pages/Register" */ '../components/views/pages/Register');
+const DoctorSpecialization = () => import(/* webpackChunkName: "admin/components/views/pages/DoctorSpecialization" */ '../components/views/pages/DoctorSpecialization');
+const DoctorQualifications = () => import(/* webpackChunkName: "admin/components/views/pages/DoctorQualifications" */ '../components/views/pages/DoctorQualifications');
+const AddDoctor = () => import(/* webpackChunkName: "admin/components/views/pages/AddDoctor" */ '../components/views/pages/AddDoctor');
+const AddDoctorImage = () => import(/* webpackChunkName: "admin/components/views/pages/AddDoctor" */ '../components/views/pages/AddDoctorImage');
 
 // Users
-const Users = () => import('../components/views/users/Users');
-const User = () => import('../components/views/users/User');
+const Users = () => import(/* webpackChunkName: "admin/components/views/users/Users" */ '../components/views/users/Users');
+const User = () => import(/* webpackChunkName: "admin/components/views/users/User" */ '../components/views/users/User');
 
 // Actions
-const Logout = () => import('../components/views/actions/Logout');
+const Logout = () => import(/* webpackChunkName: "admin/components/views/actions/Logout" */ '../components/views/actions/Logout');
 
 Vue.use(Router);
 
@@ -83,6 +84,7 @@ export default new Router({
                 {
                     path: 'doctor',
                     name: 'doctor',
+                    redirect: {name: 'addDoctor'},
                     component: {
                         render(c) {
                             return c('router-view')
@@ -90,29 +92,50 @@ export default new Router({
                     },
                     children: [
                         {
-                            path: 'specialization',
+                            path: 'specializations',
                             name: 'doctorSpecialization',
                             component: DoctorSpecialization,
-                            meta: {label: 'Specializations'},
+                            meta: {
+                                label: 'Specializations',
+                                title: 'Doctor Specializations'
+                            },
                         },
                         {
                             path: 'qualifications',
                             name: 'doctorQualification',
                             component: DoctorQualifications,
-                            meta: {label: 'Qualifications'},
+                            meta: {
+                                label: 'Qualifications',
+                                title: 'Doctor Qualifications'
+                            },
                         },
                         {
                             path: 'add-new',
                             name: 'addDoctor',
                             component: AddDoctor,
-                            meta: {label: 'Add Doctor'},
+                            meta: {
+                                label: 'Add Doctor',
+                                title: 'Add Doctor'
+                            },
+                        },
+                        {
+                            path: 'add-image/:id',
+                            name: 'addDoctorImage',
+                            component: AddDoctorImage,
+                            meta: {
+                                label: 'Add Doctor Image',
+                                title: 'Doctor Image'
+                            },
                         }
                     ]
                 },
                 {
                     path: 'dashboard',
                     name: 'Dashboard',
-                    component: Dashboard
+                    component: Dashboard,
+                    meta: {
+                        title: 'Home'
+                    },
                 },
                 {
                     path: 'theme',

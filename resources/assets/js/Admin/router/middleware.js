@@ -8,7 +8,10 @@ import {store} from "../store/store";
  */
 export default (to, from, next) => {
 
+    document.title = to.meta.title;
+
     if (to.matched.some(record => record.meta.requiresAuth)) {
+
         // this route requires auth, check if logged in
         // if not, redirect to login page.
         if (!store.getters.loggedIn) {

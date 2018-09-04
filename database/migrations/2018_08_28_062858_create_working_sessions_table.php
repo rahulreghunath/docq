@@ -18,7 +18,7 @@ class CreateWorkingSessionsTable extends Migration
             $table->timestamps();
             $table->string('session_title', 100)->comment('Daily Session');
             $table->integer('clinic_id')->unsigned()->comment('Clinic Id');
-            $table->integer('week_days_id')->unsigned();
+            $table->integer('week_day_id')->unsigned();
             $table->integer('no_patients')->comment('Total Number of patients');
             $table->integer('status')->comment('Current status of Session');
         });

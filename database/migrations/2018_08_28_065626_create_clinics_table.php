@@ -16,17 +16,12 @@ class CreateClinicsTable extends Migration
         Schema::create('clinics', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('doctor_id')->unsigned();
+            $table->integer('doctor_details_id')->unsigned();
             $table->string('clinic_name', 150)->comment('Name of clinic');
             $table->string('location', 100)->comment('Clinic Location');
             $table->bigInteger('phone')->nullable()->comment('Clinic Phone');
             $table->string('latitude', 100)->comment('Clinic Latitude');
             $table->string('longitude', 100)->comment('Clinic Longitude');
-
-        });
-        Schema::table('clinics', function (Blueprint $table) {
-
-            $table->foreign('doctor_id')->references('id')->on('registers');
 
         });
     }

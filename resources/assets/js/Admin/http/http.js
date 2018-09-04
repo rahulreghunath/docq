@@ -37,24 +37,26 @@ export default function submit({type, url, data = null, config = null, form = fa
             axios.post(url, data.data(), config)
                 .then(response => {
 
-                    /**
-                     * Handle form submit success in form class
-                     */
-                    data.onSuccess(response.data);
+                    if (response.data.status === 'success') {
+                        /**
+                         * Handle form submit success in form class
+                         */
+                        data.onSuccess(response.data);
 
-                    /**
-                     * Showing status message
-                     */
-                    showMessage({
-                        title: response.data.status === "success" ? "Done" : "Oops!",
-                        text: response.data.message,
-                        icon: response.data.status,
-                    });
+                        /**
+                         * Showing status message
+                         */
+                        showMessage({
+                            title: response.data.status === "success" ? "Done" : "Oops!",
+                            text: response.data.data.message,
+                            icon: response.data.status,
+                        });
 
-                    /**
-                     * Reset form
-                     */
-                    data.reset();
+                        /**
+                         * Reset form
+                         */
+                        data.reset();
+                    }
 
                     /**
                      * Change loading spinner
