@@ -2,6 +2,7 @@ import axios from "axios/index";
 import {store} from "../store/store";
 import Form from '../shared/form';
 import swal from 'sweetalert';
+import {SUCCESS_STATUS} from "../constants/constants";
 
 
 /**
@@ -37,25 +38,27 @@ export default function submit({type, url, data = null, config = null, form = fa
             axios.post(url, data.data(), config)
                 .then(response => {
 
-                    if (response.data.status === 'success') {
+                    if (response.data.status === SUCCESS_STATUS) {
                         /**
                          * Handle form submit success in form class
                          */
                         data.onSuccess(response.data);
 
                         /**
-                         * Showing status message
-                         */
-                        showMessage({
-                            title: response.data.status === "success" ? "Done" : "Oops!",
-                            text: response.data.data.message,
-                            icon: response.data.status,
-                        });
-
-                        /**
                          * Reset form
                          */
                         data.reset();
+                    }
+
+                    if (response.data.data.message) {
+                        /**
+                         * Showing status message
+                         */
+                        showMessage({
+                            title: response.data.status === SUCCESS_STATUS ? "Done" : "Oops!",
+                            text: response.data.data.message,
+                            icon: response.data.status,
+                        });
                     }
 
                     /**
@@ -80,13 +83,37 @@ export default function submit({type, url, data = null, config = null, form = fa
         } else if (type === 'post') {
             axios.post(url, data, config)
                 .then(response => {
-                    if (response.data.status === 'success') {
+                    if (response.data.status === SUCCESS_STATUS) {
+
+                        if (response.data.data.message) {
+                            /**
+                             * Showing status message
+                             */
+                            showMessage({
+                                title: response.data.status === "success" ? "Done" : "Oops!",
+                                text: response.data.data.message,
+                                icon: response.data.status,
+                            });
+                        }
                         /**
                          * Change loading spinner
                          */
                         store.commit('changeStatus');
                         resolve(response);
                     } else {
+
+                        if (response.data.data.message) {
+
+                            /**
+                             * Showing status message
+                             */
+                            showMessage({
+                                title: response.data.status === "success" ? "Done" : "Oops!",
+                                text: response.data.data.message,
+                                icon: response.data.status,
+                            });
+                        }
+
                         /**
                          * Change loading spinner
                          */
@@ -110,7 +137,7 @@ export default function submit({type, url, data = null, config = null, form = fa
                     params: data
                 }, config)
                     .then(response => {
-                        if (response.data.status === 'success') {
+                        if (response.data.status === SUCCESS_STATUS) {
 
                             /**
                              * Change loading spinner
@@ -136,7 +163,7 @@ export default function submit({type, url, data = null, config = null, form = fa
             } else {
                 axios.get(url, config)
                     .then(response => {
-                        if (response.data.status === 'success') {
+                        if (response.data.status === SUCCESS_STATUS) {
 
                             /**
                              * Change loading spinner

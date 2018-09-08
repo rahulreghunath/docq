@@ -5,24 +5,35 @@
             <b-col sm="12">
                 <b-card>
                     <div slot="header">
-                        <strong>Add Doctor Qualifications</strong>
+                        <strong>Add Doctor Image</strong>
                     </div>
                     <b-row>
                         <b-col sm="12">
+                            <h4> Doctor {{ doctor.full_name}}</h4>
+                        </b-col>
+                        <b-col sm="12">
                             <div class="form-group">
-                                <input type="file" class="form-control" @change="setImage">
+                                <label for="image">
+                                    Choose Image To Crop
+                                </label>
+                                <input type="file" id="image" class="form-control" @change="setImage">
                             </div>
                         </b-col>
                         <b-col sm="12" class="cropper-box">
-                            <img ref="image"
-                                 :src="imageSrc">
+                            <div>
+                                <img ref="image" class="cropper-box"
+                                     :src="imageSrc">
+                            </div>
                         </b-col>
                     </b-row>
                     <div slot="footer">
-                        <b-button type="submit" size="sm" variant="primary"><i class="fa fa-dot-circle-o"></i>
-                            Submit
+                        <b-button type="submit" size="sm" @click="uploadImage" variant="primary"><i
+                                class="fa fa-dot-circle-o"></i>
+                            Upload
                         </b-button>
-                        <b-button type="reset" size="sm" variant="danger"><i class="fa fa-ban"></i> Reset</b-button>
+                        <b-button type="reset" @click="skipImageUpload" size="sm" variant="danger"><i
+                                class="fa fa-ban"></i> Skip
+                        </b-button>
                     </div>
                 </b-card>
             </b-col>
@@ -35,6 +46,8 @@
     import submit from '../../../http/http';
     import Cropper from 'cropperjs';
     import 'cropperjs/dist/cropper.css';
+    import alerts from '../../../shared/alert';
+    import {SUCCESS_STATUS} from "../../../constants/constants";
 
     export default {
         name: "AddDoctorImage",
@@ -42,51 +55,113 @@
         data() {
             return {
                 id: this.$route.params.id,
+                doctor: '',
                 croppedSrc: '',
-                imageSrc: 'http://localhost:8000/Steve-Jobs-HD-Quote-Wallpapers-2.jpg'
+                imageSrc: 'http://localhost:8000/Steve-Jobs-HD-Quote-Wallpapers-2.jpg',
+                image: null,
+                width: '',
+                height: '',
+                x: null,
+                y: ''
             };
         },
         methods: {
+            uploadImage: function () {
+                if (this.image === null) {
+                    alerts({
+                        options: {
+                            title: "Choose an image",
+                            text: "Please choose an image to upload",
+                            icon: "warning",
+                            button: "Ok",
+                        }
+                    });
+                } else {
+
+                    let form = new FormData();
+                    form.append('image', this.image, this.image.name);
+                    form.append('x', Math.floor(this.x));
+                    form.append('y', Math.floor(this.y));
+                    form.append('width', Math.floor(this.width));
+                    form.append('height', Math.floor(this.height));
+                    form.append('doctor', this.id);
+
+                    alerts({
+                        options: {
+                            title: "Are you sure?",
+                            text: "Are you sure want to continue with this image",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        },
+                        callback: true,
+                    }).then(() => {
+                        submit({type: 'post', url: 'add-doctor-profile-image', data: form}).then(({data}) => {
+                            if (data.status === SUCCESS_STATUS) {
+                                this.$router.push({name: 'addClinic', params: {id: this.id}});
+                            }
+                        });
+                    });
+                }
+            },
             setImage(e) {
                 let uploadedImageType = 'image/jpeg';
-                let uploadedImageName = 'cropped.jpg';
+                let uploadedImageName;
                 let uploadedImageURL;
                 let URL = window.URL;
                 const image = this.$refs.image;
-                const file = e.target.files[0];
+                this.image = e.target.files[0];
 
-                if (/^image\/\w+/.test(file.type)) {
-                    uploadedImageType = file.type;
-                    uploadedImageName = file.name;
+                if (/^image\/\w+/.test(this.image.type)) {
+                    uploadedImageType = this.image.type;
+                    uploadedImageName = this.image.name;
 
                     if (uploadedImageURL) {
                         URL.revokeObjectURL(uploadedImageURL);
                     }
 
-                    image.src = uploadedImageURL = URL.createObjectURL(file);
+                    image.src = uploadedImageURL = URL.createObjectURL(this.image);
                     window.cropper.destroy();
+                    let vue = this;
                     window.cropper = new Cropper(image, {
                         aspectRatio: 3 / 3,
                         crop(event) {
-                            console.log(event.detail.x);
-                            console.log(event.detail.y);
-                            console.log(event.detail.width);
-                            console.log(event.detail.height);
-                            console.log(event.detail.rotate);
-                            console.log(event.detail.scaleX);
-                            console.log(event.detail.scaleY);
-                        },
+                            vue.x = event.detail.x;
+                            vue.y = event.detail.y;
+                            vue.width = event.detail.width;
+                            vue.height = event.detail.height;
+                        }
                     });
-                    e.value = null;
                 } else {
-                    window.alert('Please choose an image file.');
+                    alerts({
+                        options: {
+                            title: "Choose an image",
+                            text: "Choose an image file to upload",
+                            icon: "warning",
+                            button: "Ok",
+                        }
+                    });
                 }
             },
             getDoctorDetails() {
-                submit({type: 'get', url: 'get-doctor-basic-details-img', data: {id: this.id}})
+                submit({type: 'get', url: 'get-doctor-basic-details-img', data: {doctor: this.id}})
                     .then(({data}) => {
-                        console.log(data);
+                        this.doctor = data.data.doctor;
                     });
+            },
+            skipImageUpload() {
+                alerts({
+                    options: {
+                        title: "Are you sure?",
+                        text: "Are you sure want to skip this step",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    },
+                    callback: true,
+                }).then(() => {
+                    this.$router.push({name: 'addClinic', params: {id: this.id}});
+                })
             }
         },
         mounted() {
@@ -94,15 +169,6 @@
             const image = this.$refs.image;
             window.cropper = new Cropper(image, {
                 aspectRatio: 3 / 3,
-                crop(event) {
-                    console.log(event.detail.x);
-                    console.log(event.detail.y);
-                    console.log(event.detail.width);
-                    console.log(event.detail.height);
-                    console.log(event.detail.rotate);
-                    console.log(event.detail.scaleX);
-                    console.log(event.detail.scaleY);
-                },
             });
         }
     }
@@ -110,7 +176,7 @@
 
 <style scoped>
     .cropper-box {
-        width: 100%;
+        max-width: 100%;
         height: 600px;
     }
 </style>

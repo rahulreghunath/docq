@@ -57,6 +57,7 @@ const DoctorSpecialization = () => import(/* webpackChunkName: "admin/components
 const DoctorQualifications = () => import(/* webpackChunkName: "admin/components/views/pages/DoctorQualifications" */ '../components/views/pages/DoctorQualifications');
 const AddDoctor = () => import(/* webpackChunkName: "admin/components/views/pages/AddDoctor" */ '../components/views/pages/AddDoctor');
 const AddDoctorImage = () => import(/* webpackChunkName: "admin/components/views/pages/AddDoctor" */ '../components/views/pages/AddDoctorImage');
+const AddClinic = () => import(/* webpackChunkName: "admin/components/views/pages/AddClinic" */ '../components/views/pages/AddClinic');
 
 // Users
 const Users = () => import(/* webpackChunkName: "admin/components/views/users/Users" */ '../components/views/users/Users');
@@ -116,7 +117,7 @@ export default new Router({
                             meta: {
                                 label: 'Add Doctor',
                                 title: 'Add Doctor'
-                            },
+                            }
                         },
                         {
                             path: 'add-image/:id',
@@ -125,6 +126,15 @@ export default new Router({
                             meta: {
                                 label: 'Add Doctor Image',
                                 title: 'Doctor Image'
+                            }
+                        },
+                        {
+                            path: 'add-clinic/:id',
+                            name: 'addClinic',
+                            component: AddClinic,
+                            meta: {
+                                label: 'Add Clinic',
+                                title: 'Doctor Clinic'
                             },
                         }
                     ]

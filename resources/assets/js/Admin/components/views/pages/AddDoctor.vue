@@ -109,6 +109,18 @@
                             </b-col>
                             <b-col sm="4">
                                 <b-form-group
+                                        label="Enter Medical Registration Number"
+                                        label-for="mediReg"
+                                        :invalid-feedback="form.errors.get('medicalRegistrationNumber')"
+                                        :state="form.has('medicalRegistrationNumber')"
+                                >
+                                    <b-form-input id="mediReg" placeholder="Medical Registration Number"
+                                                  :state="form.has('medicalRegistrationNumber')"
+                                                  v-model.trim="form.medicalRegistrationNumber"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm="4">
+                                <b-form-group
                                         label="Specialisation"
                                         label-for="specialisation"
                                         :invalid-feedback="form.errors.get('specialisation')"
@@ -121,18 +133,6 @@
                                             :state="form.has('specialisation')"
                                             :options="specialisations"
                                     ></b-form-select>
-                                </b-form-group>
-                            </b-col>
-                            <b-col sm="4">
-                                <b-form-group
-                                        label="Enter Medical Registration Number"
-                                        label-for="mediReg"
-                                        :invalid-feedback="form.errors.get('medicalRegistrationNumber')"
-                                        :state="form.has('medicalRegistrationNumber')"
-                                >
-                                    <b-form-input id="mediReg" placeholder="Medical Registration Number"
-                                                  :state="form.has('medicalRegistrationNumber')"
-                                                  v-model.trim="form.medicalRegistrationNumber"></b-form-input>
                                 </b-form-group>
                             </b-col>
                             <b-col sm="4">
@@ -193,7 +193,7 @@
                     phone: '',
                     email: '',
                     gender: '',
-                    specialisation: '',
+                    specialisation: [],
                     medicalRegistrationNumber: '',
                     experience: '',
                     consultingFees: '',
@@ -213,7 +213,6 @@
                     data: this.form,
                     form: true
                 }).then(({data}) => {
-                    console.table(data);
                     this.$router.push({name: 'addDoctorImage', params: {id: data.data.user}});
                 });
             },

@@ -38,5 +38,10 @@ Route::group([
     Route::get('get-doctor-form-details', 'API\AdminController@getDoctorFormDetails');
     Route::post('add-doctor', 'API\AdminController@addDoctor');
     Route::get('get-doctor-basic-details-img', 'API\AdminController@getDoctorBasicDetails');
+    Route::post('add-doctor-profile-image', 'API\AdminController@uploadDoctorImage');
 
+    /**
+     * Add Clinic
+     */
+    Route::post('add-doctor-clinic', 'API\AdminController@addDoctorClinic');
 });

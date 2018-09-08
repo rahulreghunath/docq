@@ -19,11 +19,16 @@ use Illuminate\Database\Eloquent\Model;
 class Registration extends Model
 {
     /**
-     * User
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function login()
     {
-        return $this->belongsTo('App\Models\Login', 'registration_id', 'id');
+        return $this->hasOne('App\Models\Login', 'registration_id');
     }
+
+    public function doctor()
+    {
+        return $this->belongsTo('App\Models\DoctorDetails', 'id', 'registration_id');
+    }
+
 }
