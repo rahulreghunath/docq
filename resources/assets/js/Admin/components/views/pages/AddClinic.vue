@@ -37,8 +37,8 @@
                                     </b-col>
                                     <b-col sm="4">
                                         <b-form-group label="&nbsp;">
-                                            <b-button @click="getLocation" variant="danger" class="btn-full-width">
-                                                Location Details
+                                            <b-button @click="getLocation" :variant="mapButton" class="btn-full-width">
+                                                {{mapButtonLabel}}
                                             </b-button>
                                         </b-form-group>
                                     </b-col>
@@ -57,7 +57,10 @@
                                 </b-form-group>
                             </b-col>
                             <b-col>
-                                latitude:{{ form.latitude }} longitude: {{ form.longitude }}
+                                <div>latitude:{{ form.latitude }} longitude: {{ form.longitude }}</div>
+                                <small class="text-danger" v-if="form.has('latitude')===false">
+                                    {{form.errors.get('latitude')}}
+                                </small>
                             </b-col>
                         </b-row>
 
@@ -65,7 +68,9 @@
                             <b-button type="submit" size="sm" variant="primary"><i class="fa fa-dot-circle-o"></i>
                                 Submit
                             </b-button>
-                            <b-button type="reset" size="sm" variant="danger"><i class="fa fa-ban"></i> Reset</b-button>
+                            <b-button type="reset" size="sm" @click="form.reset(['doctor'])" variant="danger"><i
+                                    class="fa fa-ban"></i> Reset
+                            </b-button>
                         </div>
                     </b-card>
                 </b-form>
@@ -80,6 +85,45 @@
                     ></GmapMap>
                 </b-modal>
             </b-col>
+            <b-col sm="6">
+                <b-card no-body>
+                    <b-card-header>
+                        <strong>Existing Clinics</strong>
+                    </b-card-header>
+                    <b-card-body>
+                        <list-count :data="clinics"></list-count>
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Sl.no</th>
+                                <th>Qualification</th>
+                                <th>Options</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-if="clinics.data.length">
+                                <tr v-for="(clinic,index) in clinics.data">
+                                    <td>{{ (clinics.meta.current_page * clinics.meta.per_page) -
+                                        clinics.meta.per_page + index + 1}}
+                                    </td>
+                                    <td>{{clinic.clinic_name}}</td>
+                                    <td></td>
+                                </tr>
+                            </template>
+                            <tr v-else>
+                                <td colspan="3" class="text-center">
+                                    No Clinics added
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center margin-top-30">
+                            <pagination :form-data="{id:form.doctor}" :data="clinics"
+                                        @pagination-change-page="getClinicDetails"></pagination>
+                        </div>
+                    </b-card-body>
+                </b-card>
+            </b-col>
         </b-row>
     </div>
 </template>
@@ -88,11 +132,17 @@
     import Form from '../../../shared/form';
     import submit from '../../../http/http';
     import {spinner} from "../../../mixins/helper";
-    import {gmapApi} from 'vue2-google-maps'
+    import {gmapApi} from 'vue2-google-maps';
+    import ListCount from '../../shared/PaginationListCount';
+    import Pagination from '../../shared/Pagination';
 
     export default {
         name: "AddClinic",
         mixins: [spinner],
+        components: {
+            ListCount,
+            Pagination
+        },
         data() {
             return {
                 form: new Form({
@@ -100,11 +150,12 @@
                     clinicName: '',
                     location: '',
                     phone: '',
-                    latitude: '',
-                    longitude: '',
+                    latitude: '__',
+                    longitude: '__',
                 }),
                 marker: null,
                 geocoder: null,
+                clinics: {data: []}
             };
         },
         methods: {
@@ -113,10 +164,21 @@
                     type: 'post',
                     url: 'add-doctor-clinic',
                     data: this.form,
-                    form: true
+                    form: true,
+                    clearExcept: ['doctor']
                 }).then(({data}) => {
-                    this.$router.push({name: 'addDoctor', params: {id: data.data.user}});
+                    this.getClinicDetails({url: 'get-doctor-clinic-details', data: {id: this.form.doctor}});
+                }).catch(response => {
+                    if (response.status !== 422)
+                        this.$router.push({name: 'addDoctor'});
                 });
+            },
+            getClinicDetails({url, data}) {
+                submit({
+                    type: 'get',
+                    url: url,
+                    data: data
+                }).then(data => this.clinics = data.data).catch(data => alert('Oops something went wrong, please try again'));
             },
             getLocation() {
                 if (this.geocoder === null) {
@@ -175,6 +237,22 @@
         },
         computed: {
             google: gmapApi,
+            mapButton() {
+                if (this.form.latitude === '__') {
+                    return 'danger';
+                }
+                return 'success';
+            },
+            mapButtonLabel() {
+                if (this.form.latitude === '__') {
+                    return 'Get Coordinates';
+                }
+                return 'Coordinates Added';
+            }
+
+        },
+        created() {
+            this.getClinicDetails({url: 'get-doctor-clinic-details', data: {id: this.form.doctor}});
         }
     }
 </script>

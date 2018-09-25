@@ -16,7 +16,7 @@ class CreateQualificationsTable extends Migration
         Schema::create('qualifications', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('qualification_value', 150)->comment('Doctors qualification');
+            $table->string('qualification_value', 150)->comment('DoctorResource qualification');
         });
     }
 

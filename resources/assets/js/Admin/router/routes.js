@@ -58,6 +58,8 @@ const DoctorQualifications = () => import(/* webpackChunkName: "admin/components
 const AddDoctor = () => import(/* webpackChunkName: "admin/components/views/pages/AddDoctor" */ '../components/views/pages/AddDoctor');
 const AddDoctorImage = () => import(/* webpackChunkName: "admin/components/views/pages/AddDoctor" */ '../components/views/pages/AddDoctorImage');
 const AddClinic = () => import(/* webpackChunkName: "admin/components/views/pages/AddClinic" */ '../components/views/pages/AddClinic');
+const Doctors = () => import(/* webpackChunkName: "admin/components/views/pages/DoctorResource" */ '../components/views/pages/Doctors');
+const WorkingSessions = () => import(/* webpackChunkName: "admin/components/views/pages/WorkingSessions" */ '../components/views/pages/WorkingSessions');
 
 // Users
 const Users = () => import(/* webpackChunkName: "admin/components/views/users/Users" */ '../components/views/users/Users');
@@ -97,8 +99,8 @@ export default new Router({
                             name: 'doctorSpecialization',
                             component: DoctorSpecialization,
                             meta: {
-                                label: 'Specializations',
-                                title: 'Doctor Specializations'
+                                label: 'SpecializationResource',
+                                title: 'Doctor SpecializationResource'
                             },
                         },
                         {
@@ -136,6 +138,15 @@ export default new Router({
                                 label: 'Add Clinic',
                                 title: 'Doctor Clinic'
                             },
+                        },
+                        {
+                            path: 'working-sessions/:id/:name',
+                            name: 'workingSessions',
+                            component: WorkingSessions,
+                            meta: {
+                                label: 'Working Sessions',
+                                title: 'Working Sessions'
+                            },
                         }
                     ]
                 },
@@ -145,6 +156,15 @@ export default new Router({
                     component: Dashboard,
                     meta: {
                         title: 'Home'
+                    },
+                },
+                {
+                    path: 'doctors',
+                    name: 'doctors',
+                    component: Doctors,
+                    meta: {
+                        title: 'Doctors',
+                        label: 'Doctors'
                     },
                 },
                 {

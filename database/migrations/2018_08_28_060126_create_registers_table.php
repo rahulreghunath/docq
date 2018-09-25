@@ -24,7 +24,7 @@ class CreateRegistersTable extends Migration
             $table->bigInteger('phone')->nullable()->comment('User Phone');
             $table->string('email', 100)->comment('User E-mail');
             $table->string('gender', 100)->comment('User Gender');
-            $table->string('profile_picture', 300)->nullable()->comment('Doctors profile picture');
+            $table->string('profile_picture', 300)->nullable()->comment('DoctorResource profile picture');
             $table->integer('status')->comment('Current status of User');
         });
     }

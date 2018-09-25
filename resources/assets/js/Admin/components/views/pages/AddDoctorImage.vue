@@ -9,7 +9,7 @@
                     </div>
                     <b-row>
                         <b-col sm="12">
-                            <h4> Doctor {{ doctor.full_name}}</h4>
+                            <h4> Dr. {{ doctor.full_name}}</h4>
                         </b-col>
                         <b-col sm="12">
                             <div class="form-group">
@@ -147,7 +147,9 @@
                 submit({type: 'get', url: 'get-doctor-basic-details-img', data: {doctor: this.id}})
                     .then(({data}) => {
                         this.doctor = data.data.doctor;
-                    });
+                    }).catch(({data}) => {
+                    this.$router.push({name: 'addDoctor'});
+                });
             },
             skipImageUpload() {
                 alerts({

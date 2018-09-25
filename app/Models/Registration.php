@@ -23,12 +23,15 @@ class Registration extends Model
      */
     public function login()
     {
-        return $this->hasOne('App\Models\Login', 'registration_id');
+        return $this->hasOne('App\Models\Login');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function doctor()
     {
-        return $this->belongsTo('App\Models\DoctorDetails', 'id', 'registration_id');
+        return $this->hasOne('App\Models\DoctorDetails');
     }
 
 }

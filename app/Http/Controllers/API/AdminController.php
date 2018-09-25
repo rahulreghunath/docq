@@ -3,16 +3,25 @@
 namespace App\Http\Controllers\API;
 
 use App\Constants\Constants;
+use App\Constants\Messages;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddClinicRequest;
 use App\Http\Requests\AddDoctorRequest;
-use App\Http\Resources\Specializations;
+use App\Http\Resources\ClinicResourceCollection;
+use App\Http\Resources\DoctorRegistrationCollection;
+use App\Http\Resources\QualificationResourceCollection;
+use App\Http\Resources\SpecializationResource;
+use App\Http\Resources\QualificationResource;
+use App\Http\Resources\SpecializationResourceCollection;
 use App\Models\Clinic;
 use App\Models\DoctorDetails;
+use App\Models\DoctorQualification;
 use App\Models\DoctorSpecialization;
 use App\Models\Login;
 use App\Models\Qualification;
 use App\Models\Registration;
 use App\Models\Specialization;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -35,14 +44,14 @@ class AdminController extends Controller
     public function addSpecialisation(Request $request)
     {
         $validatedData = $request->validate([
-            'specialization' => 'required',
+            'specialization' => 'required|unique:specializations,specialization_value',
         ]);
 
         $specialization = new Specialization();
         $specialization->specialization_value = $validatedData['specialization'];
         $specialization->save();
 
-        return response()->json(jsonResponse(['message' => 'Specialization added'], Constants::$SUCCESS));
+        return response()->json(jsonResponse(['message' => Messages::$SPECIALISATION_ADDED], Constants::$SUCCESS));
     }
 
     /**
@@ -50,12 +59,9 @@ class AdminController extends Controller
      */
     public function getSpecialisations()
     {
-        $specializations = Specialization::paginate(5);
+        $specializations = Specialization::paginate(Constants::$ADMIN_PAGINATION_COUNT);
 
-        $data = [
-            'specializations' => $specializations,
-        ];
-        return response()->json(jsonResponse($data, Constants::$SUCCESS));
+        return SpecializationResourceCollection::make($specializations)->status(Constants::$SUCCESS);
 
     }
 
@@ -66,45 +72,47 @@ class AdminController extends Controller
     public function addQualification(Request $request)
     {
         $validatedData = $request->validate([
-            'qualification' => 'required',
+            'qualification' => 'required|unique:qualifications,qualification_value',
         ]);
 
         $qualification = new Qualification();
         $qualification->qualification_value = $validatedData['qualification'];
         $qualification->save();
 
-        return response()->json(jsonResponse(['message' => 'Qualification added'], Constants::$SUCCESS));
+        return response()->json(jsonResponse(['message' => Messages::$QUALIFICATION_ADDED], Constants::$SUCCESS));
     }
 
     /**
+     * Display added
      * @return \Illuminate\Http\JsonResponse
      */
     public function getQualifications()
     {
-        $qualifications = Qualification::paginate(5);
+        $qualifications = Qualification::paginate(Constants::$ADMIN_PAGINATION_COUNT);
 
-        $data = [
-            'qualifications' => $qualifications,
-        ];
-        return response()->json(jsonResponse($data, Constants::$SUCCESS));
+        return QualificationResourceCollection::make($qualifications)->status(Constants::$SUCCESS);
 
     }
 
     /**
+     * Getting doctor specializations to construct form
      * @return \Illuminate\Http\JsonResponse
      */
     public function getDoctorFormDetails()
     {
-        $specialisations = Specializations::collection(Specialization::all());
+        $specialisations = SpecializationResource::collection(Specialization::all());
+        $qualifications = QualificationResource::collection(Qualification::all());
 
         $data = [
             'specialisations' => $specialisations,
+            'qualifications' => $qualifications
         ];
 
         return response()->json(jsonResponse($data, Constants::$SUCCESS));
     }
 
     /**
+     * Adding new Doctor
      * @param AddDoctorRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -138,15 +146,28 @@ class AdminController extends Controller
         $login->user_category_id = 1;
         $login->save();
 
-        foreach ($request['specialisation'] as $specialisation) {
+        /**
+         * Adding specialisations
+         */
+        foreach ($request['specialisations'] as $specialisation) {
             $doctorSpecialisation = new DoctorSpecialization();
             $doctorSpecialisation->doctor_details_id = $doctor->id;
             $doctorSpecialisation->specialization_id = $specialisation;
             $doctorSpecialisation->save();
         }
 
+        /**
+         * Adding qualifications
+         */
+        foreach ($request['qualifications'] as $qualification) {
+            $doctorQualification = new DoctorQualification();
+            $doctorQualification->doctor_details_id = $doctor->id;
+            $doctorQualification->qualification_id = $qualification;
+            $doctorQualification->save();
+        }
+
         $data = [
-            'message' => 'Doctor added successfully',
+            'message' => Messages::$DOCTOR_ADDED,
             'user' => $user->id
         ];
 
@@ -154,6 +175,7 @@ class AdminController extends Controller
     }
 
     /**
+     * Get doctor basic details
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -165,10 +187,22 @@ class AdminController extends Controller
                 $query->where('user_category_id', Constants::$DOCTOR_USER);
             })->first();
 
-        return response()->json(jsonResponse(['doctor' => $doctor], Constants::$SUCCESS));
+        $data = [
+            'doctor' => $doctor,
+        ];
+
+        if ($doctor == null) {
+            $data = [
+                'doctor' => null,
+                'message' => Messages::$ERROR_MESSAGE
+            ];
+        }
+
+        return response()->json(jsonResponse($data, $doctor != null ? Constants::$SUCCESS : Constants::$FAILED));
     }
 
     /**
+     * uploading doctor profile picture
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -192,39 +226,67 @@ class AdminController extends Controller
         }
 
         $data = [
-            'message' => $stats == 1 ? 'Doctor image added successfully' : 'Can\'t upload image at this time, try again',
+            'message' => $stats == 1 ?: Messages::$DOCTOR_IMAGE_UPLOAD_FAILED,
         ];
 
         return response()->json(jsonResponse($data, $stats == 1 ? Constants::$SUCCESS : Constants::$FAILED));
     }
 
-    /**
-     * @param Request $request
-     */
-    public function addDoctorClinic(Request $request)
-    {
-        $validatedData = $request->validate([
-            'clinicName' => 'required',
-            'location' => 'required',
-            'phone' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'doctor' => 'required',
-        ]);
 
-        $clinic = new Clinic();
-        $clinic->doctor_details_id = DoctorDetails::where('registration_id', $request['doctor'])->select('id')->first()->id;
-        $clinic->clinic_name = $validatedData['clinicName'];
-        $clinic->location = $validatedData['location'];
-        $clinic->phone = $validatedData['phone'];
-        $clinic->latitude = $validatedData['latitude'];
-        $clinic->longitude = $validatedData['longitude'];
-        $clinic->save();
+    /**
+     * Ading new clinic
+     * @param AddClinicRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addDoctorClinic(AddClinicRequest $request)
+    {
+        try {
+            $clinic = new Clinic();
+            $clinic->doctor_details_id = DoctorDetails::where('registration_id', $request['doctor'])->first()->id;
+            $clinic->clinic_name = $request['clinicName'];
+            $clinic->location = $request['location'];
+            $clinic->phone = $request['phone'];
+            $clinic->latitude = $request['latitude'];
+            $clinic->longitude = $request['longitude'];
+            $clinic->save();
+        } catch (Exception $e) {
+            $clinic = false;
+        }
 
         $data = [
-            'message' => 'Clinic added successfully',
+            'message' => $clinic != false ? Messages::$CLINIC_ADDED : Messages::$ERROR_MESSAGE,
         ];
 
-        return response()->json(jsonResponse($data, Constants::$SUCCESS));
+        return response()->json(jsonResponse($data, $clinic != false ? Constants::$SUCCESS : Constants::$FAILED));
+    }
+
+    /**
+     * Getting clinic details
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getClinicDetails(Request $request)
+    {
+        $clinics = Clinic::whereHas('doctor_details', function ($query) use ($request) {
+            $query->whereHas('registration', function ($query) use ($request) {
+                $query->where('id', $request['id']);
+            });
+        })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+
+        return ClinicResourceCollection::make($clinics)->status(Constants::$SUCCESS);
+    }
+
+    public function getDoctorsDetails()
+    {
+        $doctors = Registration::whereHas('login', function ($query) {
+            $query->where('user_category_id', Constants::$DOCTOR_USER);
+        })->with([
+            'doctor',
+            'doctor.doctor_specializations',
+            'doctor.doctor_qualifications',
+            'doctor.doctor_qualifications.qualification'
+        ])->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+
+        return DoctorRegistrationCollection::make($doctors)->status(Constants::$SUCCESS);
     }
 }

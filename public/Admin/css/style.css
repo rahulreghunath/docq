@@ -19,10 +19,25 @@
     width: 100%;
 }
 
-.v--modal {
-    z-index: 500000;
+.margin-top-30{
+    margin-top: 30px;
 }
 
-.vue-modal {
-    z-index: 500000;
+.v--modal {
+    z-index: 1500!important;
+}
+
+.vue-modal-header {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #ccc;
+    padding: 15px;
+}
+
+.vue-modal-footer {
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #ccc;
+    padding: 10px;
+
 }

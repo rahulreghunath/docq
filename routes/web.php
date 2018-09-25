@@ -24,3 +24,8 @@ Route::group([
         'as' => 'home'
     ]);
 });
+
+Route::get('job', [
+    'uses' => 'HomeController@getJob',
+    'as' => 'job'
+]);

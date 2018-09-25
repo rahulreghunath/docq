@@ -1,18 +1,18 @@
 <template>
-    <ul class="pagination" v-if="data.total > data.per_page">
-        <li class="page-item pagination-prev-nav" v-if="data.prev_page_url">
-            <a class="page-link" href="#" aria-label="Previous" @click.prevent="selectPage(--data.current_page)">
+    <ul class="pagination" v-if="data.meta.total > data.meta.per_page">
+        <li class="page-item pagination-prev-nav" v-if="data.links.prev">
+            <a class="page-link" href="#" aria-label="Previous" @click.prevent="selectPage(--data.meta.current_page)">
                 <slot name="prev-nav">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
                 </slot>
             </a>
         </li>
-        <li class="page-item pagination-page-nav" v-for="n in getPages()" :class="{active: n === data.current_page }">
+        <li class="page-item pagination-page-nav" v-for="n in getPages()" :class="{active: n === data.meta.current_page }">
             <a class="page-link" href="#" @click.prevent="selectPage(n)">{{ n }}</a>
         </li>
-        <li class="page-item pagination-next-nav" v-if="data.next_page_url">
-            <a class="page-link" href="#" aria-label="Next" @click.prevent="selectPage(++data.current_page)">
+        <li class="page-item pagination-next-nav" v-if="data.links.next">
+            <a class="page-link" href="#" aria-label="Next" @click.prevent="selectPage(++data.meta.current_page)">
                 <slot name="next-nav">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
@@ -22,23 +22,17 @@
     </ul>
 </template>
 <script>
-    import * as constants from '../../constants/constants';
-
     export default {
         name: 'pagination',
         props: {
             data: {
                 default: function () {
                     return {
-                        current_page: 1,
-                        data: [],
-                        from: 1,
-                        last_page: 1,
-                        next_page_url: null,
-                        per_page: constants.PAGINATION_COUNT,
-                        prev_page_url: null,
-                        to: 1,
-                        total: 0,
+                        meta: {
+                            total:0
+                        },
+                        data: {},
+                        links: {}
                     }
                 }
             },
@@ -69,11 +63,11 @@
                 }
 
                 if (this.limit === 0) {
-                    return this.data.last_page;
+                    return this.data.meta.last_page;
                 }
 
-                var current = this.data.current_page,
-                    last = this.data.last_page,
+                var current = this.data.meta.current_page,
+                    last = this.data.meta.last_page,
                     delta = this.limit,
                     left = current - delta,
                     right = current + delta + 1,
@@ -102,10 +96,10 @@
                 return pages;
             },
             getUrl() {
-                if (this.data.next_page_url !== null)
-                    return this.data.next_page_url.slice(0, this.data.next_page_url.lastIndexOf('&'));
+                if (this.data.links.next !== null)
+                    return this.data.links.next.slice(0, this.data.links.next.lastIndexOf('&'));
                 else
-                    return this.data.prev_page_url.slice(0, this.data.prev_page_url.lastIndexOf('&'));
+                    return this.data.links.prev.slice(0, this.data.links.prev.lastIndexOf('&'));
             }
         },
     };

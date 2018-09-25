@@ -51,10 +51,10 @@
                             <tbody>
                             <template v-if="specializations.data.length">
                                 <tr v-for="(specialization,index) in specializations.data">
-                                    <td>{{ (specializations.current_page * specializations.per_page) -
-                                        specializations.per_page + index + 1}}
+                                    <td>{{ (specializations.meta.current_page * specializations.meta.per_page) -
+                                        specializations.meta.per_page + index + 1}}
                                     </td>
-                                    <td>{{specialization.specialization_value}}</td>
+                                    <td>{{specialization.text}}</td>
                                     <td></td>
                                 </tr>
                             </template>
@@ -94,7 +94,7 @@
                 form: new Form({
                     specialization: '',
                 }),
-                specializations: [],
+                specializations: {data: []},
             }
         },
         methods: {
@@ -108,7 +108,7 @@
             },
             getSpecializationData({url, data = null}) {
                 submit({type: 'get', url: url}).then(({data}) => {
-                    this.specializations = data.data.specializations;
+                    this.specializations = data;
                 }).catch(data => {
 
                 });

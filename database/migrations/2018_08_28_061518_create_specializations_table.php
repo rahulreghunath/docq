@@ -16,7 +16,7 @@ class CreateSpecializationsTable extends Migration
         Schema::create('specializations', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('specialization_value', 150)->comment('Doctors specialization');
+            $table->string('specialization_value', 150)->comment('DoctorResource specialization');
         });
     }
 

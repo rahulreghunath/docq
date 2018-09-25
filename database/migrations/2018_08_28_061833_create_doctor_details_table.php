@@ -18,7 +18,7 @@ class CreateDoctorDetailsTable extends Migration
             $table->timestamps();
             $table->integer('registration_id')->unsigned();
             $table->string('medical_registration_number', 150)->comment('Medical registration number');
-            $table->string('experience', 100)->comment('Doctors experience');
+            $table->string('experience', 100)->comment('DoctorResource experience');
             $table->float('consulting_fee')->comment('Consulting fee');
 
         });

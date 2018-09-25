@@ -51,10 +51,10 @@
                             <tbody>
                             <template v-if="qualifications.data.length">
                                 <tr v-for="(qualification,index) in qualifications.data">
-                                    <td>{{ (qualifications.current_page * qualifications.per_page) -
-                                        qualifications.per_page + index + 1}}
+                                    <td>{{ (qualifications.meta.current_page * qualifications.meta.per_page) -
+                                        qualifications.meta.per_page + index + 1}}
                                     </td>
-                                    <td>{{qualification.qualification_value}}</td>
+                                    <td>{{qualification.text}}</td>
                                     <td></td>
                                 </tr>
                             </template>
@@ -65,7 +65,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="text-center">
+                        <div class="text-center margin-top-30">
                             <pagination :data="qualifications"
                                         @pagination-change-page="getQualificationData"></pagination>
                         </div>
@@ -96,7 +96,7 @@
                 form: new Form({
                     qualification: '',
                 }),
-                qualifications: [],
+                qualifications: {data: []},
             }
         },
         methods: {
@@ -110,10 +110,8 @@
             },
             getQualificationData({url}) {
                 submit({type: 'get', url: url}).then(({data}) => {
-                    this.qualifications = data.data.qualifications;
-                }).catch(data => {
-
-                });
+                    this.qualifications = data;
+                }).catch(data => alert('Oops Somthing went wrong, Please try again'));
             }
         },
         created() {

@@ -15,6 +15,6 @@ mix.js('resources/assets/js/Admin/app.js', 'public/Admin/js')
    .sass('resources/assets/sass/Admin/app.scss', 'public/Admin/css');
 mix.webpackConfig({
     output: {
-        chunkFilename: 'js/lazy-js-components/[name].[chunkhash].js'
+        chunkFilename: 'js/lazy-js-components/[name].js'
     },
 });

@@ -1,27 +1,28 @@
 import axios from "axios/index";
 import {store} from "../store/store";
-import Form from '../shared/form';
 import swal from 'sweetalert';
 import {SUCCESS_STATUS} from "../constants/constants";
+import {ENV} from "../config/config";
 
 
 /**
  * Http Request
- * @param type
- * @param url
- * @param data
- * @param config
- * @param form
+ * @param type - type of request
+ * @param url - url
+ * @param data - data to send
+ * @param config - headers if any
+ * @param form - true if data from form or false
+ * @param clearExcept - array of form data keys to not delete after form submission
  * @returns {Promise<any>}
  */
-export default function submit({type, url, data = null, config = null, form = false}) {
+export default function submit({type, url, data = null, config = null, form = false, clearExcept = []}) {
 
     /**
-     * Setting authoriseation header for all request
+     * Setting authorisation header for all request
      * @type {string}
      */
 
-    axios.defaults.baseURL = 'http://localhost:8000/api/admin';
+    axios.defaults.baseURL = ENV.ADMIN.END_POINT;
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.getters.getToken;
 
     return new Promise((resolve, reject) => {
@@ -29,6 +30,9 @@ export default function submit({type, url, data = null, config = null, form = fa
         * Axios post request
          */
 
+        /**
+         * Spinner status change
+         */
         store.commit('changeStatus');
 
         /**
@@ -47,19 +51,17 @@ export default function submit({type, url, data = null, config = null, form = fa
                         /**
                          * Reset form
                          */
-                        data.reset();
+                        data.reset(clearExcept);
                     }
 
-                    if (response.data.data.message) {
-                        /**
-                         * Showing status message
-                         */
-                        showMessage({
-                            title: response.data.status === SUCCESS_STATUS ? "Done" : "Oops!",
-                            text: response.data.data.message,
-                            icon: response.data.status,
-                        });
-                    }
+                    /**
+                     * Showing status message
+                     */
+                    showMessage({
+                        title: response.data.status === SUCCESS_STATUS ? "Done" : "Oops!",
+                        text: response.data.data.message,
+                        icon: response.data.status,
+                    });
 
                     /**
                      * Change loading spinner
@@ -85,16 +87,15 @@ export default function submit({type, url, data = null, config = null, form = fa
                 .then(response => {
                     if (response.data.status === SUCCESS_STATUS) {
 
-                        if (response.data.data.message) {
-                            /**
-                             * Showing status message
-                             */
-                            showMessage({
-                                title: response.data.status === "success" ? "Done" : "Oops!",
-                                text: response.data.data.message,
-                                icon: response.data.status,
-                            });
-                        }
+                        /**
+                         * Showing status message
+                         */
+                        showMessage({
+                            title: response.data.status === "success" ? "Done" : "Oops!",
+                            text: response.data.data.message,
+                            icon: response.data.status,
+                        });
+
                         /**
                          * Change loading spinner
                          */
@@ -102,17 +103,14 @@ export default function submit({type, url, data = null, config = null, form = fa
                         resolve(response);
                     } else {
 
-                        if (response.data.data.message) {
-
-                            /**
-                             * Showing status message
-                             */
-                            showMessage({
-                                title: response.data.status === "success" ? "Done" : "Oops!",
-                                text: response.data.data.message,
-                                icon: response.data.status,
-                            });
-                        }
+                        /**
+                         * Showing status message
+                         */
+                        showMessage({
+                            title: response.data.status === "success" ? "Done" : "Oops!",
+                            text: response.data.data.message,
+                            icon: response.data.status,
+                        });
 
                         /**
                          * Change loading spinner
@@ -129,14 +127,23 @@ export default function submit({type, url, data = null, config = null, form = fa
                 store.commit('changeStatus');
                 reject(error.response);
             });
-        }
-        else if (type === 'get') {
+        } else if (type === 'get') {
 
             if (data !== null) {
                 axios.get(url, {
                     params: data
                 }, config)
                     .then(response => {
+
+                        /**
+                         * Showing status message
+                         */
+                        showMessage({
+                            title: response.data.status === SUCCESS_STATUS ? "Done" : "Oops!",
+                            text: response.data.data.message,
+                            icon: response.data.status,
+                        });
+
                         if (response.data.status === SUCCESS_STATUS) {
 
                             /**
@@ -152,6 +159,7 @@ export default function submit({type, url, data = null, config = null, form = fa
                             store.commit('changeStatus');
                             reject(response.data);
                         }
+
                     }).catch(error => {
 
                     /**
@@ -163,6 +171,16 @@ export default function submit({type, url, data = null, config = null, form = fa
             } else {
                 axios.get(url, config)
                     .then(response => {
+
+                        /**
+                         * Showing status message
+                         */
+                        showMessage({
+                            title: response.data.status === SUCCESS_STATUS ? "Done" : "Oops!",
+                            text: response.data.data.message,
+                            icon: response.data.status,
+                        });
+
                         if (response.data.status === SUCCESS_STATUS) {
 
                             /**
@@ -192,5 +210,6 @@ export default function submit({type, url, data = null, config = null, form = fa
 }
 
 let showMessage = (message) => {
-    swal(message);
+    if (message.text !== undefined)
+        swal(message);
 };

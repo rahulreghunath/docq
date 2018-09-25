@@ -1,0 +1,1 @@
+export const ERROR_MESSAGE = 'Oops somthing went wrong,Please try again';

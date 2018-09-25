@@ -5019,5 +5019,208 @@
             "thumbnail",
             "watermark"
         ]
+    },
+    {
+        "name": "symfony/yaml",
+        "version": "v4.1.4",
+        "version_normalized": "4.1.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/yaml.git",
+            "reference": "b832cc289608b6d305f62149df91529a2ab3c314"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/yaml/zipball/b832cc289608b6d305f62149df91529a2ab3c314",
+            "reference": "b832cc289608b6d305f62149df91529a2ab3c314",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1.3",
+            "symfony/polyfill-ctype": "~1.8"
+        },
+        "conflict": {
+            "symfony/console": "<3.4"
+        },
+        "require-dev": {
+            "symfony/console": "~3.4|~4.0"
+        },
+        "suggest": {
+            "symfony/console": "For validating YAML files using the lint command"
+        },
+        "time": "2018-08-18T16:52:46+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Yaml\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Yaml Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "pragmarx/yaml",
+        "version": "v0.1.7",
+        "version_normalized": "0.1.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/antonioribeiro/yaml.git",
+            "reference": "0c704b622ce276904eda7f09dd43f756ddc89910"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/antonioribeiro/yaml/zipball/0c704b622ce276904eda7f09dd43f756ddc89910",
+            "reference": "0c704b622ce276904eda7f09dd43f756ddc89910",
+            "shasum": ""
+        },
+        "require": {
+            "laravel/framework": ">=5.5.33",
+            "php": "^7.0",
+            "symfony/yaml": "^3.4|^4.0"
+        },
+        "require-dev": {
+            "orchestra/testbench": "3.5|^3.6",
+            "phpunit/phpunit": "^6.4|^4.0"
+        },
+        "time": "2018-09-22T17:12:12+00:00",
+        "type": "library",
+        "extra": {
+            "component": "package",
+            "laravel": {
+                "providers": [
+                    "PragmaRX\\Yaml\\Package\\ServiceProvider"
+                ],
+                "aliases": {
+                    "Yaml": "PragmaRX\\Yaml\\Package\\Facade"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "PragmaRX\\Yaml\\Package\\": "src/package",
+                "PragmaRX\\Yaml\\Tests\\": "tests/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Antonio Carlos Ribeiro",
+                "email": "acr@antoniocarlosribeiro.com",
+                "role": "Creator & Designer"
+            }
+        ],
+        "description": "Load your Laravel config files using yaml",
+        "keywords": [
+            "config",
+            "laravel",
+            "yaml"
+        ]
+    },
+    {
+        "name": "pragmarx/health",
+        "version": "v0.9.13",
+        "version_normalized": "0.9.13.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/antonioribeiro/health.git",
+            "reference": "dbfecf59730ab4e784a716b807415c3517c97b71"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/antonioribeiro/health/zipball/dbfecf59730ab4e784a716b807415c3517c97b71",
+            "reference": "dbfecf59730ab4e784a716b807415c3517c97b71",
+            "shasum": ""
+        },
+        "require": {
+            "laravel/framework": "5.5.*|5.6.*|5.7.*",
+            "php": ">=7.0",
+            "phpunit/php-timer": "^1.0|^2.0",
+            "pragmarx/yaml": "^0.1.7"
+        },
+        "require-dev": {
+            "docusign/esign-client": "^2.0",
+            "guzzlehttp/guzzle": "~6.0",
+            "laravel/laravel": "^5.5",
+            "nesbot/carbon": ">=1.34",
+            "orchestra/testbench": "~3.5",
+            "phpunit/phpunit": "~6.5|~7.3",
+            "predis/predis": "^1.0",
+            "sensiolabs/security-checker": "^4.1"
+        },
+        "suggest": {
+            "docusign/esign-client": "^2.0",
+            "guzzlehttp/guzzle": "~6.0",
+            "league/flysystem-aws-s3-v3": "^1.0",
+            "predis/predis": "^1.0",
+            "sensiolabs/security-checker": "^4.1"
+        },
+        "time": "2018-09-24T18:50:43+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "PragmaRX\\Health\\ServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/Support/Throwable.php",
+                "src/Support/helpers.php"
+            ],
+            "psr-4": {
+                "PragmaRX\\Health\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Antonio Carlos Ribeiro",
+                "email": "acr@antoniocarlosribeiro.com",
+                "role": "Creator & Designer"
+            }
+        ],
+        "description": "Laravel Server & App Health Monitor and Notifier",
+        "keywords": [
+            "app",
+            "health",
+            "laravel",
+            "monitor",
+            "notifications",
+            "panel",
+            "pragmarx",
+            "server"
+        ]
     }
 ]

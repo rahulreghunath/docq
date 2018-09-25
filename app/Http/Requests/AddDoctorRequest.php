@@ -25,14 +25,15 @@ class AddDoctorRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'age' => 'required|numeric',
+            'age' => ['required','numeric','regexp:([[30-80]{2})'],
             'location' => 'required',
-            'pin' => 'required|numeric',
+            'pin' => 'required|numeric|digits:6',
             'address' => 'required',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|digits:10',
             'email' => 'required|email',
             'gender' => 'required',
-            'specialisation' => 'required',
+            'specialisations' => 'required',
+            'qualifications'=>'required',
             'medicalRegistrationNumber' => 'required',
             'experience' => 'required',
             'consultingFees' => 'required|numeric',
@@ -47,8 +48,11 @@ class AddDoctorRequest extends FormRequest
     {
         return [
             'age.numeric' => 'Enter a valid age',
+            'age.regexp' => 'Enter a valid age',
             'pin.numeric' => 'Enter a valid pin code',
-            'phone.numeric' => 'Enter a valid pin phone number',
+            'pin.digits' => 'Enter a valid pin code',
+            'phone.numeric' => 'Enter a valid phone number',
+            'phone.digits' => 'Enter a valid phone number',
             'consultingFees.numeric' => 'Enter a valid fees amount',
         ];
     }

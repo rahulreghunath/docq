@@ -1,9 +1,11 @@
 import forIn from 'lodash/forIn';
 import mixin from 'lodash/mixin';
+import indexOf from 'lodash/indexOf';
 import _ from 'lodash/wrapperLodash';
 
 mixin(_, {
-    forIn
+    forIn,
+    indexOf
 });
 export default class Form {
     constructor(data) {
@@ -17,9 +19,10 @@ export default class Form {
     /*
      * Reset the form
      */
-    reset() {
+    reset(clearExcept = []) {
         _.forIn(this.orginalData, (value, key) => {
-            this[key] = '';
+            if (_.indexOf(clearExcept, key) === -1)
+                this[key] = '';
         });
     }
 

@@ -123,15 +123,31 @@
                                 <b-form-group
                                         label="Specialisation"
                                         label-for="specialisation"
-                                        :invalid-feedback="form.errors.get('specialisation')"
-                                        :state="form.has('specialisation')"
+                                        :invalid-feedback="form.errors.get('specialisations')"
+                                        :state="form.has('specialisations')"
                                 >
                                     <b-form-select
                                             multiple
                                             :select-size="4"
-                                            id="specialisation" v-model="form.specialisation"
-                                            :state="form.has('specialisation')"
+                                            id="specialisation" v-model="form.specialisations"
+                                            :state="form.has('specialisations')"
                                             :options="specialisations"
+                                    ></b-form-select>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm="4">
+                                <b-form-group
+                                        label="Qualifications"
+                                        label-for="qualifications"
+                                        :invalid-feedback="form.errors.get('qualifications')"
+                                        :state="form.has('qualifications')"
+                                >
+                                    <b-form-select
+                                            multiple
+                                            :select-size="4"
+                                            id="qualifications" v-model="form.qualifications"
+                                            :state="form.has('qualifications')"
+                                            :options="qualifications"
                                     ></b-form-select>
                                 </b-form-group>
                             </b-col>
@@ -193,7 +209,8 @@
                     phone: '',
                     email: '',
                     gender: '',
-                    specialisation: [],
+                    specialisations: [],
+                    qualifications:[],
                     medicalRegistrationNumber: '',
                     experience: '',
                     consultingFees: '',
@@ -203,6 +220,7 @@
                     {value: 'female', text: 'Female'},
                 ],
                 specialisations: [],
+                qualifications:[]
             };
         },
         methods: {
@@ -222,6 +240,7 @@
                     url: 'get-doctor-form-details'
                 }).then(({data}) => {
                     this.specialisations = data.data.specialisations;
+                    this.qualifications = data.data.qualifications;
                 });
             }
         },

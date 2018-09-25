@@ -10,5 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DoctorSpecialization extends Model
 {
-    //
+    public function specialization()
+    {
+        return $this->belongsTo('App\Models\Specialization');
+    }
 }
