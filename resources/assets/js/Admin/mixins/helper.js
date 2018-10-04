@@ -2,6 +2,7 @@
  * Helper functions
  */
 import {Stretch} from '../components/loading-spinner/spinner';
+import kebabCase from 'lodash/kebabCase';
 
 /**
  * user asset urls
@@ -64,12 +65,20 @@ export const pagination = {
  * @type {{computed: {loading(): *}}}
  */
 export const spinner = {
-    components:{
-        spinner:Stretch
+    components: {
+        spinner: Stretch
     },
     computed: {
         loading() {
             return this.$store.getters.getStatus;
         }
     },
+};
+
+export const dashCase = {
+    methods: {
+        dashCase(value) {
+            return kebabCase(value);
+        }
+    }
 };

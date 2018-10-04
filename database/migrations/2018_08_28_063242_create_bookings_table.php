@@ -19,8 +19,6 @@ class CreateBookingsTable extends Migration
             $table->integer('doctor_details_id')->unsigned();
             $table->integer('registration_id')->unsigned();
             $table->integer('booking_slot_id')->unsigned();
-            $table->date('booking_date');
-            $table->integer('token_no');
             $table->integer('status');
         });
     }

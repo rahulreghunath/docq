@@ -34,7 +34,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <router-link :to="{ name: 'workingSessions',params: { id: doctor.doctor.id,name:changeCase(doctor.name) } }"><i class="fa fa-clock-o" v-b-tooltip.hover title="Add Schedule"></i></router-link>
+                                        <router-link :to="{ name: 'workingSessions',params: { id: doctor.doctor.id,name:dashCase(doctor.name) } }"><i class="fa fa-clock-o" v-b-tooltip.hover title="Add Schedule"></i></router-link>
                                     </td>
                                 </tr>
                             </template>
@@ -58,15 +58,13 @@
 
 <script>
     import submit from '../../../http/http';
-    import {spinner} from '../../../mixins/helper';
+    import {spinner,dashCase} from '../../../mixins/helper';
     import ListCount from '../../shared/PaginationListCount';
     import Pagination from '../../shared/Pagination';
-    import kebabCase from 'lodash/kebabCase';
-    import { Loading } from 'element-ui';
 
     export default {
         name: "Doctors",
-        mixins: [spinner],
+        mixins: [spinner,dashCase],
         components:{
             ListCount,
             Pagination
@@ -78,16 +76,12 @@
         },
         methods: {
             getDoctorDetails({url}) {
-                Loading.service({ fullscreen: true });
                 submit({
                     type: 'get',
                     url: url
                 }).then(({data}) => {
                     this.doctors = data;
                 });
-            },
-            changeCase(value){
-                return kebabCase(value);
             }
         },
         created() {

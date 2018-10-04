@@ -25,7 +25,7 @@ class AddDoctorRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'age' => ['required','numeric','regexp:([[30-80]{2})'],
+            'age' => ['required','numeric'],
             'location' => 'required',
             'pin' => 'required|numeric|digits:6',
             'address' => 'required',

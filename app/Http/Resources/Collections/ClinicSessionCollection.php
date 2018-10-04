@@ -1,13 +1,19 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Collections;
 
+use App\Http\Resources\ClinicSessionResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ClinicResourceCollection extends ResourceCollection
+class ClinicSessionCollection extends ResourceCollection
 {
     private $status;
 
+    /**
+     * To set status field in json response
+     * @param $status
+     * @return $this
+     */
     public function status($status)
     {
         $this->status = $status;
@@ -23,7 +29,7 @@ class ClinicResourceCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => $this->collection,
+            'data' => ClinicSessionResource::collection($this->collection),
             'status' => $this->status
         ];
     }

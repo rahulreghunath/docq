@@ -15,7 +15,11 @@ namespace App\Constants;
  */
 class Constants
 {
+    public static $ACTIVE_USER = '1';
+
     public static $DOCTOR_USER = '1';
+    public static $PATIENT_USER = '2';
+
     public static $SUCCESS = 'success';
     public static $FAILED = 'error';
     public static $ADMIN_PAGINATION_COUNT = 5;

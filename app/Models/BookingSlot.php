@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string start_time
- * @property mixed working_session_id
  * @property string end_time
  * @property int status
+ * @property mixed session_date_id
+ * @property string token_number
  */
 class BookingSlot extends Model
 {
@@ -17,8 +18,8 @@ class BookingSlot extends Model
         return $this->hasOne('App\Models\Booking');
     }
 
-    public function working_session()
+    public function session_date()
     {
-        return $this->belongsTo('App\Models\WorkingSession');
+        return $this->belongsTo('App\Models\SessionDate');
     }
 }

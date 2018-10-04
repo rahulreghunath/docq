@@ -7,12 +7,12 @@ use App\Constants\Messages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddClinicRequest;
 use App\Http\Requests\AddDoctorRequest;
-use App\Http\Resources\ClinicResourceCollection;
-use App\Http\Resources\DoctorRegistrationCollection;
-use App\Http\Resources\QualificationResourceCollection;
-use App\Http\Resources\SpecializationResource;
-use App\Http\Resources\QualificationResource;
-use App\Http\Resources\SpecializationResourceCollection;
+use App\Http\Resources\Collections\ClinicResourceCollection;
+use App\Http\Resources\Collections\DoctorRegistrationCollection;
+use App\Http\Resources\Collections\QualificationResourceCollection;
+use App\Http\Resources\FormResource\SpecializationResource;
+use App\Http\Resources\FormResource\QualificationResource;
+use App\Http\Resources\Collections\SpecializationResourceCollection;
 use App\Models\Clinic;
 use App\Models\DoctorDetails;
 use App\Models\DoctorQualification;
@@ -51,7 +51,12 @@ class AdminController extends Controller
         $specialization->specialization_value = $validatedData['specialization'];
         $specialization->save();
 
-        return response()->json(jsonResponse(['message' => Messages::$SPECIALISATION_ADDED], Constants::$SUCCESS));
+        return response()->json(
+            jsonResponse(
+                ['message' => Messages::$SPECIALISATION_ADDED],
+                Constants::$SUCCESS
+            )
+        );
     }
 
     /**
@@ -79,7 +84,11 @@ class AdminController extends Controller
         $qualification->qualification_value = $validatedData['qualification'];
         $qualification->save();
 
-        return response()->json(jsonResponse(['message' => Messages::$QUALIFICATION_ADDED], Constants::$SUCCESS));
+        return response()->json(
+            jsonResponse(['message' => Messages::$QUALIFICATION_ADDED],
+                Constants::$SUCCESS
+            )
+        );
     }
 
     /**
@@ -127,7 +136,7 @@ class AdminController extends Controller
         $user->phone = $request['phone'];
         $user->email = $request['email'];
         $user->gender = $request['gender'];
-        $user->status = 1;
+        $user->status = Constants::$ACTIVE_USER;
         $user->profile_picture = 'http://localhost:8000/public/default-user.png';
         $user->save();
 
@@ -143,7 +152,7 @@ class AdminController extends Controller
         $login->email = $request['email'];
         $login->phone = $request['phone'];
         $login->password = bcrypt($request['phone']);
-        $login->user_category_id = 1;
+        $login->user_category_id = Constants::$DOCTOR_USER;
         $login->save();
 
         /**
@@ -198,7 +207,11 @@ class AdminController extends Controller
             ];
         }
 
-        return response()->json(jsonResponse($data, $doctor != null ? Constants::$SUCCESS : Constants::$FAILED));
+        return response()->json(
+            jsonResponse(
+                $data, $doctor != null ? Constants::$SUCCESS : Constants::$FAILED
+            )
+        );
     }
 
     /**
@@ -229,7 +242,11 @@ class AdminController extends Controller
             'message' => $stats == 1 ?: Messages::$DOCTOR_IMAGE_UPLOAD_FAILED,
         ];
 
-        return response()->json(jsonResponse($data, $stats == 1 ? Constants::$SUCCESS : Constants::$FAILED));
+        return response()->json(
+            jsonResponse(
+                $data, $stats == 1 ? Constants::$SUCCESS : Constants::$FAILED
+            )
+        );
     }
 
 
@@ -257,13 +274,18 @@ class AdminController extends Controller
             'message' => $clinic != false ? Messages::$CLINIC_ADDED : Messages::$ERROR_MESSAGE,
         ];
 
-        return response()->json(jsonResponse($data, $clinic != false ? Constants::$SUCCESS : Constants::$FAILED));
+        return response()->json(
+            jsonResponse(
+                $data, $clinic != false ? Constants::$SUCCESS : Constants::$FAILED
+            )
+        );
     }
+
 
     /**
      * Getting clinic details
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return ClinicResourceCollection
      */
     public function getClinicDetails(Request $request)
     {

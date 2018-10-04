@@ -54,7 +54,7 @@
                                     <td>{{ (specializations.meta.current_page * specializations.meta.per_page) -
                                         specializations.meta.per_page + index + 1}}
                                     </td>
-                                    <td>{{specialization.text}}</td>
+                                    <td>{{specialization.specialization_value}}</td>
                                     <td></td>
                                 </tr>
                             </template>
@@ -70,7 +70,6 @@
                     </b-card-body>
                 </b-card>
             </b-col>
-
         </b-row>
     </div>
 </template>

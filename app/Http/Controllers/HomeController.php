@@ -8,6 +8,7 @@ use App\Jobs\DoctorTimeScheduling;
 use App\Jobs\ScheduleTimingJob;
 use App\Models\BookingSlot;
 use App\Models\Registration;
+use App\Models\SessionDate;
 use App\Responses\AuthResponse;
 use App\User;
 use Carbon\Carbon;
@@ -45,13 +46,19 @@ class HomeController extends Controller
                     $startTime = new Carbon($workingSession->start_time);
                     $endTime = new Carbon($workingSession->end_time);
                     $slot = $startTime->diffInMinutes($endTime) / $workingSession->no_patients;
+
+                    $sessionDate = new SessionDate();
+                    $sessionDate->working_session_id = $workingSession->id;
+                    $sessionDate->date = $date->format('Y-m-d');
+                    $sessionDate->save();
+
                     for ($i = 0; $i < $workingSession->no_patients; $i++) {
                         $bookingSlot = new BookingSlot();
-                        $bookingSlot->working_session_id = $workingSession->id;
+                        $bookingSlot->session_date_id = $sessionDate->id;
                         $bookingSlot->start_time = $startTime->format('h:i:s');
                         $startTime->addMinute($slot);
                         $bookingSlot->end_time = $startTime->format('h:i:s');
-                        $bookingSlot->date = $date->format('Y-m-d');
+                        $bookingSlot->token_number = $i + 1;
                         $bookingSlot->status = Constants::$AVAILABLE_SLOT_STATUS;
                         $bookingSlot->save();
                     }

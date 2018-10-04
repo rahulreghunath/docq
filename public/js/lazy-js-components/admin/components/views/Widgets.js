@@ -1,6 +1,552 @@
-webpackJsonp([9],{
+webpackJsonp([10],{
 
-/***/ 1183:
+/***/ 1199:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var helpers = __webpack_require__(965);
+
+function filterByPosition(array, position) {
+	return helpers.where(array, function(v) {
+		return v.position === position;
+	});
+}
+
+function sortByWeight(array, reverse) {
+	array.forEach(function(v, i) {
+		v._tmpIndex_ = i;
+		return v;
+	});
+	array.sort(function(a, b) {
+		var v0 = reverse ? b : a;
+		var v1 = reverse ? a : b;
+		return v0.weight === v1.weight ?
+			v0._tmpIndex_ - v1._tmpIndex_ :
+			v0.weight - v1.weight;
+	});
+	array.forEach(function(v) {
+		delete v._tmpIndex_;
+	});
+}
+
+/**
+ * @interface ILayoutItem
+ * @prop {String} position - The position of the item in the chart layout. Possible values are
+ * 'left', 'top', 'right', 'bottom', and 'chartArea'
+ * @prop {Number} weight - The weight used to sort the item. Higher weights are further away from the chart area
+ * @prop {Boolean} fullWidth - if true, and the item is horizontal, then push vertical boxes down
+ * @prop {Function} isHorizontal - returns true if the layout item is horizontal (ie. top or bottom)
+ * @prop {Function} update - Takes two parameters: width and height. Returns size of item
+ * @prop {Function} getPadding -  Returns an object with padding on the edges
+ * @prop {Number} width - Width of item. Must be valid after update()
+ * @prop {Number} height - Height of item. Must be valid after update()
+ * @prop {Number} left - Left edge of the item. Set by layout system and cannot be used in update
+ * @prop {Number} top - Top edge of the item. Set by layout system and cannot be used in update
+ * @prop {Number} right - Right edge of the item. Set by layout system and cannot be used in update
+ * @prop {Number} bottom - Bottom edge of the item. Set by layout system and cannot be used in update
+ */
+
+// The layout service is very self explanatory.  It's responsible for the layout within a chart.
+// Scales, Legends and Plugins all rely on the layout service and can easily register to be placed anywhere they need
+// It is this service's responsibility of carrying out that layout.
+module.exports = {
+	defaults: {},
+
+	/**
+	 * Register a box to a chart.
+	 * A box is simply a reference to an object that requires layout. eg. Scales, Legend, Title.
+	 * @param {Chart} chart - the chart to use
+	 * @param {ILayoutItem} item - the item to add to be layed out
+	 */
+	addBox: function(chart, item) {
+		if (!chart.boxes) {
+			chart.boxes = [];
+		}
+
+		// initialize item with default values
+		item.fullWidth = item.fullWidth || false;
+		item.position = item.position || 'top';
+		item.weight = item.weight || 0;
+
+		chart.boxes.push(item);
+	},
+
+	/**
+	 * Remove a layoutItem from a chart
+	 * @param {Chart} chart - the chart to remove the box from
+	 * @param {Object} layoutItem - the item to remove from the layout
+	 */
+	removeBox: function(chart, layoutItem) {
+		var index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
+		if (index !== -1) {
+			chart.boxes.splice(index, 1);
+		}
+	},
+
+	/**
+	 * Sets (or updates) options on the given `item`.
+	 * @param {Chart} chart - the chart in which the item lives (or will be added to)
+	 * @param {Object} item - the item to configure with the given options
+	 * @param {Object} options - the new item options.
+	 */
+	configure: function(chart, item, options) {
+		var props = ['fullWidth', 'position', 'weight'];
+		var ilen = props.length;
+		var i = 0;
+		var prop;
+
+		for (; i < ilen; ++i) {
+			prop = props[i];
+			if (options.hasOwnProperty(prop)) {
+				item[prop] = options[prop];
+			}
+		}
+	},
+
+	/**
+	 * Fits boxes of the given chart into the given size by having each box measure itself
+	 * then running a fitting algorithm
+	 * @param {Chart} chart - the chart
+	 * @param {Number} width - the width to fit into
+	 * @param {Number} height - the height to fit into
+	 */
+	update: function(chart, width, height) {
+		if (!chart) {
+			return;
+		}
+
+		var layoutOptions = chart.options.layout || {};
+		var padding = helpers.options.toPadding(layoutOptions.padding);
+		var leftPadding = padding.left;
+		var rightPadding = padding.right;
+		var topPadding = padding.top;
+		var bottomPadding = padding.bottom;
+
+		var leftBoxes = filterByPosition(chart.boxes, 'left');
+		var rightBoxes = filterByPosition(chart.boxes, 'right');
+		var topBoxes = filterByPosition(chart.boxes, 'top');
+		var bottomBoxes = filterByPosition(chart.boxes, 'bottom');
+		var chartAreaBoxes = filterByPosition(chart.boxes, 'chartArea');
+
+		// Sort boxes by weight. A higher weight is further away from the chart area
+		sortByWeight(leftBoxes, true);
+		sortByWeight(rightBoxes, false);
+		sortByWeight(topBoxes, true);
+		sortByWeight(bottomBoxes, false);
+
+		// Essentially we now have any number of boxes on each of the 4 sides.
+		// Our canvas looks like the following.
+		// The areas L1 and L2 are the left axes. R1 is the right axis, T1 is the top axis and
+		// B1 is the bottom axis
+		// There are also 4 quadrant-like locations (left to right instead of clockwise) reserved for chart overlays
+		// These locations are single-box locations only, when trying to register a chartArea location that is already taken,
+		// an error will be thrown.
+		//
+		// |----------------------------------------------------|
+		// |                  T1 (Full Width)                   |
+		// |----------------------------------------------------|
+		// |    |    |                 T2                  |    |
+		// |    |----|-------------------------------------|----|
+		// |    |    | C1 |                           | C2 |    |
+		// |    |    |----|                           |----|    |
+		// |    |    |                                     |    |
+		// | L1 | L2 |           ChartArea (C0)            | R1 |
+		// |    |    |                                     |    |
+		// |    |    |----|                           |----|    |
+		// |    |    | C3 |                           | C4 |    |
+		// |    |----|-------------------------------------|----|
+		// |    |    |                 B1                  |    |
+		// |----------------------------------------------------|
+		// |                  B2 (Full Width)                   |
+		// |----------------------------------------------------|
+		//
+		// What we do to find the best sizing, we do the following
+		// 1. Determine the minimum size of the chart area.
+		// 2. Split the remaining width equally between each vertical axis
+		// 3. Split the remaining height equally between each horizontal axis
+		// 4. Give each layout the maximum size it can be. The layout will return it's minimum size
+		// 5. Adjust the sizes of each axis based on it's minimum reported size.
+		// 6. Refit each axis
+		// 7. Position each axis in the final location
+		// 8. Tell the chart the final location of the chart area
+		// 9. Tell any axes that overlay the chart area the positions of the chart area
+
+		// Step 1
+		var chartWidth = width - leftPadding - rightPadding;
+		var chartHeight = height - topPadding - bottomPadding;
+		var chartAreaWidth = chartWidth / 2; // min 50%
+		var chartAreaHeight = chartHeight / 2; // min 50%
+
+		// Step 2
+		var verticalBoxWidth = (width - chartAreaWidth) / (leftBoxes.length + rightBoxes.length);
+
+		// Step 3
+		var horizontalBoxHeight = (height - chartAreaHeight) / (topBoxes.length + bottomBoxes.length);
+
+		// Step 4
+		var maxChartAreaWidth = chartWidth;
+		var maxChartAreaHeight = chartHeight;
+		var minBoxSizes = [];
+
+		function getMinimumBoxSize(box) {
+			var minSize;
+			var isHorizontal = box.isHorizontal();
+
+			if (isHorizontal) {
+				minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, horizontalBoxHeight);
+				maxChartAreaHeight -= minSize.height;
+			} else {
+				minSize = box.update(verticalBoxWidth, maxChartAreaHeight);
+				maxChartAreaWidth -= minSize.width;
+			}
+
+			minBoxSizes.push({
+				horizontal: isHorizontal,
+				minSize: minSize,
+				box: box,
+			});
+		}
+
+		helpers.each(leftBoxes.concat(rightBoxes, topBoxes, bottomBoxes), getMinimumBoxSize);
+
+		// If a horizontal box has padding, we move the left boxes over to avoid ugly charts (see issue #2478)
+		var maxHorizontalLeftPadding = 0;
+		var maxHorizontalRightPadding = 0;
+		var maxVerticalTopPadding = 0;
+		var maxVerticalBottomPadding = 0;
+
+		helpers.each(topBoxes.concat(bottomBoxes), function(horizontalBox) {
+			if (horizontalBox.getPadding) {
+				var boxPadding = horizontalBox.getPadding();
+				maxHorizontalLeftPadding = Math.max(maxHorizontalLeftPadding, boxPadding.left);
+				maxHorizontalRightPadding = Math.max(maxHorizontalRightPadding, boxPadding.right);
+			}
+		});
+
+		helpers.each(leftBoxes.concat(rightBoxes), function(verticalBox) {
+			if (verticalBox.getPadding) {
+				var boxPadding = verticalBox.getPadding();
+				maxVerticalTopPadding = Math.max(maxVerticalTopPadding, boxPadding.top);
+				maxVerticalBottomPadding = Math.max(maxVerticalBottomPadding, boxPadding.bottom);
+			}
+		});
+
+		// At this point, maxChartAreaHeight and maxChartAreaWidth are the size the chart area could
+		// be if the axes are drawn at their minimum sizes.
+		// Steps 5 & 6
+		var totalLeftBoxesWidth = leftPadding;
+		var totalRightBoxesWidth = rightPadding;
+		var totalTopBoxesHeight = topPadding;
+		var totalBottomBoxesHeight = bottomPadding;
+
+		// Function to fit a box
+		function fitBox(box) {
+			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minBox) {
+				return minBox.box === box;
+			});
+
+			if (minBoxSize) {
+				if (box.isHorizontal()) {
+					var scaleMargin = {
+						left: Math.max(totalLeftBoxesWidth, maxHorizontalLeftPadding),
+						right: Math.max(totalRightBoxesWidth, maxHorizontalRightPadding),
+						top: 0,
+						bottom: 0
+					};
+
+					// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
+					// on the margin. Sometimes they need to increase in size slightly
+					box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
+				} else {
+					box.update(minBoxSize.minSize.width, maxChartAreaHeight);
+				}
+			}
+		}
+
+		// Update, and calculate the left and right margins for the horizontal boxes
+		helpers.each(leftBoxes.concat(rightBoxes), fitBox);
+
+		helpers.each(leftBoxes, function(box) {
+			totalLeftBoxesWidth += box.width;
+		});
+
+		helpers.each(rightBoxes, function(box) {
+			totalRightBoxesWidth += box.width;
+		});
+
+		// Set the Left and Right margins for the horizontal boxes
+		helpers.each(topBoxes.concat(bottomBoxes), fitBox);
+
+		// Figure out how much margin is on the top and bottom of the vertical boxes
+		helpers.each(topBoxes, function(box) {
+			totalTopBoxesHeight += box.height;
+		});
+
+		helpers.each(bottomBoxes, function(box) {
+			totalBottomBoxesHeight += box.height;
+		});
+
+		function finalFitVerticalBox(box) {
+			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minSize) {
+				return minSize.box === box;
+			});
+
+			var scaleMargin = {
+				left: 0,
+				right: 0,
+				top: totalTopBoxesHeight,
+				bottom: totalBottomBoxesHeight
+			};
+
+			if (minBoxSize) {
+				box.update(minBoxSize.minSize.width, maxChartAreaHeight, scaleMargin);
+			}
+		}
+
+		// Let the left layout know the final margin
+		helpers.each(leftBoxes.concat(rightBoxes), finalFitVerticalBox);
+
+		// Recalculate because the size of each layout might have changed slightly due to the margins (label rotation for instance)
+		totalLeftBoxesWidth = leftPadding;
+		totalRightBoxesWidth = rightPadding;
+		totalTopBoxesHeight = topPadding;
+		totalBottomBoxesHeight = bottomPadding;
+
+		helpers.each(leftBoxes, function(box) {
+			totalLeftBoxesWidth += box.width;
+		});
+
+		helpers.each(rightBoxes, function(box) {
+			totalRightBoxesWidth += box.width;
+		});
+
+		helpers.each(topBoxes, function(box) {
+			totalTopBoxesHeight += box.height;
+		});
+		helpers.each(bottomBoxes, function(box) {
+			totalBottomBoxesHeight += box.height;
+		});
+
+		// We may be adding some padding to account for rotated x axis labels
+		var leftPaddingAddition = Math.max(maxHorizontalLeftPadding - totalLeftBoxesWidth, 0);
+		totalLeftBoxesWidth += leftPaddingAddition;
+		totalRightBoxesWidth += Math.max(maxHorizontalRightPadding - totalRightBoxesWidth, 0);
+
+		var topPaddingAddition = Math.max(maxVerticalTopPadding - totalTopBoxesHeight, 0);
+		totalTopBoxesHeight += topPaddingAddition;
+		totalBottomBoxesHeight += Math.max(maxVerticalBottomPadding - totalBottomBoxesHeight, 0);
+
+		// Figure out if our chart area changed. This would occur if the dataset layout label rotation
+		// changed due to the application of the margins in step 6. Since we can only get bigger, this is safe to do
+		// without calling `fit` again
+		var newMaxChartAreaHeight = height - totalTopBoxesHeight - totalBottomBoxesHeight;
+		var newMaxChartAreaWidth = width - totalLeftBoxesWidth - totalRightBoxesWidth;
+
+		if (newMaxChartAreaWidth !== maxChartAreaWidth || newMaxChartAreaHeight !== maxChartAreaHeight) {
+			helpers.each(leftBoxes, function(box) {
+				box.height = newMaxChartAreaHeight;
+			});
+
+			helpers.each(rightBoxes, function(box) {
+				box.height = newMaxChartAreaHeight;
+			});
+
+			helpers.each(topBoxes, function(box) {
+				if (!box.fullWidth) {
+					box.width = newMaxChartAreaWidth;
+				}
+			});
+
+			helpers.each(bottomBoxes, function(box) {
+				if (!box.fullWidth) {
+					box.width = newMaxChartAreaWidth;
+				}
+			});
+
+			maxChartAreaHeight = newMaxChartAreaHeight;
+			maxChartAreaWidth = newMaxChartAreaWidth;
+		}
+
+		// Step 7 - Position the boxes
+		var left = leftPadding + leftPaddingAddition;
+		var top = topPadding + topPaddingAddition;
+
+		function placeBox(box) {
+			if (box.isHorizontal()) {
+				box.left = box.fullWidth ? leftPadding : totalLeftBoxesWidth;
+				box.right = box.fullWidth ? width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
+				box.top = top;
+				box.bottom = top + box.height;
+
+				// Move to next point
+				top = box.bottom;
+
+			} else {
+
+				box.left = left;
+				box.right = left + box.width;
+				box.top = totalTopBoxesHeight;
+				box.bottom = totalTopBoxesHeight + maxChartAreaHeight;
+
+				// Move to next point
+				left = box.right;
+			}
+		}
+
+		helpers.each(leftBoxes.concat(topBoxes), placeBox);
+
+		// Account for chart width and height
+		left += maxChartAreaWidth;
+		top += maxChartAreaHeight;
+
+		helpers.each(rightBoxes, placeBox);
+		helpers.each(bottomBoxes, placeBox);
+
+		// Step 8
+		chart.chartArea = {
+			left: totalLeftBoxesWidth,
+			top: totalTopBoxesHeight,
+			right: totalLeftBoxesWidth + maxChartAreaWidth,
+			bottom: totalTopBoxesHeight + maxChartAreaHeight
+		};
+
+		// Step 9
+		helpers.each(chartAreaBoxes, function(box) {
+			box.left = chart.chartArea.left;
+			box.top = chart.chartArea.top;
+			box.right = chart.chartArea.right;
+			box.bottom = chart.chartArea.bottom;
+
+			box.update(maxChartAreaWidth, maxChartAreaHeight);
+		});
+	}
+};
+
+
+/***/ }),
+
+/***/ 1200:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var helpers = __webpack_require__(965);
+
+/**
+ * Namespace to hold static tick generation functions
+ * @namespace Chart.Ticks
+ */
+module.exports = {
+	/**
+	 * Namespace to hold formatters for different types of ticks
+	 * @namespace Chart.Ticks.formatters
+	 */
+	formatters: {
+		/**
+		 * Formatter for value labels
+		 * @method Chart.Ticks.formatters.values
+		 * @param value the value to display
+		 * @return {String|Array} the label to display
+		 */
+		values: function(value) {
+			return helpers.isArray(value) ? value : '' + value;
+		},
+
+		/**
+		 * Formatter for linear numeric ticks
+		 * @method Chart.Ticks.formatters.linear
+		 * @param tickValue {Number} the value to be formatted
+		 * @param index {Number} the position of the tickValue parameter in the ticks array
+		 * @param ticks {Array<Number>} the list of ticks being converted
+		 * @return {String} string representation of the tickValue parameter
+		 */
+		linear: function(tickValue, index, ticks) {
+			// If we have lots of ticks, don't use the ones
+			var delta = ticks.length > 3 ? ticks[2] - ticks[1] : ticks[1] - ticks[0];
+
+			// If we have a number like 2.5 as the delta, figure out how many decimal places we need
+			if (Math.abs(delta) > 1) {
+				if (tickValue !== Math.floor(tickValue)) {
+					// not an integer
+					delta = tickValue - Math.floor(tickValue);
+				}
+			}
+
+			var logDelta = helpers.log10(Math.abs(delta));
+			var tickString = '';
+
+			if (tickValue !== 0) {
+				var numDecimal = -1 * Math.floor(logDelta);
+				numDecimal = Math.max(Math.min(numDecimal, 20), 0); // toFixed has a max of 20 decimal places
+				tickString = tickValue.toFixed(numDecimal);
+			} else {
+				tickString = '0'; // never show decimal places for 0
+			}
+
+			return tickString;
+		},
+
+		logarithmic: function(tickValue, index, ticks) {
+			var remain = tickValue / (Math.pow(10, Math.floor(helpers.log10(tickValue))));
+
+			if (tickValue === 0) {
+				return '0';
+			} else if (remain === 1 || remain === 2 || remain === 5 || index === 0 || index === ticks.length - 1) {
+				return tickValue.toExponential();
+			}
+			return '';
+		}
+	}
+};
+
+
+/***/ }),
+
+/***/ 1207:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export VueCharts */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__ = __webpack_require__(1400);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseCharts__ = __webpack_require__(1401);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a"]; });
+/* unused harmony reexport HorizontalBar */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h"]; });
+/* unused harmony reexport Bubble */
+/* unused harmony reexport Scatter */
+/* unused harmony reexport mixins */
+/* unused harmony reexport generateChart */
+
+
+var VueCharts = {
+  Bar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a" /* Bar */],
+  HorizontalBar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["d" /* HorizontalBar */],
+  Doughnut: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c" /* Doughnut */],
+  Line: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e" /* Line */],
+  Pie: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f" /* Pie */],
+  PolarArea: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g" /* PolarArea */],
+  Radar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h" /* Radar */],
+  Bubble: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["b" /* Bubble */],
+  Scatter: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["i" /* Scatter */],
+  mixins: __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__["a" /* default */],
+  generateChart: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["j" /* generateChart */],
+  render: function render() {
+    return console.error('[vue-chartjs]: This is not a vue component. It is the whole object containing all vue components. Please import the named export or access the components over the dot notation. For more info visit https://vue-chartjs.org/#/home?id=quick-start');
+  }
+};
+/* unused harmony default export */ var _unused_webpack_default_export = (VueCharts);
+
+
+/***/ }),
+
+/***/ 1208:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -347,7 +893,7 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1184:
+/***/ 1209:
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -489,13 +1035,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1194:
+/***/ 1221:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -567,13 +1113,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1195:
+/***/ 1222:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -707,13 +1253,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1196:
+/***/ 1223:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -771,13 +1317,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1197:
+/***/ 1224:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -835,13 +1381,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1198:
+/***/ 1225:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -962,13 +1508,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1199:
+/***/ 1226:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1026,13 +1572,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1200:
+/***/ 1227:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1135,13 +1681,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1201:
+/***/ 1228:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1199,13 +1745,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1202:
+/***/ 1229:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1309,13 +1855,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1203:
+/***/ 1230:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1446,13 +1992,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1204:
+/***/ 1231:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1541,13 +2087,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1205:
+/***/ 1232:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1604,13 +2150,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1206:
+/***/ 1233:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1728,13 +2274,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1207:
+/***/ 1234:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1852,13 +2398,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1208:
+/***/ 1235:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -1965,13 +2511,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1209:
+/***/ 1236:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2121,13 +2667,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1210:
+/***/ 1237:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2214,13 +2760,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1211:
+/***/ 1238:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2398,13 +2944,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1212:
+/***/ 1239:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2466,13 +3012,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1213:
+/***/ 1240:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2551,13 +3097,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1214:
+/***/ 1241:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2616,13 +3162,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1215:
+/***/ 1242:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2697,13 +3243,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1216:
+/***/ 1243:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2778,13 +3324,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1217:
+/***/ 1244:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2859,13 +3405,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1218:
+/***/ 1245:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -2963,13 +3509,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1219:
+/***/ 1246:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3068,13 +3614,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1220:
+/***/ 1247:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3140,13 +3686,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1221:
+/***/ 1248:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3208,13 +3754,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1222:
+/***/ 1249:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3280,13 +3826,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1223:
+/***/ 1250:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3352,13 +3898,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1224:
+/***/ 1251:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3419,13 +3965,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1225:
+/***/ 1252:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3491,13 +4037,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1226:
+/***/ 1253:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3567,13 +4113,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1227:
+/***/ 1254:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3664,13 +4210,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1228:
+/***/ 1255:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3761,13 +4307,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1229:
+/***/ 1256:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3849,13 +4395,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1230:
+/***/ 1257:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -3934,13 +4480,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1231:
+/***/ 1258:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4005,13 +4551,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1232:
+/***/ 1259:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4116,13 +4662,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1233:
+/***/ 1260:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4230,13 +4776,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1234:
+/***/ 1261:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4295,13 +4841,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1235:
+/***/ 1262:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4383,13 +4929,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1236:
+/***/ 1263:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4462,13 +5008,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1237:
+/***/ 1264:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4545,13 +5091,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1238:
+/***/ 1265:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4625,13 +5171,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1239:
+/***/ 1266:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4706,13 +5252,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1240:
+/***/ 1267:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4788,13 +5334,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1241:
+/***/ 1268:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -4916,13 +5462,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1242:
+/***/ 1269:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5045,13 +5591,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1243:
+/***/ 1270:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5147,13 +5693,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1244:
+/***/ 1271:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5276,13 +5822,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1245:
+/***/ 1272:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5435,13 +5981,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1246:
+/***/ 1273:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5550,13 +6096,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1247:
+/***/ 1274:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5650,13 +6196,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1248:
+/***/ 1275:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5737,13 +6283,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1249:
+/***/ 1276:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5874,13 +6420,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1250:
+/***/ 1277:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -5948,13 +6494,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1251:
+/***/ 1278:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6045,13 +6591,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1252:
+/***/ 1279:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6132,13 +6678,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1253:
+/***/ 1280:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6226,13 +6772,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1254:
+/***/ 1281:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6318,13 +6864,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1255:
+/***/ 1282:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6433,13 +6979,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1256:
+/***/ 1283:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6564,13 +7110,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1257:
+/***/ 1284:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6650,13 +7196,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1258:
+/***/ 1285:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6742,13 +7288,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1259:
+/***/ 1286:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6883,13 +7429,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1260:
+/***/ 1287:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -6958,13 +7504,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1261:
+/***/ 1288:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7081,13 +7627,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1262:
+/***/ 1289:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7183,13 +7729,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1263:
+/***/ 1290:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7300,13 +7846,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1264:
+/***/ 1291:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7369,13 +7915,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1265:
+/***/ 1292:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7464,13 +8010,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1266:
+/***/ 1293:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7550,13 +8096,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1267:
+/***/ 1294:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7659,13 +8205,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1268:
+/***/ 1295:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7824,13 +8370,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1269:
+/***/ 1296:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7911,13 +8457,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1270:
+/***/ 1297:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -7998,13 +8544,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1271:
+/***/ 1298:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8063,13 +8609,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1272:
+/***/ 1299:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8161,13 +8707,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1273:
+/***/ 1300:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8228,13 +8774,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1274:
+/***/ 1301:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8356,13 +8902,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1275:
+/***/ 1302:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8448,13 +8994,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1276:
+/***/ 1303:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8540,13 +9086,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1277:
+/***/ 1304:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8605,13 +9151,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1278:
+/***/ 1305:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8734,13 +9280,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1279:
+/***/ 1306:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8865,13 +9411,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1280:
+/***/ 1307:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -8935,13 +9481,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1281:
+/***/ 1308:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9001,13 +9547,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1282:
+/***/ 1309:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9081,13 +9627,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1283:
+/***/ 1310:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9268,13 +9814,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1284:
+/***/ 1311:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9371,13 +9917,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1285:
+/***/ 1312:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9436,13 +9982,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1286:
+/***/ 1313:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9512,13 +10058,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1287:
+/***/ 1314:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9673,13 +10219,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1288:
+/***/ 1315:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9851,13 +10397,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1289:
+/***/ 1316:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -9924,13 +10470,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1290:
+/***/ 1317:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10040,13 +10586,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1291:
+/***/ 1318:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10156,13 +10702,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1292:
+/***/ 1319:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10249,13 +10795,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1293:
+/***/ 1320:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10323,13 +10869,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1294:
+/***/ 1321:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10387,13 +10933,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1295:
+/***/ 1322:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10521,13 +11067,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1296:
+/***/ 1323:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10615,13 +11161,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1297:
+/***/ 1324:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10687,13 +11233,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1298:
+/***/ 1325:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10808,13 +11354,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1299:
+/***/ 1326:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10880,13 +11426,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1300:
+/***/ 1327:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -10947,13 +11493,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1301:
+/***/ 1328:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11074,12 +11620,12 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1302:
+/***/ 1329:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11173,13 +11719,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1303:
+/***/ 1330:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11269,13 +11815,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1304:
+/***/ 1331:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11332,13 +11878,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1305:
+/***/ 1332:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11395,13 +11941,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1306:
+/***/ 1333:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js language configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11519,13 +12065,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1307:
+/***/ 1334:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11675,13 +12221,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1308:
+/***/ 1335:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11778,13 +12324,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1309:
+/***/ 1336:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11841,13 +12387,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1310:
+/***/ 1337:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11904,13 +12450,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1311:
+/***/ 1338:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -11988,13 +12534,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1312:
+/***/ 1339:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -12061,13 +12607,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1313:
+/***/ 1340:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -12126,13 +12672,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1314:
+/***/ 1341:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -12241,13 +12787,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1315:
+/***/ 1342:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -12349,13 +12895,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1316:
+/***/ 1343:
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -12457,12 +13003,12 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /***/ }),
 
-/***/ 1367:
+/***/ 1381:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* MIT license */
-var convert = __webpack_require__(1393);
-var string = __webpack_require__(1395);
+var convert = __webpack_require__(1408);
+var string = __webpack_require__(1410);
 
 var Color = function (obj) {
 	if (obj instanceof Color) {
@@ -12949,13 +13495,13 @@ module.exports = Color;
 
 /***/ }),
 
-/***/ 1368:
+/***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 /**
  * Helper function to get relative position for an event
@@ -13287,15 +13833,15 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1369:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
-var basic = __webpack_require__(1401);
-var dom = __webpack_require__(1402);
+var helpers = __webpack_require__(965);
+var basic = __webpack_require__(1416);
+var dom = __webpack_require__(1417);
 
 // @TODO Make possible to select another platform at build time.
 var implementation = dom._enabled ? dom : basic;
@@ -13369,14 +13915,14 @@ module.exports = helpers.extend({
 
 /***/ }),
 
-/***/ 1370:
+/***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	plugins: {}
@@ -13759,256 +14305,256 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1388:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 1194,
-	"./af.js": 1194,
-	"./ar": 1195,
-	"./ar-dz": 1196,
-	"./ar-dz.js": 1196,
-	"./ar-kw": 1197,
-	"./ar-kw.js": 1197,
-	"./ar-ly": 1198,
-	"./ar-ly.js": 1198,
-	"./ar-ma": 1199,
-	"./ar-ma.js": 1199,
-	"./ar-sa": 1200,
-	"./ar-sa.js": 1200,
-	"./ar-tn": 1201,
-	"./ar-tn.js": 1201,
-	"./ar.js": 1195,
-	"./az": 1202,
-	"./az.js": 1202,
-	"./be": 1203,
-	"./be.js": 1203,
-	"./bg": 1204,
-	"./bg.js": 1204,
-	"./bm": 1205,
-	"./bm.js": 1205,
-	"./bn": 1206,
-	"./bn.js": 1206,
-	"./bo": 1207,
-	"./bo.js": 1207,
-	"./br": 1208,
-	"./br.js": 1208,
-	"./bs": 1209,
-	"./bs.js": 1209,
-	"./ca": 1210,
-	"./ca.js": 1210,
-	"./cs": 1211,
-	"./cs.js": 1211,
-	"./cv": 1212,
-	"./cv.js": 1212,
-	"./cy": 1213,
-	"./cy.js": 1213,
-	"./da": 1214,
-	"./da.js": 1214,
-	"./de": 1215,
-	"./de-at": 1216,
-	"./de-at.js": 1216,
-	"./de-ch": 1217,
-	"./de-ch.js": 1217,
-	"./de.js": 1215,
-	"./dv": 1218,
-	"./dv.js": 1218,
-	"./el": 1219,
-	"./el.js": 1219,
-	"./en-au": 1220,
-	"./en-au.js": 1220,
-	"./en-ca": 1221,
-	"./en-ca.js": 1221,
-	"./en-gb": 1222,
-	"./en-gb.js": 1222,
-	"./en-ie": 1223,
-	"./en-ie.js": 1223,
-	"./en-il": 1224,
-	"./en-il.js": 1224,
-	"./en-nz": 1225,
-	"./en-nz.js": 1225,
-	"./eo": 1226,
-	"./eo.js": 1226,
-	"./es": 1227,
-	"./es-do": 1228,
-	"./es-do.js": 1228,
-	"./es-us": 1229,
-	"./es-us.js": 1229,
-	"./es.js": 1227,
-	"./et": 1230,
-	"./et.js": 1230,
-	"./eu": 1231,
-	"./eu.js": 1231,
-	"./fa": 1232,
-	"./fa.js": 1232,
-	"./fi": 1233,
-	"./fi.js": 1233,
-	"./fo": 1234,
-	"./fo.js": 1234,
-	"./fr": 1235,
-	"./fr-ca": 1236,
-	"./fr-ca.js": 1236,
-	"./fr-ch": 1237,
-	"./fr-ch.js": 1237,
-	"./fr.js": 1235,
-	"./fy": 1238,
-	"./fy.js": 1238,
-	"./gd": 1239,
-	"./gd.js": 1239,
-	"./gl": 1240,
-	"./gl.js": 1240,
-	"./gom-latn": 1241,
-	"./gom-latn.js": 1241,
-	"./gu": 1242,
-	"./gu.js": 1242,
-	"./he": 1243,
-	"./he.js": 1243,
-	"./hi": 1244,
-	"./hi.js": 1244,
-	"./hr": 1245,
-	"./hr.js": 1245,
-	"./hu": 1246,
-	"./hu.js": 1246,
-	"./hy-am": 1247,
-	"./hy-am.js": 1247,
-	"./id": 1248,
-	"./id.js": 1248,
-	"./is": 1249,
-	"./is.js": 1249,
-	"./it": 1250,
-	"./it.js": 1250,
-	"./ja": 1251,
-	"./ja.js": 1251,
-	"./jv": 1252,
-	"./jv.js": 1252,
-	"./ka": 1253,
-	"./ka.js": 1253,
-	"./kk": 1254,
-	"./kk.js": 1254,
-	"./km": 1255,
-	"./km.js": 1255,
-	"./kn": 1256,
-	"./kn.js": 1256,
-	"./ko": 1257,
-	"./ko.js": 1257,
-	"./ky": 1258,
-	"./ky.js": 1258,
-	"./lb": 1259,
-	"./lb.js": 1259,
-	"./lo": 1260,
-	"./lo.js": 1260,
-	"./lt": 1261,
-	"./lt.js": 1261,
-	"./lv": 1262,
-	"./lv.js": 1262,
-	"./me": 1263,
-	"./me.js": 1263,
-	"./mi": 1264,
-	"./mi.js": 1264,
-	"./mk": 1265,
-	"./mk.js": 1265,
-	"./ml": 1266,
-	"./ml.js": 1266,
-	"./mn": 1267,
-	"./mn.js": 1267,
-	"./mr": 1268,
-	"./mr.js": 1268,
-	"./ms": 1269,
-	"./ms-my": 1270,
-	"./ms-my.js": 1270,
-	"./ms.js": 1269,
-	"./mt": 1271,
-	"./mt.js": 1271,
-	"./my": 1272,
-	"./my.js": 1272,
-	"./nb": 1273,
-	"./nb.js": 1273,
-	"./ne": 1274,
-	"./ne.js": 1274,
-	"./nl": 1275,
-	"./nl-be": 1276,
-	"./nl-be.js": 1276,
-	"./nl.js": 1275,
-	"./nn": 1277,
-	"./nn.js": 1277,
-	"./pa-in": 1278,
-	"./pa-in.js": 1278,
-	"./pl": 1279,
-	"./pl.js": 1279,
-	"./pt": 1280,
-	"./pt-br": 1281,
-	"./pt-br.js": 1281,
-	"./pt.js": 1280,
-	"./ro": 1282,
-	"./ro.js": 1282,
-	"./ru": 1283,
-	"./ru.js": 1283,
-	"./sd": 1284,
-	"./sd.js": 1284,
-	"./se": 1285,
-	"./se.js": 1285,
-	"./si": 1286,
-	"./si.js": 1286,
-	"./sk": 1287,
-	"./sk.js": 1287,
-	"./sl": 1288,
-	"./sl.js": 1288,
-	"./sq": 1289,
-	"./sq.js": 1289,
-	"./sr": 1290,
-	"./sr-cyrl": 1291,
-	"./sr-cyrl.js": 1291,
-	"./sr.js": 1290,
-	"./ss": 1292,
-	"./ss.js": 1292,
-	"./sv": 1293,
-	"./sv.js": 1293,
-	"./sw": 1294,
-	"./sw.js": 1294,
-	"./ta": 1295,
-	"./ta.js": 1295,
-	"./te": 1296,
-	"./te.js": 1296,
-	"./tet": 1297,
-	"./tet.js": 1297,
-	"./tg": 1298,
-	"./tg.js": 1298,
-	"./th": 1299,
-	"./th.js": 1299,
-	"./tl-ph": 1300,
-	"./tl-ph.js": 1300,
-	"./tlh": 1301,
-	"./tlh.js": 1301,
-	"./tr": 1302,
-	"./tr.js": 1302,
-	"./tzl": 1303,
-	"./tzl.js": 1303,
-	"./tzm": 1304,
-	"./tzm-latn": 1305,
-	"./tzm-latn.js": 1305,
-	"./tzm.js": 1304,
-	"./ug-cn": 1306,
-	"./ug-cn.js": 1306,
-	"./uk": 1307,
-	"./uk.js": 1307,
-	"./ur": 1308,
-	"./ur.js": 1308,
-	"./uz": 1309,
-	"./uz-latn": 1310,
-	"./uz-latn.js": 1310,
-	"./uz.js": 1309,
-	"./vi": 1311,
-	"./vi.js": 1311,
-	"./x-pseudo": 1312,
-	"./x-pseudo.js": 1312,
-	"./yo": 1313,
-	"./yo.js": 1313,
-	"./zh-cn": 1314,
-	"./zh-cn.js": 1314,
-	"./zh-hk": 1315,
-	"./zh-hk.js": 1315,
-	"./zh-tw": 1316,
-	"./zh-tw.js": 1316
+	"./af": 1221,
+	"./af.js": 1221,
+	"./ar": 1222,
+	"./ar-dz": 1223,
+	"./ar-dz.js": 1223,
+	"./ar-kw": 1224,
+	"./ar-kw.js": 1224,
+	"./ar-ly": 1225,
+	"./ar-ly.js": 1225,
+	"./ar-ma": 1226,
+	"./ar-ma.js": 1226,
+	"./ar-sa": 1227,
+	"./ar-sa.js": 1227,
+	"./ar-tn": 1228,
+	"./ar-tn.js": 1228,
+	"./ar.js": 1222,
+	"./az": 1229,
+	"./az.js": 1229,
+	"./be": 1230,
+	"./be.js": 1230,
+	"./bg": 1231,
+	"./bg.js": 1231,
+	"./bm": 1232,
+	"./bm.js": 1232,
+	"./bn": 1233,
+	"./bn.js": 1233,
+	"./bo": 1234,
+	"./bo.js": 1234,
+	"./br": 1235,
+	"./br.js": 1235,
+	"./bs": 1236,
+	"./bs.js": 1236,
+	"./ca": 1237,
+	"./ca.js": 1237,
+	"./cs": 1238,
+	"./cs.js": 1238,
+	"./cv": 1239,
+	"./cv.js": 1239,
+	"./cy": 1240,
+	"./cy.js": 1240,
+	"./da": 1241,
+	"./da.js": 1241,
+	"./de": 1242,
+	"./de-at": 1243,
+	"./de-at.js": 1243,
+	"./de-ch": 1244,
+	"./de-ch.js": 1244,
+	"./de.js": 1242,
+	"./dv": 1245,
+	"./dv.js": 1245,
+	"./el": 1246,
+	"./el.js": 1246,
+	"./en-au": 1247,
+	"./en-au.js": 1247,
+	"./en-ca": 1248,
+	"./en-ca.js": 1248,
+	"./en-gb": 1249,
+	"./en-gb.js": 1249,
+	"./en-ie": 1250,
+	"./en-ie.js": 1250,
+	"./en-il": 1251,
+	"./en-il.js": 1251,
+	"./en-nz": 1252,
+	"./en-nz.js": 1252,
+	"./eo": 1253,
+	"./eo.js": 1253,
+	"./es": 1254,
+	"./es-do": 1255,
+	"./es-do.js": 1255,
+	"./es-us": 1256,
+	"./es-us.js": 1256,
+	"./es.js": 1254,
+	"./et": 1257,
+	"./et.js": 1257,
+	"./eu": 1258,
+	"./eu.js": 1258,
+	"./fa": 1259,
+	"./fa.js": 1259,
+	"./fi": 1260,
+	"./fi.js": 1260,
+	"./fo": 1261,
+	"./fo.js": 1261,
+	"./fr": 1262,
+	"./fr-ca": 1263,
+	"./fr-ca.js": 1263,
+	"./fr-ch": 1264,
+	"./fr-ch.js": 1264,
+	"./fr.js": 1262,
+	"./fy": 1265,
+	"./fy.js": 1265,
+	"./gd": 1266,
+	"./gd.js": 1266,
+	"./gl": 1267,
+	"./gl.js": 1267,
+	"./gom-latn": 1268,
+	"./gom-latn.js": 1268,
+	"./gu": 1269,
+	"./gu.js": 1269,
+	"./he": 1270,
+	"./he.js": 1270,
+	"./hi": 1271,
+	"./hi.js": 1271,
+	"./hr": 1272,
+	"./hr.js": 1272,
+	"./hu": 1273,
+	"./hu.js": 1273,
+	"./hy-am": 1274,
+	"./hy-am.js": 1274,
+	"./id": 1275,
+	"./id.js": 1275,
+	"./is": 1276,
+	"./is.js": 1276,
+	"./it": 1277,
+	"./it.js": 1277,
+	"./ja": 1278,
+	"./ja.js": 1278,
+	"./jv": 1279,
+	"./jv.js": 1279,
+	"./ka": 1280,
+	"./ka.js": 1280,
+	"./kk": 1281,
+	"./kk.js": 1281,
+	"./km": 1282,
+	"./km.js": 1282,
+	"./kn": 1283,
+	"./kn.js": 1283,
+	"./ko": 1284,
+	"./ko.js": 1284,
+	"./ky": 1285,
+	"./ky.js": 1285,
+	"./lb": 1286,
+	"./lb.js": 1286,
+	"./lo": 1287,
+	"./lo.js": 1287,
+	"./lt": 1288,
+	"./lt.js": 1288,
+	"./lv": 1289,
+	"./lv.js": 1289,
+	"./me": 1290,
+	"./me.js": 1290,
+	"./mi": 1291,
+	"./mi.js": 1291,
+	"./mk": 1292,
+	"./mk.js": 1292,
+	"./ml": 1293,
+	"./ml.js": 1293,
+	"./mn": 1294,
+	"./mn.js": 1294,
+	"./mr": 1295,
+	"./mr.js": 1295,
+	"./ms": 1296,
+	"./ms-my": 1297,
+	"./ms-my.js": 1297,
+	"./ms.js": 1296,
+	"./mt": 1298,
+	"./mt.js": 1298,
+	"./my": 1299,
+	"./my.js": 1299,
+	"./nb": 1300,
+	"./nb.js": 1300,
+	"./ne": 1301,
+	"./ne.js": 1301,
+	"./nl": 1302,
+	"./nl-be": 1303,
+	"./nl-be.js": 1303,
+	"./nl.js": 1302,
+	"./nn": 1304,
+	"./nn.js": 1304,
+	"./pa-in": 1305,
+	"./pa-in.js": 1305,
+	"./pl": 1306,
+	"./pl.js": 1306,
+	"./pt": 1307,
+	"./pt-br": 1308,
+	"./pt-br.js": 1308,
+	"./pt.js": 1307,
+	"./ro": 1309,
+	"./ro.js": 1309,
+	"./ru": 1310,
+	"./ru.js": 1310,
+	"./sd": 1311,
+	"./sd.js": 1311,
+	"./se": 1312,
+	"./se.js": 1312,
+	"./si": 1313,
+	"./si.js": 1313,
+	"./sk": 1314,
+	"./sk.js": 1314,
+	"./sl": 1315,
+	"./sl.js": 1315,
+	"./sq": 1316,
+	"./sq.js": 1316,
+	"./sr": 1317,
+	"./sr-cyrl": 1318,
+	"./sr-cyrl.js": 1318,
+	"./sr.js": 1317,
+	"./ss": 1319,
+	"./ss.js": 1319,
+	"./sv": 1320,
+	"./sv.js": 1320,
+	"./sw": 1321,
+	"./sw.js": 1321,
+	"./ta": 1322,
+	"./ta.js": 1322,
+	"./te": 1323,
+	"./te.js": 1323,
+	"./tet": 1324,
+	"./tet.js": 1324,
+	"./tg": 1325,
+	"./tg.js": 1325,
+	"./th": 1326,
+	"./th.js": 1326,
+	"./tl-ph": 1327,
+	"./tl-ph.js": 1327,
+	"./tlh": 1328,
+	"./tlh.js": 1328,
+	"./tr": 1329,
+	"./tr.js": 1329,
+	"./tzl": 1330,
+	"./tzl.js": 1330,
+	"./tzm": 1331,
+	"./tzm-latn": 1332,
+	"./tzm-latn.js": 1332,
+	"./tzm.js": 1331,
+	"./ug-cn": 1333,
+	"./ug-cn.js": 1333,
+	"./uk": 1334,
+	"./uk.js": 1334,
+	"./ur": 1335,
+	"./ur.js": 1335,
+	"./uz": 1336,
+	"./uz-latn": 1337,
+	"./uz-latn.js": 1337,
+	"./uz.js": 1336,
+	"./vi": 1338,
+	"./vi.js": 1338,
+	"./x-pseudo": 1339,
+	"./x-pseudo.js": 1339,
+	"./yo": 1340,
+	"./yo.js": 1340,
+	"./zh-cn": 1341,
+	"./zh-cn.js": 1341,
+	"./zh-hk": 1342,
+	"./zh-hk.js": 1342,
+	"./zh-tw": 1343,
+	"./zh-tw.js": 1343
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -14024,11 +14570,11 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 1374;
+webpackContext.id = 1388;
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1400:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14129,7 +14675,7 @@ var reactiveProp = {
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1401:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14143,7 +14689,7 @@ var reactiveProp = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Radar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Bubble; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Scatter; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(1387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(1402);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_chart_js__);
 
 function generateChart(chartId, chartType) {
@@ -14243,62 +14789,62 @@ var Scatter = generateChart('scatter-chart', 'scatter');
 
 /***/ }),
 
-/***/ 1387:
+/***/ 1402:
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @namespace Chart
  */
-var Chart = __webpack_require__(1388)();
+var Chart = __webpack_require__(1403)();
 
-Chart.helpers = __webpack_require__(964);
+Chart.helpers = __webpack_require__(965);
 
 // @todo dispatch these helpers into appropriated helpers/helpers.* file and write unit tests!
-__webpack_require__(1392)(Chart);
-
-Chart.defaults = __webpack_require__(965);
-Chart.Element = __webpack_require__(966);
-Chart.elements = __webpack_require__(969);
-Chart.Interaction = __webpack_require__(1368);
-Chart.layouts = __webpack_require__(976);
-Chart.platform = __webpack_require__(1369);
-Chart.plugins = __webpack_require__(1370);
-Chart.Ticks = __webpack_require__(977);
-
-__webpack_require__(1403)(Chart);
-__webpack_require__(1404)(Chart);
-__webpack_require__(1405)(Chart);
-__webpack_require__(1406)(Chart);
 __webpack_require__(1407)(Chart);
-__webpack_require__(1408)(Chart);
 
-__webpack_require__(1409)(Chart);
-__webpack_require__(1410)(Chart);
-__webpack_require__(1411)(Chart);
-__webpack_require__(1412)(Chart);
-__webpack_require__(1413)(Chart);
-__webpack_require__(1414)(Chart);
+Chart.defaults = __webpack_require__(966);
+Chart.Element = __webpack_require__(972);
+Chart.elements = __webpack_require__(975);
+Chart.Interaction = __webpack_require__(1382);
+Chart.layouts = __webpack_require__(1199);
+Chart.platform = __webpack_require__(1383);
+Chart.plugins = __webpack_require__(1384);
+Chart.Ticks = __webpack_require__(1200);
 
-// Controllers must be loaded after elements
-// See Chart.core.datasetController.dataElementType
-__webpack_require__(1415)(Chart);
-__webpack_require__(1416)(Chart);
-__webpack_require__(1417)(Chart);
 __webpack_require__(1418)(Chart);
 __webpack_require__(1419)(Chart);
 __webpack_require__(1420)(Chart);
 __webpack_require__(1421)(Chart);
-
 __webpack_require__(1422)(Chart);
 __webpack_require__(1423)(Chart);
+
 __webpack_require__(1424)(Chart);
 __webpack_require__(1425)(Chart);
 __webpack_require__(1426)(Chart);
 __webpack_require__(1427)(Chart);
 __webpack_require__(1428)(Chart);
+__webpack_require__(1429)(Chart);
+
+// Controllers must be loaded after elements
+// See Chart.core.datasetController.dataElementType
+__webpack_require__(1430)(Chart);
+__webpack_require__(1431)(Chart);
+__webpack_require__(1432)(Chart);
+__webpack_require__(1433)(Chart);
+__webpack_require__(1434)(Chart);
+__webpack_require__(1435)(Chart);
+__webpack_require__(1436)(Chart);
+
+__webpack_require__(1437)(Chart);
+__webpack_require__(1438)(Chart);
+__webpack_require__(1439)(Chart);
+__webpack_require__(1440)(Chart);
+__webpack_require__(1441)(Chart);
+__webpack_require__(1442)(Chart);
+__webpack_require__(1443)(Chart);
 
 // Loading built-it plugins
-var plugins = __webpack_require__(1429);
+var plugins = __webpack_require__(1444);
 for (var k in plugins) {
 	if (plugins.hasOwnProperty(k)) {
 		Chart.plugins.register(plugins[k]);
@@ -14372,13 +14918,13 @@ Chart.layoutService = Chart.layouts;
 
 /***/ }),
 
-/***/ 1388:
+/***/ 1403:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
+var defaults = __webpack_require__(966);
 
 defaults._set('global', {
 	responsive: true,
@@ -14429,13 +14975,13 @@ module.exports = function() {
 
 /***/ }),
 
-/***/ 1389:
+/***/ 1404:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(1183);
+var helpers = __webpack_require__(1208);
 
 /**
  * Easing functions adapted from Robert Penner's easing equations.
@@ -14687,13 +15233,13 @@ helpers.easingEffects = effects;
 
 /***/ }),
 
-/***/ 1390:
+/***/ 1405:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(1183);
+var helpers = __webpack_require__(1208);
 
 /**
  * @namespace Chart.helpers.canvas
@@ -14909,13 +15455,13 @@ helpers.drawRoundedRectangle = function(ctx) {
 
 /***/ }),
 
-/***/ 1391:
+/***/ 1406:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(1183);
+var helpers = __webpack_require__(1208);
 
 /**
  * @alias Chart.helpers.options
@@ -15013,7 +15559,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1407:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15021,9 +15567,9 @@ module.exports = {
 /* global document: false */
 
 
-var color = __webpack_require__(1367);
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
+var color = __webpack_require__(1381);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
 
 module.exports = function(Chart) {
 
@@ -15632,10 +16178,10 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1408:
 /***/ (function(module, exports, __webpack_require__) {
 
-var conversions = __webpack_require__(1394);
+var conversions = __webpack_require__(1409);
 
 var convert = function() {
    return new Converter();
@@ -15730,7 +16276,7 @@ module.exports = convert;
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1409:
 /***/ (function(module, exports) {
 
 /* MIT license */
@@ -16435,11 +16981,11 @@ for (var key in cssKeywords) {
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1410:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* MIT license */
-var colorNames = __webpack_require__(1396);
+var colorNames = __webpack_require__(1411);
 
 module.exports = {
    getRgba: getRgba,
@@ -16663,7 +17209,7 @@ for (var name in colorNames) {
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1411:
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -16819,15 +17365,15 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1397:
+/***/ 1412:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	elements: {
@@ -16934,15 +17480,15 @@ module.exports = Element.extend({
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1413:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 var globalDefaults = defaults.global;
 
@@ -17033,15 +17579,15 @@ module.exports = Element.extend({
 
 /***/ }),
 
-/***/ 1399:
+/***/ 1414:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 var defaultColor = defaults.global.defaultColor;
 
@@ -17147,14 +17693,14 @@ module.exports = Element.extend({
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1415:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
 
 defaults._set('global', {
 	elements: {
@@ -17372,7 +17918,7 @@ module.exports = Element.extend({
 
 /***/ }),
 
-/***/ 1401:
+/***/ 1416:
 /***/ (function(module, exports) {
 
 /**
@@ -17394,7 +17940,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1402:
+/***/ 1417:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17404,7 +17950,7 @@ module.exports = {
 
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 var EXPANDO_KEY = '$chartjs';
 var CSS_PREFIX = 'chartjs-';
@@ -17859,16 +18405,16 @@ helpers.removeEvent = removeEventListener;
 
 /***/ }),
 
-/***/ 1403:
+/***/ 1418:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* global window: false */
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	animation: {
@@ -18039,18 +18585,18 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1404:
+/***/ 1419:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var Interaction = __webpack_require__(1368);
-var layouts = __webpack_require__(976);
-var platform = __webpack_require__(1369);
-var plugins = __webpack_require__(1370);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var Interaction = __webpack_require__(1382);
+var layouts = __webpack_require__(1199);
+var platform = __webpack_require__(1383);
+var plugins = __webpack_require__(1384);
 
 module.exports = function(Chart) {
 
@@ -18994,13 +19540,13 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1405:
+/***/ 1420:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 module.exports = function(Chart) {
 
@@ -19332,15 +19878,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1406:
+/***/ 1421:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var layouts = __webpack_require__(976);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var layouts = __webpack_require__(1199);
 
 module.exports = function(Chart) {
 
@@ -19386,16 +19932,16 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1407:
+/***/ 1422:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 defaults._set('scale', {
 	display: true,
@@ -20330,15 +20876,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1408:
+/***/ 1423:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	tooltips: {
@@ -21286,13 +21832,13 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1409:
+/***/ 1424:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 /**
  * Generate a set of linear ticks
@@ -21480,7 +22026,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1410:
+/***/ 1425:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21621,15 +22167,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1411:
+/***/ 1426:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 module.exports = function(Chart) {
 
@@ -21820,14 +22366,14 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1412:
+/***/ 1427:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 /**
  * Generate a set of logarithmic ticks
@@ -22175,15 +22721,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1413:
+/***/ 1428:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 module.exports = function(Chart) {
 
@@ -22712,18 +23258,18 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1414:
+/***/ 1429:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* global window: false */
 
 
-var moment = __webpack_require__(963);
+var moment = __webpack_require__(964);
 moment = typeof moment === 'function' ? moment : window.moment;
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
 
 // Integer constants are from the ES6 spec.
 var MIN_INTEGER = Number.MIN_SAFE_INTEGER || -9007199254740991;
@@ -23503,15 +24049,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1415:
+/***/ 1430:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('bar', {
 	hover: {
@@ -24015,15 +24561,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1416:
+/***/ 1431:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('bubble', {
 	hover: {
@@ -24203,15 +24749,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1417:
+/***/ 1432:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('doughnut', {
 	animation: {
@@ -24510,15 +25056,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1418:
+/***/ 1433:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('line', {
 	showLines: true,
@@ -24851,15 +25397,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1419:
+/***/ 1434:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('polarArea', {
 	scale: {
@@ -25081,15 +25627,15 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1420:
+/***/ 1435:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('radar', {
 	scale: {
@@ -25257,13 +25803,13 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1421:
+/***/ 1436:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
+var defaults = __webpack_require__(966);
 
 defaults._set('scatter', {
 	hover: {
@@ -25307,7 +25853,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1422:
+/***/ 1437:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25326,7 +25872,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1423:
+/***/ 1438:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25344,7 +25890,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1424:
+/***/ 1439:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25363,7 +25909,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1425:
+/***/ 1440:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25382,7 +25928,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1426:
+/***/ 1441:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25401,7 +25947,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1427:
+/***/ 1442:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25420,7 +25966,7 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1428:
+/***/ 1443:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25436,21 +25982,21 @@ module.exports = function(Chart) {
 
 /***/ }),
 
-/***/ 1429:
+/***/ 1444:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 module.exports = {};
-module.exports.filler = __webpack_require__(1430);
-module.exports.legend = __webpack_require__(1431);
-module.exports.title = __webpack_require__(1432);
+module.exports.filler = __webpack_require__(1445);
+module.exports.legend = __webpack_require__(1446);
+module.exports.title = __webpack_require__(1447);
 
 
 /***/ }),
 
-/***/ 1430:
+/***/ 1445:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25462,9 +26008,9 @@ module.exports.title = __webpack_require__(1432);
 
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	plugins: {
@@ -25776,16 +26322,16 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1431:
+/***/ 1446:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
-var layouts = __webpack_require__(976);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
+var layouts = __webpack_require__(1199);
 
 var noop = helpers.noop;
 
@@ -26360,16 +26906,16 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1432:
+/***/ 1447:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
-var layouts = __webpack_require__(976);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
+var layouts = __webpack_require__(1199);
 
 var noop = helpers.noop;
 
@@ -26620,13 +27166,13 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1443:
+/***/ 1464:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1444)
+var __vue_script__ = __webpack_require__(1465)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -26668,13 +27214,13 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 1444:
+/***/ 1465:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__);
 
 
@@ -26736,12 +27282,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 1539:
+/***/ 1571:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_SocialBoxChartExample__ = __webpack_require__(1443);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_SocialBoxChartExample__ = __webpack_require__(1464);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_SocialBoxChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__dashboard_SocialBoxChartExample__);
 //
 //
@@ -27240,7 +27786,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 1540:
+/***/ 1572:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -28843,9 +29389,9 @@ if (false) {
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1539)
+var __vue_script__ = __webpack_require__(1571)
 /* template */
-var __vue_template__ = __webpack_require__(1540)
+var __vue_template__ = __webpack_require__(1572)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -28885,7 +29431,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 963:
+/***/ 964:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var require;//! moment.js
@@ -30723,7 +31269,7 @@ module.exports = Component.exports
             try {
                 oldLocale = globalLocale._abbr;
                 var aliasedRequire = require;
-                __webpack_require__(1374)("./" + name);
+                __webpack_require__(1388)("./" + name);
                 getSetGlobalLocale(oldLocale);
             } catch (e) {}
         }
@@ -33399,27 +33945,27 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 964:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(1183);
-module.exports.easing = __webpack_require__(1389);
-module.exports.canvas = __webpack_require__(1390);
-module.exports.options = __webpack_require__(1391);
-
-
-/***/ }),
-
 /***/ 965:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+module.exports = __webpack_require__(1208);
+module.exports.easing = __webpack_require__(1404);
+module.exports.canvas = __webpack_require__(1405);
+module.exports.options = __webpack_require__(1406);
+
+
+/***/ }),
+
+/***/ 966:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var helpers = __webpack_require__(965);
 
 module.exports = {
 	/**
@@ -33433,14 +33979,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 966:
+/***/ 972:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var color = __webpack_require__(1367);
-var helpers = __webpack_require__(964);
+var color = __webpack_require__(1381);
+var helpers = __webpack_require__(965);
 
 function interpolate(start, view, model, ease) {
 	var keys = Object.keys(model);
@@ -33556,563 +34102,17 @@ module.exports = Element;
 
 /***/ }),
 
-/***/ 969:
+/***/ 975:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 module.exports = {};
-module.exports.Arc = __webpack_require__(1397);
-module.exports.Line = __webpack_require__(1398);
-module.exports.Point = __webpack_require__(1399);
-module.exports.Rectangle = __webpack_require__(1400);
-
-
-/***/ }),
-
-/***/ 976:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var helpers = __webpack_require__(964);
-
-function filterByPosition(array, position) {
-	return helpers.where(array, function(v) {
-		return v.position === position;
-	});
-}
-
-function sortByWeight(array, reverse) {
-	array.forEach(function(v, i) {
-		v._tmpIndex_ = i;
-		return v;
-	});
-	array.sort(function(a, b) {
-		var v0 = reverse ? b : a;
-		var v1 = reverse ? a : b;
-		return v0.weight === v1.weight ?
-			v0._tmpIndex_ - v1._tmpIndex_ :
-			v0.weight - v1.weight;
-	});
-	array.forEach(function(v) {
-		delete v._tmpIndex_;
-	});
-}
-
-/**
- * @interface ILayoutItem
- * @prop {String} position - The position of the item in the chart layout. Possible values are
- * 'left', 'top', 'right', 'bottom', and 'chartArea'
- * @prop {Number} weight - The weight used to sort the item. Higher weights are further away from the chart area
- * @prop {Boolean} fullWidth - if true, and the item is horizontal, then push vertical boxes down
- * @prop {Function} isHorizontal - returns true if the layout item is horizontal (ie. top or bottom)
- * @prop {Function} update - Takes two parameters: width and height. Returns size of item
- * @prop {Function} getPadding -  Returns an object with padding on the edges
- * @prop {Number} width - Width of item. Must be valid after update()
- * @prop {Number} height - Height of item. Must be valid after update()
- * @prop {Number} left - Left edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} top - Top edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} right - Right edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} bottom - Bottom edge of the item. Set by layout system and cannot be used in update
- */
-
-// The layout service is very self explanatory.  It's responsible for the layout within a chart.
-// Scales, Legends and Plugins all rely on the layout service and can easily register to be placed anywhere they need
-// It is this service's responsibility of carrying out that layout.
-module.exports = {
-	defaults: {},
-
-	/**
-	 * Register a box to a chart.
-	 * A box is simply a reference to an object that requires layout. eg. Scales, Legend, Title.
-	 * @param {Chart} chart - the chart to use
-	 * @param {ILayoutItem} item - the item to add to be layed out
-	 */
-	addBox: function(chart, item) {
-		if (!chart.boxes) {
-			chart.boxes = [];
-		}
-
-		// initialize item with default values
-		item.fullWidth = item.fullWidth || false;
-		item.position = item.position || 'top';
-		item.weight = item.weight || 0;
-
-		chart.boxes.push(item);
-	},
-
-	/**
-	 * Remove a layoutItem from a chart
-	 * @param {Chart} chart - the chart to remove the box from
-	 * @param {Object} layoutItem - the item to remove from the layout
-	 */
-	removeBox: function(chart, layoutItem) {
-		var index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
-		if (index !== -1) {
-			chart.boxes.splice(index, 1);
-		}
-	},
-
-	/**
-	 * Sets (or updates) options on the given `item`.
-	 * @param {Chart} chart - the chart in which the item lives (or will be added to)
-	 * @param {Object} item - the item to configure with the given options
-	 * @param {Object} options - the new item options.
-	 */
-	configure: function(chart, item, options) {
-		var props = ['fullWidth', 'position', 'weight'];
-		var ilen = props.length;
-		var i = 0;
-		var prop;
-
-		for (; i < ilen; ++i) {
-			prop = props[i];
-			if (options.hasOwnProperty(prop)) {
-				item[prop] = options[prop];
-			}
-		}
-	},
-
-	/**
-	 * Fits boxes of the given chart into the given size by having each box measure itself
-	 * then running a fitting algorithm
-	 * @param {Chart} chart - the chart
-	 * @param {Number} width - the width to fit into
-	 * @param {Number} height - the height to fit into
-	 */
-	update: function(chart, width, height) {
-		if (!chart) {
-			return;
-		}
-
-		var layoutOptions = chart.options.layout || {};
-		var padding = helpers.options.toPadding(layoutOptions.padding);
-		var leftPadding = padding.left;
-		var rightPadding = padding.right;
-		var topPadding = padding.top;
-		var bottomPadding = padding.bottom;
-
-		var leftBoxes = filterByPosition(chart.boxes, 'left');
-		var rightBoxes = filterByPosition(chart.boxes, 'right');
-		var topBoxes = filterByPosition(chart.boxes, 'top');
-		var bottomBoxes = filterByPosition(chart.boxes, 'bottom');
-		var chartAreaBoxes = filterByPosition(chart.boxes, 'chartArea');
-
-		// Sort boxes by weight. A higher weight is further away from the chart area
-		sortByWeight(leftBoxes, true);
-		sortByWeight(rightBoxes, false);
-		sortByWeight(topBoxes, true);
-		sortByWeight(bottomBoxes, false);
-
-		// Essentially we now have any number of boxes on each of the 4 sides.
-		// Our canvas looks like the following.
-		// The areas L1 and L2 are the left axes. R1 is the right axis, T1 is the top axis and
-		// B1 is the bottom axis
-		// There are also 4 quadrant-like locations (left to right instead of clockwise) reserved for chart overlays
-		// These locations are single-box locations only, when trying to register a chartArea location that is already taken,
-		// an error will be thrown.
-		//
-		// |----------------------------------------------------|
-		// |                  T1 (Full Width)                   |
-		// |----------------------------------------------------|
-		// |    |    |                 T2                  |    |
-		// |    |----|-------------------------------------|----|
-		// |    |    | C1 |                           | C2 |    |
-		// |    |    |----|                           |----|    |
-		// |    |    |                                     |    |
-		// | L1 | L2 |           ChartArea (C0)            | R1 |
-		// |    |    |                                     |    |
-		// |    |    |----|                           |----|    |
-		// |    |    | C3 |                           | C4 |    |
-		// |    |----|-------------------------------------|----|
-		// |    |    |                 B1                  |    |
-		// |----------------------------------------------------|
-		// |                  B2 (Full Width)                   |
-		// |----------------------------------------------------|
-		//
-		// What we do to find the best sizing, we do the following
-		// 1. Determine the minimum size of the chart area.
-		// 2. Split the remaining width equally between each vertical axis
-		// 3. Split the remaining height equally between each horizontal axis
-		// 4. Give each layout the maximum size it can be. The layout will return it's minimum size
-		// 5. Adjust the sizes of each axis based on it's minimum reported size.
-		// 6. Refit each axis
-		// 7. Position each axis in the final location
-		// 8. Tell the chart the final location of the chart area
-		// 9. Tell any axes that overlay the chart area the positions of the chart area
-
-		// Step 1
-		var chartWidth = width - leftPadding - rightPadding;
-		var chartHeight = height - topPadding - bottomPadding;
-		var chartAreaWidth = chartWidth / 2; // min 50%
-		var chartAreaHeight = chartHeight / 2; // min 50%
-
-		// Step 2
-		var verticalBoxWidth = (width - chartAreaWidth) / (leftBoxes.length + rightBoxes.length);
-
-		// Step 3
-		var horizontalBoxHeight = (height - chartAreaHeight) / (topBoxes.length + bottomBoxes.length);
-
-		// Step 4
-		var maxChartAreaWidth = chartWidth;
-		var maxChartAreaHeight = chartHeight;
-		var minBoxSizes = [];
-
-		function getMinimumBoxSize(box) {
-			var minSize;
-			var isHorizontal = box.isHorizontal();
-
-			if (isHorizontal) {
-				minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, horizontalBoxHeight);
-				maxChartAreaHeight -= minSize.height;
-			} else {
-				minSize = box.update(verticalBoxWidth, maxChartAreaHeight);
-				maxChartAreaWidth -= minSize.width;
-			}
-
-			minBoxSizes.push({
-				horizontal: isHorizontal,
-				minSize: minSize,
-				box: box,
-			});
-		}
-
-		helpers.each(leftBoxes.concat(rightBoxes, topBoxes, bottomBoxes), getMinimumBoxSize);
-
-		// If a horizontal box has padding, we move the left boxes over to avoid ugly charts (see issue #2478)
-		var maxHorizontalLeftPadding = 0;
-		var maxHorizontalRightPadding = 0;
-		var maxVerticalTopPadding = 0;
-		var maxVerticalBottomPadding = 0;
-
-		helpers.each(topBoxes.concat(bottomBoxes), function(horizontalBox) {
-			if (horizontalBox.getPadding) {
-				var boxPadding = horizontalBox.getPadding();
-				maxHorizontalLeftPadding = Math.max(maxHorizontalLeftPadding, boxPadding.left);
-				maxHorizontalRightPadding = Math.max(maxHorizontalRightPadding, boxPadding.right);
-			}
-		});
-
-		helpers.each(leftBoxes.concat(rightBoxes), function(verticalBox) {
-			if (verticalBox.getPadding) {
-				var boxPadding = verticalBox.getPadding();
-				maxVerticalTopPadding = Math.max(maxVerticalTopPadding, boxPadding.top);
-				maxVerticalBottomPadding = Math.max(maxVerticalBottomPadding, boxPadding.bottom);
-			}
-		});
-
-		// At this point, maxChartAreaHeight and maxChartAreaWidth are the size the chart area could
-		// be if the axes are drawn at their minimum sizes.
-		// Steps 5 & 6
-		var totalLeftBoxesWidth = leftPadding;
-		var totalRightBoxesWidth = rightPadding;
-		var totalTopBoxesHeight = topPadding;
-		var totalBottomBoxesHeight = bottomPadding;
-
-		// Function to fit a box
-		function fitBox(box) {
-			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minBox) {
-				return minBox.box === box;
-			});
-
-			if (minBoxSize) {
-				if (box.isHorizontal()) {
-					var scaleMargin = {
-						left: Math.max(totalLeftBoxesWidth, maxHorizontalLeftPadding),
-						right: Math.max(totalRightBoxesWidth, maxHorizontalRightPadding),
-						top: 0,
-						bottom: 0
-					};
-
-					// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
-					// on the margin. Sometimes they need to increase in size slightly
-					box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
-				} else {
-					box.update(minBoxSize.minSize.width, maxChartAreaHeight);
-				}
-			}
-		}
-
-		// Update, and calculate the left and right margins for the horizontal boxes
-		helpers.each(leftBoxes.concat(rightBoxes), fitBox);
-
-		helpers.each(leftBoxes, function(box) {
-			totalLeftBoxesWidth += box.width;
-		});
-
-		helpers.each(rightBoxes, function(box) {
-			totalRightBoxesWidth += box.width;
-		});
-
-		// Set the Left and Right margins for the horizontal boxes
-		helpers.each(topBoxes.concat(bottomBoxes), fitBox);
-
-		// Figure out how much margin is on the top and bottom of the vertical boxes
-		helpers.each(topBoxes, function(box) {
-			totalTopBoxesHeight += box.height;
-		});
-
-		helpers.each(bottomBoxes, function(box) {
-			totalBottomBoxesHeight += box.height;
-		});
-
-		function finalFitVerticalBox(box) {
-			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minSize) {
-				return minSize.box === box;
-			});
-
-			var scaleMargin = {
-				left: 0,
-				right: 0,
-				top: totalTopBoxesHeight,
-				bottom: totalBottomBoxesHeight
-			};
-
-			if (minBoxSize) {
-				box.update(minBoxSize.minSize.width, maxChartAreaHeight, scaleMargin);
-			}
-		}
-
-		// Let the left layout know the final margin
-		helpers.each(leftBoxes.concat(rightBoxes), finalFitVerticalBox);
-
-		// Recalculate because the size of each layout might have changed slightly due to the margins (label rotation for instance)
-		totalLeftBoxesWidth = leftPadding;
-		totalRightBoxesWidth = rightPadding;
-		totalTopBoxesHeight = topPadding;
-		totalBottomBoxesHeight = bottomPadding;
-
-		helpers.each(leftBoxes, function(box) {
-			totalLeftBoxesWidth += box.width;
-		});
-
-		helpers.each(rightBoxes, function(box) {
-			totalRightBoxesWidth += box.width;
-		});
-
-		helpers.each(topBoxes, function(box) {
-			totalTopBoxesHeight += box.height;
-		});
-		helpers.each(bottomBoxes, function(box) {
-			totalBottomBoxesHeight += box.height;
-		});
-
-		// We may be adding some padding to account for rotated x axis labels
-		var leftPaddingAddition = Math.max(maxHorizontalLeftPadding - totalLeftBoxesWidth, 0);
-		totalLeftBoxesWidth += leftPaddingAddition;
-		totalRightBoxesWidth += Math.max(maxHorizontalRightPadding - totalRightBoxesWidth, 0);
-
-		var topPaddingAddition = Math.max(maxVerticalTopPadding - totalTopBoxesHeight, 0);
-		totalTopBoxesHeight += topPaddingAddition;
-		totalBottomBoxesHeight += Math.max(maxVerticalBottomPadding - totalBottomBoxesHeight, 0);
-
-		// Figure out if our chart area changed. This would occur if the dataset layout label rotation
-		// changed due to the application of the margins in step 6. Since we can only get bigger, this is safe to do
-		// without calling `fit` again
-		var newMaxChartAreaHeight = height - totalTopBoxesHeight - totalBottomBoxesHeight;
-		var newMaxChartAreaWidth = width - totalLeftBoxesWidth - totalRightBoxesWidth;
-
-		if (newMaxChartAreaWidth !== maxChartAreaWidth || newMaxChartAreaHeight !== maxChartAreaHeight) {
-			helpers.each(leftBoxes, function(box) {
-				box.height = newMaxChartAreaHeight;
-			});
-
-			helpers.each(rightBoxes, function(box) {
-				box.height = newMaxChartAreaHeight;
-			});
-
-			helpers.each(topBoxes, function(box) {
-				if (!box.fullWidth) {
-					box.width = newMaxChartAreaWidth;
-				}
-			});
-
-			helpers.each(bottomBoxes, function(box) {
-				if (!box.fullWidth) {
-					box.width = newMaxChartAreaWidth;
-				}
-			});
-
-			maxChartAreaHeight = newMaxChartAreaHeight;
-			maxChartAreaWidth = newMaxChartAreaWidth;
-		}
-
-		// Step 7 - Position the boxes
-		var left = leftPadding + leftPaddingAddition;
-		var top = topPadding + topPaddingAddition;
-
-		function placeBox(box) {
-			if (box.isHorizontal()) {
-				box.left = box.fullWidth ? leftPadding : totalLeftBoxesWidth;
-				box.right = box.fullWidth ? width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
-				box.top = top;
-				box.bottom = top + box.height;
-
-				// Move to next point
-				top = box.bottom;
-
-			} else {
-
-				box.left = left;
-				box.right = left + box.width;
-				box.top = totalTopBoxesHeight;
-				box.bottom = totalTopBoxesHeight + maxChartAreaHeight;
-
-				// Move to next point
-				left = box.right;
-			}
-		}
-
-		helpers.each(leftBoxes.concat(topBoxes), placeBox);
-
-		// Account for chart width and height
-		left += maxChartAreaWidth;
-		top += maxChartAreaHeight;
-
-		helpers.each(rightBoxes, placeBox);
-		helpers.each(bottomBoxes, placeBox);
-
-		// Step 8
-		chart.chartArea = {
-			left: totalLeftBoxesWidth,
-			top: totalTopBoxesHeight,
-			right: totalLeftBoxesWidth + maxChartAreaWidth,
-			bottom: totalTopBoxesHeight + maxChartAreaHeight
-		};
-
-		// Step 9
-		helpers.each(chartAreaBoxes, function(box) {
-			box.left = chart.chartArea.left;
-			box.top = chart.chartArea.top;
-			box.right = chart.chartArea.right;
-			box.bottom = chart.chartArea.bottom;
-
-			box.update(maxChartAreaWidth, maxChartAreaHeight);
-		});
-	}
-};
-
-
-/***/ }),
-
-/***/ 977:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var helpers = __webpack_require__(964);
-
-/**
- * Namespace to hold static tick generation functions
- * @namespace Chart.Ticks
- */
-module.exports = {
-	/**
-	 * Namespace to hold formatters for different types of ticks
-	 * @namespace Chart.Ticks.formatters
-	 */
-	formatters: {
-		/**
-		 * Formatter for value labels
-		 * @method Chart.Ticks.formatters.values
-		 * @param value the value to display
-		 * @return {String|Array} the label to display
-		 */
-		values: function(value) {
-			return helpers.isArray(value) ? value : '' + value;
-		},
-
-		/**
-		 * Formatter for linear numeric ticks
-		 * @method Chart.Ticks.formatters.linear
-		 * @param tickValue {Number} the value to be formatted
-		 * @param index {Number} the position of the tickValue parameter in the ticks array
-		 * @param ticks {Array<Number>} the list of ticks being converted
-		 * @return {String} string representation of the tickValue parameter
-		 */
-		linear: function(tickValue, index, ticks) {
-			// If we have lots of ticks, don't use the ones
-			var delta = ticks.length > 3 ? ticks[2] - ticks[1] : ticks[1] - ticks[0];
-
-			// If we have a number like 2.5 as the delta, figure out how many decimal places we need
-			if (Math.abs(delta) > 1) {
-				if (tickValue !== Math.floor(tickValue)) {
-					// not an integer
-					delta = tickValue - Math.floor(tickValue);
-				}
-			}
-
-			var logDelta = helpers.log10(Math.abs(delta));
-			var tickString = '';
-
-			if (tickValue !== 0) {
-				var numDecimal = -1 * Math.floor(logDelta);
-				numDecimal = Math.max(Math.min(numDecimal, 20), 0); // toFixed has a max of 20 decimal places
-				tickString = tickValue.toFixed(numDecimal);
-			} else {
-				tickString = '0'; // never show decimal places for 0
-			}
-
-			return tickString;
-		},
-
-		logarithmic: function(tickValue, index, ticks) {
-			var remain = tickValue / (Math.pow(10, Math.floor(helpers.log10(tickValue))));
-
-			if (tickValue === 0) {
-				return '0';
-			} else if (remain === 1 || remain === 2 || remain === 5 || index === 0 || index === ticks.length - 1) {
-				return tickValue.toExponential();
-			}
-			return '';
-		}
-	}
-};
-
-
-/***/ }),
-
-/***/ 978:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export VueCharts */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__ = __webpack_require__(1385);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseCharts__ = __webpack_require__(1386);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a"]; });
-/* unused harmony reexport HorizontalBar */
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h"]; });
-/* unused harmony reexport Bubble */
-/* unused harmony reexport Scatter */
-/* unused harmony reexport mixins */
-/* unused harmony reexport generateChart */
-
-
-var VueCharts = {
-  Bar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a" /* Bar */],
-  HorizontalBar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["d" /* HorizontalBar */],
-  Doughnut: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c" /* Doughnut */],
-  Line: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e" /* Line */],
-  Pie: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f" /* Pie */],
-  PolarArea: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g" /* PolarArea */],
-  Radar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h" /* Radar */],
-  Bubble: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["b" /* Bubble */],
-  Scatter: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["i" /* Scatter */],
-  mixins: __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__["a" /* default */],
-  generateChart: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["j" /* generateChart */],
-  render: function render() {
-    return console.error('[vue-chartjs]: This is not a vue component. It is the whole object containing all vue components. Please import the named export or access the components over the dot notation. For more info visit https://vue-chartjs.org/#/home?id=quick-start');
-  }
-};
-/* unused harmony default export */ var _unused_webpack_default_export = (VueCharts);
+module.exports.Arc = __webpack_require__(1412);
+module.exports.Line = __webpack_require__(1413);
+module.exports.Point = __webpack_require__(1414);
+module.exports.Rectangle = __webpack_require__(1415);
 
 
 /***/ })

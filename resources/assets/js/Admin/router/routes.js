@@ -60,6 +60,8 @@ const AddDoctorImage = () => import(/* webpackChunkName: "admin/components/views
 const AddClinic = () => import(/* webpackChunkName: "admin/components/views/pages/AddClinic" */ '../components/views/pages/AddClinic');
 const Doctors = () => import(/* webpackChunkName: "admin/components/views/pages/DoctorResource" */ '../components/views/pages/Doctors');
 const WorkingSessions = () => import(/* webpackChunkName: "admin/components/views/pages/WorkingSessions" */ '../components/views/pages/WorkingSessions');
+const StaffBooking = () => import(/* webpackChunkName: "admin/components/views/pages/StaffBooking" */ '../components/views/pages/StaffBooking');
+const Bookings = () => import(/* webpackChunkName: "admin/components/views/pages/Bookings" */ '../components/views/pages/Bookings');
 
 // Users
 const Users = () => import(/* webpackChunkName: "admin/components/views/users/Users" */ '../components/views/users/Users');
@@ -99,7 +101,7 @@ export default new Router({
                             name: 'doctorSpecialization',
                             component: DoctorSpecialization,
                             meta: {
-                                label: 'SpecializationResource',
+                                label: 'Specializations',
                                 title: 'Doctor SpecializationResource'
                             },
                         },
@@ -146,6 +148,36 @@ export default new Router({
                             meta: {
                                 label: 'Working Sessions',
                                 title: 'Working Sessions'
+                            },
+                        }
+                    ]
+                },
+                {
+                    path: 'booking',
+                    name: 'booking',
+                    redirect: {name: 'staffNewBooking'},
+                    component: {
+                        render(c) {
+                            return c('router-view')
+                        }
+                    },
+                    children: [
+                        {
+                            path: 'new-booking',
+                            name: 'staffNewBooking',
+                            component: StaffBooking,
+                            meta: {
+                                label: 'New Booking',
+                                title: 'Staff Booking'
+                            },
+                        },
+                        {
+                            path: 'all-booking',
+                            name: 'allBookings',
+                            component: Bookings,
+                            meta: {
+                                label: 'All Booking',
+                                title: 'All Bookings'
                             },
                         }
                     ]

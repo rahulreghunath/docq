@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\FormResource\SpecializationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DoctorSpecializationResource extends JsonResource

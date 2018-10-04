@@ -1,6 +1,6 @@
-webpackJsonp([18],{
+webpackJsonp([19],{
 
-/***/ 1467:
+/***/ 1490:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10,12 +10,12 @@ var usersData = [{ id: 0, name: 'John Doe', registered: '2018/01/01', role: 'Gue
 
 /***/ }),
 
-/***/ 1740:
+/***/ 1828:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UsersData__ = __webpack_require__(1467);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UsersData__ = __webpack_require__(1490);
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 //
@@ -76,7 +76,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 /***/ }),
 
-/***/ 1741:
+/***/ 1829:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -153,15 +153,15 @@ if (false) {
 
 /***/ }),
 
-/***/ 961:
+/***/ 962:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1740)
+var __vue_script__ = __webpack_require__(1828)
 /* template */
-var __vue_template__ = __webpack_require__(1741)
+var __vue_template__ = __webpack_require__(1829)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */

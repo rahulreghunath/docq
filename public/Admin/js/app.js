@@ -29,7 +29,7 @@
 /******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
-/******/ 		46: 0
+/******/ 		47: 0
 /******/ 	};
 /******/
 /******/ 	// The require function
@@ -86,7 +86,7 @@
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
-/******/ 		script.src = __webpack_require__.p + "js/lazy-js-components/" + ({"0":"admin/components/views/pages/AddDoctor","1":"admin/components/views/Dashboard","2":"admin/components/views/pages/WorkingSessions","3":"admin/components/views/pages/DoctorResource","4":"admin/components/views/pages/DoctorSpecialization","5":"admin/components/views/pages/DoctorQualifications","6":"admin/components/views/pages/AddClinic","7":"admin/components/containers/DefaultContainer","8":"admin/components/views/Charts","9":"admin/components/views/Widgets","10":"admin/components/views/theme/Colors","11":"admin/components/views/base/Tables","12":"admin/components/views/users/Users","13":"admin/components/views/base/Switches","14":"admin/components/views/buttons/BrandButtons","15":"admin/components/views/base/Forms","16":"admin/components/views/base/Cards","17":"admin/components/views/actions/Logout","18":"admin/components/views/users/User","19":"admin/components/views/theme/Typography","20":"admin/components/views/pages/Register","21":"admin/components/views/pages/Page500","22":"admin/components/views/pages/Page404","23":"admin/components/views/pages/Login","24":"admin/components/views/notifications/Modals","25":"admin/components/views/notifications/Badges","26":"admin/components/views/notifications/Alerts","27":"admin/components/views/icons/SimpleLineIcons","28":"admin/components/views/icons/FontAwesome","29":"admin/components/views/icons/Flags","30":"admin/components/views/icons/CoreUIIcons","31":"admin/components/views/buttons/StandardButtons","32":"admin/components/views/buttons/Dropdowns","33":"admin/components/views/buttons/ButtonGroups","34":"admin/components/views/base/Tooltips","35":"admin/components/views/base/Tabs","36":"admin/components/views/base/ProgressBars","37":"admin/components/views/base/Popovers","38":"admin/components/views/base/Paginations","39":"admin/components/views/base/Navs","40":"admin/components/views/base/Navbars","41":"admin/components/views/base/ListGroups","42":"admin/components/views/base/Jumbotrons","43":"admin/components/views/base/Collapses","44":"admin/components/views/base/Carousels","45":"admin/components/views/base/Breadcrumbs"}[chunkId]||chunkId) + ".js";
+/******/ 		script.src = __webpack_require__.p + "js/lazy-js-components/" + ({"0":"admin/components/views/pages/AddDoctor","1":"admin/components/views/Dashboard","2":"admin/components/views/pages/WorkingSessions","3":"admin/components/views/pages/DoctorResource","4":"admin/components/views/pages/StaffBooking","5":"admin/components/views/pages/DoctorSpecialization","6":"admin/components/views/pages/DoctorQualifications","7":"admin/components/views/pages/AddClinic","8":"admin/components/containers/DefaultContainer","9":"admin/components/views/Charts","10":"admin/components/views/Widgets","11":"admin/components/views/theme/Colors","12":"admin/components/views/base/Tables","13":"admin/components/views/users/Users","14":"admin/components/views/base/Switches","15":"admin/components/views/buttons/BrandButtons","16":"admin/components/views/base/Forms","17":"admin/components/views/base/Cards","18":"admin/components/views/actions/Logout","19":"admin/components/views/users/User","20":"admin/components/views/theme/Typography","21":"admin/components/views/pages/Register","22":"admin/components/views/pages/Page500","23":"admin/components/views/pages/Page404","24":"admin/components/views/pages/Login","25":"admin/components/views/notifications/Modals","26":"admin/components/views/notifications/Badges","27":"admin/components/views/notifications/Alerts","28":"admin/components/views/icons/SimpleLineIcons","29":"admin/components/views/icons/FontAwesome","30":"admin/components/views/icons/Flags","31":"admin/components/views/icons/CoreUIIcons","32":"admin/components/views/buttons/StandardButtons","33":"admin/components/views/buttons/Dropdowns","34":"admin/components/views/buttons/ButtonGroups","35":"admin/components/views/base/Tooltips","36":"admin/components/views/base/Tabs","37":"admin/components/views/base/ProgressBars","38":"admin/components/views/base/Popovers","39":"admin/components/views/base/Paginations","40":"admin/components/views/base/Navs","41":"admin/components/views/base/Navbars","42":"admin/components/views/base/ListGroups","43":"admin/components/views/base/Jumbotrons","44":"admin/components/views/base/Collapses","45":"admin/components/views/base/Carousels","46":"admin/components/views/base/Breadcrumbs","48":"admin/components/views/pages/Bookings"}[chunkId]||chunkId) + ".js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -36348,7 +36348,7 @@ window.Vue = __webpack_require__(41);
 
 
 
-// import cssVars from 'css-vars-ponyfill'
+
 
 
 
@@ -72102,7 +72102,7 @@ var mutations = {
 
 // Containers
 var DefaultContainer = function DefaultContainer() {
-    return __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 916));
+    return __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 916));
 };
 
 // Views
@@ -72111,126 +72111,126 @@ var Dashboard = function Dashboard() {
 };
 
 var Colors = function Colors() {
-    return __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 918));
+    return __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, 918));
 };
 var Typography = function Typography() {
-    return __webpack_require__.e/* import() */(19).then(__webpack_require__.bind(null, 919));
+    return __webpack_require__.e/* import() */(20).then(__webpack_require__.bind(null, 919));
 };
 
 var Charts = function Charts() {
-    return __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 920));
+    return __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 920));
 };
 var Widgets = function Widgets() {
-    return __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 921));
+    return __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 921));
 };
 
 // Views / Components
 var Cards = function Cards() {
-    return __webpack_require__.e/* import() */(16).then(__webpack_require__.bind(null, 922));
+    return __webpack_require__.e/* import() */(17).then(__webpack_require__.bind(null, 922));
 };
 var Forms = function Forms() {
-    return __webpack_require__.e/* import() */(15).then(__webpack_require__.bind(null, 923));
+    return __webpack_require__.e/* import() */(16).then(__webpack_require__.bind(null, 923));
 };
 var Switches = function Switches() {
-    return __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, 924));
+    return __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, 924));
 };
 var Tables = function Tables() {
-    return __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, 925));
+    return __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, 925));
 };
 var Tabs = function Tabs() {
-    return __webpack_require__.e/* import() */(35).then(__webpack_require__.bind(null, 926));
+    return __webpack_require__.e/* import() */(36).then(__webpack_require__.bind(null, 926));
 };
 var Breadcrumbs = function Breadcrumbs() {
-    return __webpack_require__.e/* import() */(45).then(__webpack_require__.bind(null, 927));
+    return __webpack_require__.e/* import() */(46).then(__webpack_require__.bind(null, 927));
 };
 var Carousels = function Carousels() {
-    return __webpack_require__.e/* import() */(44).then(__webpack_require__.bind(null, 928));
+    return __webpack_require__.e/* import() */(45).then(__webpack_require__.bind(null, 928));
 };
 var Collapses = function Collapses() {
-    return __webpack_require__.e/* import() */(43).then(__webpack_require__.bind(null, 929));
+    return __webpack_require__.e/* import() */(44).then(__webpack_require__.bind(null, 929));
 };
 var Jumbotrons = function Jumbotrons() {
-    return __webpack_require__.e/* import() */(42).then(__webpack_require__.bind(null, 930));
+    return __webpack_require__.e/* import() */(43).then(__webpack_require__.bind(null, 930));
 };
 var ListGroups = function ListGroups() {
-    return __webpack_require__.e/* import() */(41).then(__webpack_require__.bind(null, 931));
+    return __webpack_require__.e/* import() */(42).then(__webpack_require__.bind(null, 931));
 };
 var Navs = function Navs() {
-    return __webpack_require__.e/* import() */(39).then(__webpack_require__.bind(null, 932));
+    return __webpack_require__.e/* import() */(40).then(__webpack_require__.bind(null, 932));
 };
 var Navbars = function Navbars() {
-    return __webpack_require__.e/* import() */(40).then(__webpack_require__.bind(null, 933));
+    return __webpack_require__.e/* import() */(41).then(__webpack_require__.bind(null, 933));
 };
 var Paginations = function Paginations() {
-    return __webpack_require__.e/* import() */(38).then(__webpack_require__.bind(null, 934));
+    return __webpack_require__.e/* import() */(39).then(__webpack_require__.bind(null, 934));
 };
 var Popovers = function Popovers() {
-    return __webpack_require__.e/* import() */(37).then(__webpack_require__.bind(null, 935));
+    return __webpack_require__.e/* import() */(38).then(__webpack_require__.bind(null, 935));
 };
 var ProgressBars = function ProgressBars() {
-    return __webpack_require__.e/* import() */(36).then(__webpack_require__.bind(null, 936));
+    return __webpack_require__.e/* import() */(37).then(__webpack_require__.bind(null, 936));
 };
 var Tooltips = function Tooltips() {
-    return __webpack_require__.e/* import() */(34).then(__webpack_require__.bind(null, 937));
+    return __webpack_require__.e/* import() */(35).then(__webpack_require__.bind(null, 937));
 };
 
 // Views - Buttons
 var StandardButtons = function StandardButtons() {
-    return __webpack_require__.e/* import() */(31).then(__webpack_require__.bind(null, 938));
+    return __webpack_require__.e/* import() */(32).then(__webpack_require__.bind(null, 938));
 };
 var ButtonGroups = function ButtonGroups() {
-    return __webpack_require__.e/* import() */(33).then(__webpack_require__.bind(null, 939));
+    return __webpack_require__.e/* import() */(34).then(__webpack_require__.bind(null, 939));
 };
 var Dropdowns = function Dropdowns() {
-    return __webpack_require__.e/* import() */(32).then(__webpack_require__.bind(null, 940));
+    return __webpack_require__.e/* import() */(33).then(__webpack_require__.bind(null, 940));
 };
 var BrandButtons = function BrandButtons() {
-    return __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, 941));
+    return __webpack_require__.e/* import() */(15).then(__webpack_require__.bind(null, 941));
 };
 
 // Views - Icons
 var Flags = function Flags() {
-    return __webpack_require__.e/* import() */(29).then(__webpack_require__.bind(null, 942));
+    return __webpack_require__.e/* import() */(30).then(__webpack_require__.bind(null, 942));
 };
 var FontAwesome = function FontAwesome() {
-    return __webpack_require__.e/* import() */(28).then(__webpack_require__.bind(null, 943));
+    return __webpack_require__.e/* import() */(29).then(__webpack_require__.bind(null, 943));
 };
 var SimpleLineIcons = function SimpleLineIcons() {
-    return __webpack_require__.e/* import() */(27).then(__webpack_require__.bind(null, 944));
+    return __webpack_require__.e/* import() */(28).then(__webpack_require__.bind(null, 944));
 };
 var CoreUIIcons = function CoreUIIcons() {
-    return __webpack_require__.e/* import() */(30).then(__webpack_require__.bind(null, 945));
+    return __webpack_require__.e/* import() */(31).then(__webpack_require__.bind(null, 945));
 };
 
 // Views - Notifications
 var Alerts = function Alerts() {
-    return __webpack_require__.e/* import() */(26).then(__webpack_require__.bind(null, 946));
+    return __webpack_require__.e/* import() */(27).then(__webpack_require__.bind(null, 946));
 };
 var Badges = function Badges() {
-    return __webpack_require__.e/* import() */(25).then(__webpack_require__.bind(null, 947));
+    return __webpack_require__.e/* import() */(26).then(__webpack_require__.bind(null, 947));
 };
 var Modals = function Modals() {
-    return __webpack_require__.e/* import() */(24).then(__webpack_require__.bind(null, 948));
+    return __webpack_require__.e/* import() */(25).then(__webpack_require__.bind(null, 948));
 };
 
 // Views - Pages
 var Page404 = function Page404() {
-    return __webpack_require__.e/* import() */(22).then(__webpack_require__.bind(null, 949));
+    return __webpack_require__.e/* import() */(23).then(__webpack_require__.bind(null, 949));
 };
 var Page500 = function Page500() {
-    return __webpack_require__.e/* import() */(21).then(__webpack_require__.bind(null, 950));
+    return __webpack_require__.e/* import() */(22).then(__webpack_require__.bind(null, 950));
 };
 var Login = function Login() {
-    return __webpack_require__.e/* import() */(23).then(__webpack_require__.bind(null, 951));
+    return __webpack_require__.e/* import() */(24).then(__webpack_require__.bind(null, 951));
 };
 var Register = function Register() {
-    return __webpack_require__.e/* import() */(20).then(__webpack_require__.bind(null, 952));
+    return __webpack_require__.e/* import() */(21).then(__webpack_require__.bind(null, 952));
 };
 var DoctorSpecialization = function DoctorSpecialization() {
-    return __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 953));
+    return __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 953));
 };
 var DoctorQualifications = function DoctorQualifications() {
-    return __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 954));
+    return __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 954));
 };
 var AddDoctor = function AddDoctor() {
     return __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 955));
@@ -72239,7 +72239,7 @@ var AddDoctorImage = function AddDoctorImage() {
     return __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 956));
 };
 var AddClinic = function AddClinic() {
-    return __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 957));
+    return __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 957));
 };
 var Doctors = function Doctors() {
     return __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 958));
@@ -72247,18 +72247,24 @@ var Doctors = function Doctors() {
 var WorkingSessions = function WorkingSessions() {
     return __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 959));
 };
+var StaffBooking = function StaffBooking() {
+    return __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 960));
+};
+var Bookings = function Bookings() {
+    return __webpack_require__.e/* import() */(48).then(__webpack_require__.bind(null, 1835));
+};
 
 // Users
 var Users = function Users() {
-    return __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, 960));
+    return __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, 961));
 };
 var User = function User() {
-    return __webpack_require__.e/* import() */(18).then(__webpack_require__.bind(null, 961));
+    return __webpack_require__.e/* import() */(19).then(__webpack_require__.bind(null, 962));
 };
 
 // Actions
 var Logout = function Logout() {
-    return __webpack_require__.e/* import() */(17).then(__webpack_require__.bind(null, 962));
+    return __webpack_require__.e/* import() */(18).then(__webpack_require__.bind(null, 963));
 };
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
@@ -72291,7 +72297,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 name: 'doctorSpecialization',
                 component: DoctorSpecialization,
                 meta: {
-                    label: 'SpecializationResource',
+                    label: 'Specializations',
                     title: 'Doctor SpecializationResource'
                 }
             }, {
@@ -72333,6 +72339,32 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 meta: {
                     label: 'Working Sessions',
                     title: 'Working Sessions'
+                }
+            }]
+        }, {
+            path: 'booking',
+            name: 'booking',
+            redirect: { name: 'staffNewBooking' },
+            component: {
+                render: function render(c) {
+                    return c('router-view');
+                }
+            },
+            children: [{
+                path: 'new-booking',
+                name: 'staffNewBooking',
+                component: StaffBooking,
+                meta: {
+                    label: 'New Booking',
+                    title: 'Staff Booking'
+                }
+            }, {
+                path: 'all-booking',
+                name: 'allBookings',
+                component: Bookings,
+                meta: {
+                    label: 'All Booking',
+                    title: 'All Bookings'
                 }
             }]
         }, {

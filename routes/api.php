@@ -60,4 +60,17 @@ Route::group([
     Route::get('get-doctor-working-sessions', 'API\AdminDoctorSchedulingController@getWorkingSessions');
     Route::post('update-doctor-working-session', 'API\AdminDoctorSchedulingController@updateWorkingSession');
     Route::get('check-doctor-working-session-relations', 'API\AdminDoctorSchedulingController@checkWorkingSessionRelation');
+
+    /**
+     * Staff Booking
+     */
+    Route::get('get-staff-booking-form-data', 'API\AdminBookingController@getBookingFormData');
+    Route::get('get-staff-booking-clinics', 'API\AdminBookingController@getClinics');
+    Route::get('get-staff-booking-sessions', 'API\AdminBookingController@getSessions');
+    Route::get('get-staff-booking-tokens', 'API\AdminBookingController@getTokens');
+    Route::get('get-staff-booking-patients', 'API\AdminBookingController@getPatients');
+    Route::post('post-staff-booking-patient', 'API\AdminBookingController@addPatient');
+    Route::post('post-staff-booking', 'API\AdminBookingController@addBooking');
+    Route::get('get-staff-bookings', 'API\AdminBookingController@getBookings');
+
 });

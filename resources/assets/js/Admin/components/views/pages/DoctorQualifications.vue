@@ -54,7 +54,7 @@
                                     <td>{{ (qualifications.meta.current_page * qualifications.meta.per_page) -
                                         qualifications.meta.per_page + index + 1}}
                                     </td>
-                                    <td>{{qualification.text}}</td>
+                                    <td>{{qualification.qualification_value}}</td>
                                     <td></td>
                                 </tr>
                             </template>
@@ -80,14 +80,14 @@
 <script>
     import Form from '../../../shared/form';
     import submit from '../../../http/http';
-    import pagination from '../../shared/Pagination';
+    import Pagination from '../../shared/Pagination';
     import listCount from '../../shared/PaginationListCount';
     import {spinner} from "../../../mixins/helper";
 
     export default {
         name: "DoctorQualifications",
         components: {
-            pagination,
+            Pagination,
             listCount,
         },
         mixins: [spinner],

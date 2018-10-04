@@ -1,6 +1,6 @@
-webpackJsonp([10],{
+webpackJsonp([11],{
 
-/***/ 1371:
+/***/ 1385:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -195,12 +195,12 @@ webpackJsonp([10],{
 
 /***/ }),
 
-/***/ 1515:
+/***/ 1547:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ColorTheme__ = __webpack_require__(1516);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ColorTheme__ = __webpack_require__(1548);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ColorTheme___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ColorTheme__);
 //
 //
@@ -273,15 +273,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 1516:
+/***/ 1548:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1517)
+var __vue_script__ = __webpack_require__(1549)
 /* template */
-var __vue_template__ = __webpack_require__(1521)
+var __vue_template__ = __webpack_require__(1553)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -321,12 +321,12 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 1517:
+/***/ 1549:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ColorView__ = __webpack_require__(1518);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ColorView__ = __webpack_require__(1550);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ColorView___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ColorView__);
 //
 //
@@ -355,15 +355,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 1518:
+/***/ 1550:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1519)
+var __vue_script__ = __webpack_require__(1551)
 /* template */
-var __vue_template__ = __webpack_require__(1520)
+var __vue_template__ = __webpack_require__(1552)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -403,12 +403,12 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 1519:
+/***/ 1551:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1371);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1385);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__coreui_coreui_dist_js_coreui_utilities___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__coreui_coreui_dist_js_coreui_utilities__);
 //
 //
@@ -453,7 +453,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 1520:
+/***/ 1552:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -492,7 +492,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 1521:
+/***/ 1553:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -527,7 +527,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 1522:
+/***/ 1554:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -739,9 +739,9 @@ if (false) {
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1515)
+var __vue_script__ = __webpack_require__(1547)
 /* template */
-var __vue_template__ = __webpack_require__(1522)
+var __vue_template__ = __webpack_require__(1554)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */

@@ -1,6 +1,6 @@
-webpackJsonp([12],{
+webpackJsonp([13],{
 
-/***/ 1467:
+/***/ 1490:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10,13 +10,13 @@ var usersData = [{ id: 0, name: 'John Doe', registered: '2018/01/01', role: 'Gue
 
 /***/ }),
 
-/***/ 1736:
+/***/ 1824:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1737);
+var content = __webpack_require__(1825);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -37,7 +37,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1737:
+/***/ 1825:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -52,12 +52,12 @@ exports.push([module.i, "\n.card-body[data-v-6334b94e] table > tbody > tr > td {
 
 /***/ }),
 
-/***/ 1738:
+/***/ 1826:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UsersData__ = __webpack_require__(1467);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UsersData__ = __webpack_require__(1490);
 //
 //
 //
@@ -144,7 +144,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 1739:
+/***/ 1827:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -262,19 +262,19 @@ if (false) {
 
 /***/ }),
 
-/***/ 960:
+/***/ 961:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1736)
+  __webpack_require__(1824)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1738)
+var __vue_script__ = __webpack_require__(1826)
 /* template */
-var __vue_template__ = __webpack_require__(1739)
+var __vue_template__ = __webpack_require__(1827)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */

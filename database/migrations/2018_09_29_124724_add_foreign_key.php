@@ -8,7 +8,7 @@ class AddForeignKey extends Migration
 {
     /**
      * Run the migrations.
-     * Add foreign keys
+     *
      * @return void
      */
     public function up()
@@ -53,7 +53,7 @@ class AddForeignKey extends Migration
         });
 
         Schema::table('booking_slots', function (Blueprint $table) {
-            $table->foreign('working_session_id')->references('id')->on('working_sessions');
+            $table->foreign('session_date_id')->references('id')->on('session_dates');
         });
 
         Schema::table('remarks', function (Blueprint $table) {
@@ -64,6 +64,10 @@ class AddForeignKey extends Migration
         Schema::table('documents', function (Blueprint $table) {
             $table->foreign('doctor_details_id')->references('id')->on('doctor_details');
             $table->foreign('registration_id')->references('id')->on('registrations');
+        });
+
+        Schema::table('session_dates', function (Blueprint $table) {
+            $table->foreign('working_session_id')->references('id')->on('working_sessions');
         });
     }
 

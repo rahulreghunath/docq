@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\FormResource\WeekDayResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WorkingSessionResource extends JsonResource
@@ -21,7 +22,7 @@ class WorkingSessionResource extends JsonResource
             'status' => $this->status,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
-            'week_day'=>WeekDayResource::make($this->week_day)
+            'week_day' => WeekDayResource::make($this->week_day)
         ];
     }
 }

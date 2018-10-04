@@ -16,10 +16,10 @@ class CreateBookingSlotsTable extends Migration
         Schema::create('booking_slots', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('working_session_id')->unsigned();
-            $table->date('date');
+            $table->integer('session_date_id')->unsigned();
             $table->time('start_time')->comment('Start Time');
             $table->time('end_time')->comment('End Time');
+            $table->integer('token_number')->comment('End Time');
             $table->integer('status');
         });
     }

@@ -7,16 +7,14 @@ use App\Constants\Messages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateWorkingSessionRequest;
 use App\Http\Requests\WorkingSessionRequest;
-use App\Http\Resources\ClinicSessionCollection;
-use App\Http\Resources\ClinicsResource;
+use App\Http\Resources\Collections\ClinicSessionCollection;
+use App\Http\Resources\FormResource\ClinicsResource;
 use App\Http\Resources\SingleDoctorBookingResource;
-use App\Http\Resources\WeekDayResource;
+use App\Http\Resources\FormResource\WeekDayResource;
 use App\Models\Booking;
-use App\Models\BookingSlot;
 use App\Models\Clinic;
 use App\Models\WeekDay;
 use App\Models\WorkingSession;
-use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -66,7 +64,11 @@ class AdminDoctorSchedulingController extends Controller
             'message' => $workingSession != false ? Messages::$SESSION_ADDED : Messages::$ERROR_MESSAGE,
         ];
 
-        return response()->json(jsonResponse($data, $workingSession != false ? Constants::$SUCCESS : Constants::$FAILED));
+        return response()->json(
+            jsonResponse(
+                $data, $workingSession != false ? Constants::$SUCCESS : Constants::$FAILED
+            )
+        );
     }
 
     public function getWorkingSessions(Request $request)
@@ -117,7 +119,11 @@ class AdminDoctorSchedulingController extends Controller
             'message' => $session != false ? $message : Messages::$ERROR_MESSAGE,
         ];
 
-        return response()->json(jsonResponse($data, $session != false ? Constants::$SUCCESS : Constants::$FAILED));
+        return response()->json(
+            jsonResponse(
+                $data, $session != false ? Constants::$SUCCESS : Constants::$FAILED
+            )
+        );
     }
 
     public function checkWorkingSessionRelation(Request $request)

@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\FormResource;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Sample extends JsonResource
+class QualificationResource extends JsonResource
 {
     /**
+     * Used for display in form
+     *
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -14,6 +16,9 @@ class Sample extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'value' => $this->id,
+            'text' => $this->qualification_value,
+        ];
     }
 }

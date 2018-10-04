@@ -5,13 +5,13 @@ webpackJsonp([1],Array(917).concat([
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1499)
+  __webpack_require__(1531)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1501)
+var __vue_script__ = __webpack_require__(1533)
 /* template */
-var __vue_template__ = __webpack_require__(1514)
+var __vue_template__ = __webpack_require__(1546)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -95,7 +95,8 @@ module.exports = Component.exports
 /* 960 */,
 /* 961 */,
 /* 962 */,
-/* 963 */
+/* 963 */,
+/* 964 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var require;//! moment.js
@@ -1933,7 +1934,7 @@ module.exports = Component.exports
             try {
                 oldLocale = globalLocale._abbr;
                 var aliasedRequire = require;
-                __webpack_require__(1374)("./" + name);
+                __webpack_require__(1388)("./" + name);
                 getSetGlobalLocale(oldLocale);
             } catch (e) {}
         }
@@ -4608,26 +4609,26 @@ module.exports = Component.exports
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(141)(module)))
 
 /***/ }),
-/* 964 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(1183);
-module.exports.easing = __webpack_require__(1389);
-module.exports.canvas = __webpack_require__(1390);
-module.exports.options = __webpack_require__(1391);
-
-
-/***/ }),
 /* 965 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+module.exports = __webpack_require__(1208);
+module.exports.easing = __webpack_require__(1404);
+module.exports.canvas = __webpack_require__(1405);
+module.exports.options = __webpack_require__(1406);
+
+
+/***/ }),
+/* 966 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var helpers = __webpack_require__(965);
 
 module.exports = {
 	/**
@@ -4640,14 +4641,128 @@ module.exports = {
 
 
 /***/ }),
-/* 966 */
+/* 967 */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return value != null && typeof value == 'object';
+}
+
+module.exports = isObjectLike;
+
+
+/***/ }),
+/* 968 */,
+/* 969 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var root = __webpack_require__(973);
+
+/** Built-in value references. */
+var Symbol = root.Symbol;
+
+module.exports = Symbol;
+
+
+/***/ }),
+/* 970 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Symbol = __webpack_require__(969),
+    getRawTag = __webpack_require__(1193),
+    objectToString = __webpack_require__(1194);
+
+/** `Object#toString` result references. */
+var nullTag = '[object Null]',
+    undefinedTag = '[object Undefined]';
+
+/** Built-in value references. */
+var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+/**
+ * The base implementation of `getTag` without fallbacks for buggy environments.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
+ */
+function baseGetTag(value) {
+  if (value == null) {
+    return value === undefined ? undefinedTag : nullTag;
+  }
+  return (symToStringTag && symToStringTag in Object(value))
+    ? getRawTag(value)
+    : objectToString(value);
+}
+
+module.exports = baseGetTag;
+
+
+/***/ }),
+/* 971 */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(document.body.children);
+ * // => false
+ *
+ * _.isArray('abc');
+ * // => false
+ *
+ * _.isArray(_.noop);
+ * // => false
+ */
+var isArray = Array.isArray;
+
+module.exports = isArray;
+
+
+/***/ }),
+/* 972 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var color = __webpack_require__(1367);
-var helpers = __webpack_require__(964);
+var color = __webpack_require__(1381);
+var helpers = __webpack_require__(965);
 
 function interpolate(start, view, model, ease) {
 	var keys = Object.keys(model);
@@ -4762,37 +4877,132 @@ module.exports = Element;
 
 
 /***/ }),
-/* 967 */,
-/* 968 */,
-/* 969 */
+/* 973 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var freeGlobal = __webpack_require__(978);
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+module.exports = root;
+
+
+/***/ }),
+/* 974 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseToString = __webpack_require__(1191);
+
+/**
+ * Converts `value` to a string. An empty string is returned for `null`
+ * and `undefined` values. The sign of `-0` is preserved.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to convert.
+ * @returns {string} Returns the converted string.
+ * @example
+ *
+ * _.toString(null);
+ * // => ''
+ *
+ * _.toString(-0);
+ * // => '-0'
+ *
+ * _.toString([1, 2, 3]);
+ * // => '1,2,3'
+ */
+function toString(value) {
+  return value == null ? '' : baseToString(value);
+}
+
+module.exports = toString;
+
+
+/***/ }),
+/* 975 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 module.exports = {};
-module.exports.Arc = __webpack_require__(1397);
-module.exports.Line = __webpack_require__(1398);
-module.exports.Point = __webpack_require__(1399);
-module.exports.Rectangle = __webpack_require__(1400);
+module.exports.Arc = __webpack_require__(1412);
+module.exports.Line = __webpack_require__(1413);
+module.exports.Point = __webpack_require__(1414);
+module.exports.Rectangle = __webpack_require__(1415);
 
 
 /***/ }),
-/* 970 */,
-/* 971 */,
-/* 972 */,
-/* 973 */,
-/* 974 */
+/* 976 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(970),
+    isObjectLike = __webpack_require__(967);
+
+/** `Object#toString` result references. */
+var symbolTag = '[object Symbol]';
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && baseGetTag(value) == symbolTag);
+}
+
+module.exports = isSymbol;
+
+
+/***/ }),
+/* 977 */,
+/* 978 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+module.exports = freeGlobal;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
+
+/***/ }),
+/* 979 */,
+/* 980 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return asset; });
 /* unused harmony export pagination */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return spinner; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_loading_spinner_spinner__ = __webpack_require__(982);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return spinner; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return dashCase; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_loading_spinner_spinner__ = __webpack_require__(985);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_kebabCase__ = __webpack_require__(982);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_kebabCase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash_kebabCase__);
 /**
  * Helper functions
  */
+
 
 
 /**
@@ -4866,637 +5076,135 @@ var spinner = {
     }
 };
 
-/***/ }),
-/* 975 */,
-/* 976 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var helpers = __webpack_require__(964);
-
-function filterByPosition(array, position) {
-	return helpers.where(array, function(v) {
-		return v.position === position;
-	});
-}
-
-function sortByWeight(array, reverse) {
-	array.forEach(function(v, i) {
-		v._tmpIndex_ = i;
-		return v;
-	});
-	array.sort(function(a, b) {
-		var v0 = reverse ? b : a;
-		var v1 = reverse ? a : b;
-		return v0.weight === v1.weight ?
-			v0._tmpIndex_ - v1._tmpIndex_ :
-			v0.weight - v1.weight;
-	});
-	array.forEach(function(v) {
-		delete v._tmpIndex_;
-	});
-}
-
-/**
- * @interface ILayoutItem
- * @prop {String} position - The position of the item in the chart layout. Possible values are
- * 'left', 'top', 'right', 'bottom', and 'chartArea'
- * @prop {Number} weight - The weight used to sort the item. Higher weights are further away from the chart area
- * @prop {Boolean} fullWidth - if true, and the item is horizontal, then push vertical boxes down
- * @prop {Function} isHorizontal - returns true if the layout item is horizontal (ie. top or bottom)
- * @prop {Function} update - Takes two parameters: width and height. Returns size of item
- * @prop {Function} getPadding -  Returns an object with padding on the edges
- * @prop {Number} width - Width of item. Must be valid after update()
- * @prop {Number} height - Height of item. Must be valid after update()
- * @prop {Number} left - Left edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} top - Top edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} right - Right edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} bottom - Bottom edge of the item. Set by layout system and cannot be used in update
- */
-
-// The layout service is very self explanatory.  It's responsible for the layout within a chart.
-// Scales, Legends and Plugins all rely on the layout service and can easily register to be placed anywhere they need
-// It is this service's responsibility of carrying out that layout.
-module.exports = {
-	defaults: {},
-
-	/**
-	 * Register a box to a chart.
-	 * A box is simply a reference to an object that requires layout. eg. Scales, Legend, Title.
-	 * @param {Chart} chart - the chart to use
-	 * @param {ILayoutItem} item - the item to add to be layed out
-	 */
-	addBox: function(chart, item) {
-		if (!chart.boxes) {
-			chart.boxes = [];
-		}
-
-		// initialize item with default values
-		item.fullWidth = item.fullWidth || false;
-		item.position = item.position || 'top';
-		item.weight = item.weight || 0;
-
-		chart.boxes.push(item);
-	},
-
-	/**
-	 * Remove a layoutItem from a chart
-	 * @param {Chart} chart - the chart to remove the box from
-	 * @param {Object} layoutItem - the item to remove from the layout
-	 */
-	removeBox: function(chart, layoutItem) {
-		var index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
-		if (index !== -1) {
-			chart.boxes.splice(index, 1);
-		}
-	},
-
-	/**
-	 * Sets (or updates) options on the given `item`.
-	 * @param {Chart} chart - the chart in which the item lives (or will be added to)
-	 * @param {Object} item - the item to configure with the given options
-	 * @param {Object} options - the new item options.
-	 */
-	configure: function(chart, item, options) {
-		var props = ['fullWidth', 'position', 'weight'];
-		var ilen = props.length;
-		var i = 0;
-		var prop;
-
-		for (; i < ilen; ++i) {
-			prop = props[i];
-			if (options.hasOwnProperty(prop)) {
-				item[prop] = options[prop];
-			}
-		}
-	},
-
-	/**
-	 * Fits boxes of the given chart into the given size by having each box measure itself
-	 * then running a fitting algorithm
-	 * @param {Chart} chart - the chart
-	 * @param {Number} width - the width to fit into
-	 * @param {Number} height - the height to fit into
-	 */
-	update: function(chart, width, height) {
-		if (!chart) {
-			return;
-		}
-
-		var layoutOptions = chart.options.layout || {};
-		var padding = helpers.options.toPadding(layoutOptions.padding);
-		var leftPadding = padding.left;
-		var rightPadding = padding.right;
-		var topPadding = padding.top;
-		var bottomPadding = padding.bottom;
-
-		var leftBoxes = filterByPosition(chart.boxes, 'left');
-		var rightBoxes = filterByPosition(chart.boxes, 'right');
-		var topBoxes = filterByPosition(chart.boxes, 'top');
-		var bottomBoxes = filterByPosition(chart.boxes, 'bottom');
-		var chartAreaBoxes = filterByPosition(chart.boxes, 'chartArea');
-
-		// Sort boxes by weight. A higher weight is further away from the chart area
-		sortByWeight(leftBoxes, true);
-		sortByWeight(rightBoxes, false);
-		sortByWeight(topBoxes, true);
-		sortByWeight(bottomBoxes, false);
-
-		// Essentially we now have any number of boxes on each of the 4 sides.
-		// Our canvas looks like the following.
-		// The areas L1 and L2 are the left axes. R1 is the right axis, T1 is the top axis and
-		// B1 is the bottom axis
-		// There are also 4 quadrant-like locations (left to right instead of clockwise) reserved for chart overlays
-		// These locations are single-box locations only, when trying to register a chartArea location that is already taken,
-		// an error will be thrown.
-		//
-		// |----------------------------------------------------|
-		// |                  T1 (Full Width)                   |
-		// |----------------------------------------------------|
-		// |    |    |                 T2                  |    |
-		// |    |----|-------------------------------------|----|
-		// |    |    | C1 |                           | C2 |    |
-		// |    |    |----|                           |----|    |
-		// |    |    |                                     |    |
-		// | L1 | L2 |           ChartArea (C0)            | R1 |
-		// |    |    |                                     |    |
-		// |    |    |----|                           |----|    |
-		// |    |    | C3 |                           | C4 |    |
-		// |    |----|-------------------------------------|----|
-		// |    |    |                 B1                  |    |
-		// |----------------------------------------------------|
-		// |                  B2 (Full Width)                   |
-		// |----------------------------------------------------|
-		//
-		// What we do to find the best sizing, we do the following
-		// 1. Determine the minimum size of the chart area.
-		// 2. Split the remaining width equally between each vertical axis
-		// 3. Split the remaining height equally between each horizontal axis
-		// 4. Give each layout the maximum size it can be. The layout will return it's minimum size
-		// 5. Adjust the sizes of each axis based on it's minimum reported size.
-		// 6. Refit each axis
-		// 7. Position each axis in the final location
-		// 8. Tell the chart the final location of the chart area
-		// 9. Tell any axes that overlay the chart area the positions of the chart area
-
-		// Step 1
-		var chartWidth = width - leftPadding - rightPadding;
-		var chartHeight = height - topPadding - bottomPadding;
-		var chartAreaWidth = chartWidth / 2; // min 50%
-		var chartAreaHeight = chartHeight / 2; // min 50%
-
-		// Step 2
-		var verticalBoxWidth = (width - chartAreaWidth) / (leftBoxes.length + rightBoxes.length);
-
-		// Step 3
-		var horizontalBoxHeight = (height - chartAreaHeight) / (topBoxes.length + bottomBoxes.length);
-
-		// Step 4
-		var maxChartAreaWidth = chartWidth;
-		var maxChartAreaHeight = chartHeight;
-		var minBoxSizes = [];
-
-		function getMinimumBoxSize(box) {
-			var minSize;
-			var isHorizontal = box.isHorizontal();
-
-			if (isHorizontal) {
-				minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, horizontalBoxHeight);
-				maxChartAreaHeight -= minSize.height;
-			} else {
-				minSize = box.update(verticalBoxWidth, maxChartAreaHeight);
-				maxChartAreaWidth -= minSize.width;
-			}
-
-			minBoxSizes.push({
-				horizontal: isHorizontal,
-				minSize: minSize,
-				box: box,
-			});
-		}
-
-		helpers.each(leftBoxes.concat(rightBoxes, topBoxes, bottomBoxes), getMinimumBoxSize);
-
-		// If a horizontal box has padding, we move the left boxes over to avoid ugly charts (see issue #2478)
-		var maxHorizontalLeftPadding = 0;
-		var maxHorizontalRightPadding = 0;
-		var maxVerticalTopPadding = 0;
-		var maxVerticalBottomPadding = 0;
-
-		helpers.each(topBoxes.concat(bottomBoxes), function(horizontalBox) {
-			if (horizontalBox.getPadding) {
-				var boxPadding = horizontalBox.getPadding();
-				maxHorizontalLeftPadding = Math.max(maxHorizontalLeftPadding, boxPadding.left);
-				maxHorizontalRightPadding = Math.max(maxHorizontalRightPadding, boxPadding.right);
-			}
-		});
-
-		helpers.each(leftBoxes.concat(rightBoxes), function(verticalBox) {
-			if (verticalBox.getPadding) {
-				var boxPadding = verticalBox.getPadding();
-				maxVerticalTopPadding = Math.max(maxVerticalTopPadding, boxPadding.top);
-				maxVerticalBottomPadding = Math.max(maxVerticalBottomPadding, boxPadding.bottom);
-			}
-		});
-
-		// At this point, maxChartAreaHeight and maxChartAreaWidth are the size the chart area could
-		// be if the axes are drawn at their minimum sizes.
-		// Steps 5 & 6
-		var totalLeftBoxesWidth = leftPadding;
-		var totalRightBoxesWidth = rightPadding;
-		var totalTopBoxesHeight = topPadding;
-		var totalBottomBoxesHeight = bottomPadding;
-
-		// Function to fit a box
-		function fitBox(box) {
-			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minBox) {
-				return minBox.box === box;
-			});
-
-			if (minBoxSize) {
-				if (box.isHorizontal()) {
-					var scaleMargin = {
-						left: Math.max(totalLeftBoxesWidth, maxHorizontalLeftPadding),
-						right: Math.max(totalRightBoxesWidth, maxHorizontalRightPadding),
-						top: 0,
-						bottom: 0
-					};
-
-					// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
-					// on the margin. Sometimes they need to increase in size slightly
-					box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
-				} else {
-					box.update(minBoxSize.minSize.width, maxChartAreaHeight);
-				}
-			}
-		}
-
-		// Update, and calculate the left and right margins for the horizontal boxes
-		helpers.each(leftBoxes.concat(rightBoxes), fitBox);
-
-		helpers.each(leftBoxes, function(box) {
-			totalLeftBoxesWidth += box.width;
-		});
-
-		helpers.each(rightBoxes, function(box) {
-			totalRightBoxesWidth += box.width;
-		});
-
-		// Set the Left and Right margins for the horizontal boxes
-		helpers.each(topBoxes.concat(bottomBoxes), fitBox);
-
-		// Figure out how much margin is on the top and bottom of the vertical boxes
-		helpers.each(topBoxes, function(box) {
-			totalTopBoxesHeight += box.height;
-		});
-
-		helpers.each(bottomBoxes, function(box) {
-			totalBottomBoxesHeight += box.height;
-		});
-
-		function finalFitVerticalBox(box) {
-			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minSize) {
-				return minSize.box === box;
-			});
-
-			var scaleMargin = {
-				left: 0,
-				right: 0,
-				top: totalTopBoxesHeight,
-				bottom: totalBottomBoxesHeight
-			};
-
-			if (minBoxSize) {
-				box.update(minBoxSize.minSize.width, maxChartAreaHeight, scaleMargin);
-			}
-		}
-
-		// Let the left layout know the final margin
-		helpers.each(leftBoxes.concat(rightBoxes), finalFitVerticalBox);
-
-		// Recalculate because the size of each layout might have changed slightly due to the margins (label rotation for instance)
-		totalLeftBoxesWidth = leftPadding;
-		totalRightBoxesWidth = rightPadding;
-		totalTopBoxesHeight = topPadding;
-		totalBottomBoxesHeight = bottomPadding;
-
-		helpers.each(leftBoxes, function(box) {
-			totalLeftBoxesWidth += box.width;
-		});
-
-		helpers.each(rightBoxes, function(box) {
-			totalRightBoxesWidth += box.width;
-		});
-
-		helpers.each(topBoxes, function(box) {
-			totalTopBoxesHeight += box.height;
-		});
-		helpers.each(bottomBoxes, function(box) {
-			totalBottomBoxesHeight += box.height;
-		});
-
-		// We may be adding some padding to account for rotated x axis labels
-		var leftPaddingAddition = Math.max(maxHorizontalLeftPadding - totalLeftBoxesWidth, 0);
-		totalLeftBoxesWidth += leftPaddingAddition;
-		totalRightBoxesWidth += Math.max(maxHorizontalRightPadding - totalRightBoxesWidth, 0);
-
-		var topPaddingAddition = Math.max(maxVerticalTopPadding - totalTopBoxesHeight, 0);
-		totalTopBoxesHeight += topPaddingAddition;
-		totalBottomBoxesHeight += Math.max(maxVerticalBottomPadding - totalBottomBoxesHeight, 0);
-
-		// Figure out if our chart area changed. This would occur if the dataset layout label rotation
-		// changed due to the application of the margins in step 6. Since we can only get bigger, this is safe to do
-		// without calling `fit` again
-		var newMaxChartAreaHeight = height - totalTopBoxesHeight - totalBottomBoxesHeight;
-		var newMaxChartAreaWidth = width - totalLeftBoxesWidth - totalRightBoxesWidth;
-
-		if (newMaxChartAreaWidth !== maxChartAreaWidth || newMaxChartAreaHeight !== maxChartAreaHeight) {
-			helpers.each(leftBoxes, function(box) {
-				box.height = newMaxChartAreaHeight;
-			});
-
-			helpers.each(rightBoxes, function(box) {
-				box.height = newMaxChartAreaHeight;
-			});
-
-			helpers.each(topBoxes, function(box) {
-				if (!box.fullWidth) {
-					box.width = newMaxChartAreaWidth;
-				}
-			});
-
-			helpers.each(bottomBoxes, function(box) {
-				if (!box.fullWidth) {
-					box.width = newMaxChartAreaWidth;
-				}
-			});
-
-			maxChartAreaHeight = newMaxChartAreaHeight;
-			maxChartAreaWidth = newMaxChartAreaWidth;
-		}
-
-		// Step 7 - Position the boxes
-		var left = leftPadding + leftPaddingAddition;
-		var top = topPadding + topPaddingAddition;
-
-		function placeBox(box) {
-			if (box.isHorizontal()) {
-				box.left = box.fullWidth ? leftPadding : totalLeftBoxesWidth;
-				box.right = box.fullWidth ? width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
-				box.top = top;
-				box.bottom = top + box.height;
-
-				// Move to next point
-				top = box.bottom;
-
-			} else {
-
-				box.left = left;
-				box.right = left + box.width;
-				box.top = totalTopBoxesHeight;
-				box.bottom = totalTopBoxesHeight + maxChartAreaHeight;
-
-				// Move to next point
-				left = box.right;
-			}
-		}
-
-		helpers.each(leftBoxes.concat(topBoxes), placeBox);
-
-		// Account for chart width and height
-		left += maxChartAreaWidth;
-		top += maxChartAreaHeight;
-
-		helpers.each(rightBoxes, placeBox);
-		helpers.each(bottomBoxes, placeBox);
-
-		// Step 8
-		chart.chartArea = {
-			left: totalLeftBoxesWidth,
-			top: totalTopBoxesHeight,
-			right: totalLeftBoxesWidth + maxChartAreaWidth,
-			bottom: totalTopBoxesHeight + maxChartAreaHeight
-		};
-
-		// Step 9
-		helpers.each(chartAreaBoxes, function(box) {
-			box.left = chart.chartArea.left;
-			box.top = chart.chartArea.top;
-			box.right = chart.chartArea.right;
-			box.bottom = chart.chartArea.bottom;
-
-			box.update(maxChartAreaWidth, maxChartAreaHeight);
-		});
-	}
+var dashCase = {
+    methods: {
+        dashCase: function dashCase(value) {
+            return __WEBPACK_IMPORTED_MODULE_1_lodash_kebabCase___default()(value);
+        }
+    }
 };
 
-
 /***/ }),
-/* 977 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var helpers = __webpack_require__(964);
-
-/**
- * Namespace to hold static tick generation functions
- * @namespace Chart.Ticks
- */
-module.exports = {
-	/**
-	 * Namespace to hold formatters for different types of ticks
-	 * @namespace Chart.Ticks.formatters
-	 */
-	formatters: {
-		/**
-		 * Formatter for value labels
-		 * @method Chart.Ticks.formatters.values
-		 * @param value the value to display
-		 * @return {String|Array} the label to display
-		 */
-		values: function(value) {
-			return helpers.isArray(value) ? value : '' + value;
-		},
-
-		/**
-		 * Formatter for linear numeric ticks
-		 * @method Chart.Ticks.formatters.linear
-		 * @param tickValue {Number} the value to be formatted
-		 * @param index {Number} the position of the tickValue parameter in the ticks array
-		 * @param ticks {Array<Number>} the list of ticks being converted
-		 * @return {String} string representation of the tickValue parameter
-		 */
-		linear: function(tickValue, index, ticks) {
-			// If we have lots of ticks, don't use the ones
-			var delta = ticks.length > 3 ? ticks[2] - ticks[1] : ticks[1] - ticks[0];
-
-			// If we have a number like 2.5 as the delta, figure out how many decimal places we need
-			if (Math.abs(delta) > 1) {
-				if (tickValue !== Math.floor(tickValue)) {
-					// not an integer
-					delta = tickValue - Math.floor(tickValue);
-				}
-			}
-
-			var logDelta = helpers.log10(Math.abs(delta));
-			var tickString = '';
-
-			if (tickValue !== 0) {
-				var numDecimal = -1 * Math.floor(logDelta);
-				numDecimal = Math.max(Math.min(numDecimal, 20), 0); // toFixed has a max of 20 decimal places
-				tickString = tickValue.toFixed(numDecimal);
-			} else {
-				tickString = '0'; // never show decimal places for 0
-			}
-
-			return tickString;
-		},
-
-		logarithmic: function(tickValue, index, ticks) {
-			var remain = tickValue / (Math.pow(10, Math.floor(helpers.log10(tickValue))));
-
-			if (tickValue === 0) {
-				return '0';
-			} else if (remain === 1 || remain === 2 || remain === 5 || index === 0 || index === ticks.length - 1) {
-				return tickValue.toExponential();
-			}
-			return '';
-		}
-	}
-};
-
-
-/***/ }),
-/* 978 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export VueCharts */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__ = __webpack_require__(1385);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseCharts__ = __webpack_require__(1386);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a"]; });
-/* unused harmony reexport HorizontalBar */
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h"]; });
-/* unused harmony reexport Bubble */
-/* unused harmony reexport Scatter */
-/* unused harmony reexport mixins */
-/* unused harmony reexport generateChart */
-
-
-var VueCharts = {
-  Bar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a" /* Bar */],
-  HorizontalBar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["d" /* HorizontalBar */],
-  Doughnut: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c" /* Doughnut */],
-  Line: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e" /* Line */],
-  Pie: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f" /* Pie */],
-  PolarArea: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g" /* PolarArea */],
-  Radar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h" /* Radar */],
-  Bubble: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["b" /* Bubble */],
-  Scatter: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["i" /* Scatter */],
-  mixins: __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__["a" /* default */],
-  generateChart: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["j" /* generateChart */],
-  render: function render() {
-    return console.error('[vue-chartjs]: This is not a vue component. It is the whole object containing all vue components. Please import the named export or access the components over the dot notation. For more info visit https://vue-chartjs.org/#/home?id=quick-start');
-  }
-};
-/* unused harmony default export */ var _unused_webpack_default_export = (VueCharts);
-
-
-/***/ }),
-/* 979 */,
-/* 980 */,
 /* 981 */,
 /* 982 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var createCompounder = __webpack_require__(1186);
+
+/**
+ * Converts `string` to
+ * [kebab case](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles).
+ *
+ * @static
+ * @memberOf _
+ * @since 3.0.0
+ * @category String
+ * @param {string} [string=''] The string to convert.
+ * @returns {string} Returns the kebab cased string.
+ * @example
+ *
+ * _.kebabCase('Foo Bar');
+ * // => 'foo-bar'
+ *
+ * _.kebabCase('fooBar');
+ * // => 'foo-bar'
+ *
+ * _.kebabCase('__FOO_BAR__');
+ * // => 'foo-bar'
+ */
+var kebabCase = createCompounder(function(result, word, index) {
+  return result + (index ? '-' : '') + word.toLowerCase();
+});
+
+module.exports = kebabCase;
+
+
+/***/ }),
+/* 983 */,
+/* 984 */,
+/* 985 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Circle_vue__ = __webpack_require__(983);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Circle_vue__ = __webpack_require__(986);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Circle_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Circle_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Circle2_vue__ = __webpack_require__(988);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Circle2_vue__ = __webpack_require__(991);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Circle2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Circle2_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Circle3_vue__ = __webpack_require__(993);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Circle3_vue__ = __webpack_require__(996);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Circle3_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_Circle3_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Circle4_vue__ = __webpack_require__(998);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Circle4_vue__ = __webpack_require__(1001);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Circle4_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_Circle4_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Circle5_vue__ = __webpack_require__(1003);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Circle5_vue__ = __webpack_require__(1006);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Circle5_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_Circle5_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Circle6_vue__ = __webpack_require__(1008);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Circle6_vue__ = __webpack_require__(1011);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Circle6_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_Circle6_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_Circle7_vue__ = __webpack_require__(1013);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_Circle7_vue__ = __webpack_require__(1016);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_Circle7_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_Circle7_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_Circle8_vue__ = __webpack_require__(1018);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_Circle8_vue__ = __webpack_require__(1021);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_Circle8_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_Circle8_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_Circle9_vue__ = __webpack_require__(1023);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_Circle9_vue__ = __webpack_require__(1026);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_Circle9_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_Circle9_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_Circle10_vue__ = __webpack_require__(1028);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_Circle10_vue__ = __webpack_require__(1031);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_Circle10_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__components_Circle10_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_Circle11_vue__ = __webpack_require__(1033);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_Circle11_vue__ = __webpack_require__(1036);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_Circle11_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__components_Circle11_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_CubeShadow_vue__ = __webpack_require__(1038);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_CubeShadow_vue__ = __webpack_require__(1041);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_CubeShadow_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__components_CubeShadow_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_Diamond_vue__ = __webpack_require__(1043);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_Diamond_vue__ = __webpack_require__(1046);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_Diamond_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12__components_Diamond_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_DoubleBounce_vue__ = __webpack_require__(1048);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_DoubleBounce_vue__ = __webpack_require__(1051);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_DoubleBounce_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13__components_DoubleBounce_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_Gauge_vue__ = __webpack_require__(1053);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_Gauge_vue__ = __webpack_require__(1056);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_Gauge_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14__components_Gauge_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__components_Google_vue__ = __webpack_require__(1058);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__components_Google_vue__ = __webpack_require__(1061);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__components_Google_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_15__components_Google_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__components_Hexagon_vue__ = __webpack_require__(1063);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__components_Hexagon_vue__ = __webpack_require__(1066);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__components_Hexagon_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16__components_Hexagon_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__components_HourGlass_vue__ = __webpack_require__(1068);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__components_HourGlass_vue__ = __webpack_require__(1071);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__components_HourGlass_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_17__components_HourGlass_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__components_Jawn_vue__ = __webpack_require__(1073);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__components_Jawn_vue__ = __webpack_require__(1076);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__components_Jawn_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_18__components_Jawn_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__components_Jumper_vue__ = __webpack_require__(1078);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__components_Jumper_vue__ = __webpack_require__(1081);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__components_Jumper_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_19__components_Jumper_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_LetterCube_vue__ = __webpack_require__(1083);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_LetterCube_vue__ = __webpack_require__(1086);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_LetterCube_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_20__components_LetterCube_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__components_Mikepad_vue__ = __webpack_require__(1088);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__components_Mikepad_vue__ = __webpack_require__(1091);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__components_Mikepad_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_21__components_Mikepad_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__components_Origami_vue__ = __webpack_require__(1093);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__components_Origami_vue__ = __webpack_require__(1096);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__components_Origami_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_22__components_Origami_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__components_Pencil_vue__ = __webpack_require__(1098);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__components_Pencil_vue__ = __webpack_require__(1101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__components_Pencil_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_23__components_Pencil_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__components_PingPong_vue__ = __webpack_require__(1103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__components_PingPong_vue__ = __webpack_require__(1106);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__components_PingPong_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_24__components_PingPong_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__components_Plane_vue__ = __webpack_require__(1108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__components_Plane_vue__ = __webpack_require__(1111);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__components_Plane_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_25__components_Plane_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__components_RotateSquare_vue__ = __webpack_require__(1113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__components_RotateSquare_vue__ = __webpack_require__(1116);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__components_RotateSquare_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_26__components_RotateSquare_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__components_RotateSquare2_vue__ = __webpack_require__(1118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__components_RotateSquare2_vue__ = __webpack_require__(1121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__components_RotateSquare2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_27__components_RotateSquare2_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__components_RotateSquare3_vue__ = __webpack_require__(1123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__components_RotateSquare3_vue__ = __webpack_require__(1126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__components_RotateSquare3_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_28__components_RotateSquare3_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__components_RotateSquare4_vue__ = __webpack_require__(1128);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__components_RotateSquare4_vue__ = __webpack_require__(1131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__components_RotateSquare4_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_29__components_RotateSquare4_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__components_RotateSquare5_vue__ = __webpack_require__(1133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__components_RotateSquare5_vue__ = __webpack_require__(1136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__components_RotateSquare5_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_30__components_RotateSquare5_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__components_ScaleOut_vue__ = __webpack_require__(1138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__components_ScaleOut_vue__ = __webpack_require__(1141);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__components_ScaleOut_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_31__components_ScaleOut_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__components_Socket_vue__ = __webpack_require__(1143);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__components_Socket_vue__ = __webpack_require__(1146);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__components_Socket_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_32__components_Socket_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__components_SpinLine_vue__ = __webpack_require__(1148);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__components_SpinLine_vue__ = __webpack_require__(1151);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__components_SpinLine_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_33__components_SpinLine_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__components_SquareGrid_vue__ = __webpack_require__(1153);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__components_SquareGrid_vue__ = __webpack_require__(1156);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__components_SquareGrid_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_34__components_SquareGrid_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__components_Stretch_vue__ = __webpack_require__(1158);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__components_Stretch_vue__ = __webpack_require__(1161);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__components_Stretch_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_35__components_Stretch_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__components_Texture_vue__ = __webpack_require__(1163);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__components_Texture_vue__ = __webpack_require__(1166);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__components_Texture_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_36__components_Texture_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__components_ThreeDots_vue__ = __webpack_require__(1168);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__components_ThreeDots_vue__ = __webpack_require__(1171);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__components_ThreeDots_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_37__components_ThreeDots_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__components_TwoCube_vue__ = __webpack_require__(1173);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__components_TwoCube_vue__ = __webpack_require__(1176);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__components_TwoCube_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_38__components_TwoCube_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__components_Wave_vue__ = __webpack_require__(1178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__components_Wave_vue__ = __webpack_require__(1181);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__components_Wave_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_39__components_Wave_vue__);
 /* unused harmony reexport Circle */
 /* unused harmony reexport Circle2 */
@@ -5582,19 +5290,19 @@ var VueCharts = {
 
 
 /***/ }),
-/* 983 */
+/* 986 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(984)
+  __webpack_require__(987)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(986)
+var __vue_script__ = __webpack_require__(989)
 /* template */
-var __vue_template__ = __webpack_require__(987)
+var __vue_template__ = __webpack_require__(990)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -5633,13 +5341,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 984 */
+/* 987 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(985);
+var content = __webpack_require__(988);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -5659,7 +5367,7 @@ if(false) {
 }
 
 /***/ }),
-/* 985 */
+/* 988 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -5673,7 +5381,7 @@ exports.push([module.i, "\n.spinner[data-v-dd7a1cca] {\n  -webkit-animation: cir
 
 
 /***/ }),
-/* 986 */
+/* 989 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5701,7 +5409,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 987 */
+/* 990 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -5741,19 +5449,19 @@ if (false) {
 }
 
 /***/ }),
-/* 988 */
+/* 991 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(989)
+  __webpack_require__(992)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(991)
+var __vue_script__ = __webpack_require__(994)
 /* template */
-var __vue_template__ = __webpack_require__(992)
+var __vue_template__ = __webpack_require__(995)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -5792,13 +5500,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 989 */
+/* 992 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(990);
+var content = __webpack_require__(993);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -5818,7 +5526,7 @@ if(false) {
 }
 
 /***/ }),
-/* 990 */
+/* 993 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -5832,7 +5540,7 @@ exports.push([module.i, "\n.spinner[data-v-d19a29b2] {\n  -webkit-box-sizing: bo
 
 
 /***/ }),
-/* 991 */
+/* 994 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5869,7 +5577,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 992 */
+/* 995 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -5892,19 +5600,19 @@ if (false) {
 }
 
 /***/ }),
-/* 993 */
+/* 996 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(994)
+  __webpack_require__(997)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(996)
+var __vue_script__ = __webpack_require__(999)
 /* template */
-var __vue_template__ = __webpack_require__(997)
+var __vue_template__ = __webpack_require__(1000)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -5943,13 +5651,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 994 */
+/* 997 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(995);
+var content = __webpack_require__(998);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -5969,7 +5677,7 @@ if(false) {
 }
 
 /***/ }),
-/* 995 */
+/* 998 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -5983,7 +5691,7 @@ exports.push([module.i, "\n.spinner[data-v-d17dfab0] {\n  -webkit-box-sizing: bo
 
 
 /***/ }),
-/* 996 */
+/* 999 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6022,7 +5730,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 997 */
+/* 1000 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -6045,19 +5753,19 @@ if (false) {
 }
 
 /***/ }),
-/* 998 */
+/* 1001 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(999)
+  __webpack_require__(1002)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1001)
+var __vue_script__ = __webpack_require__(1004)
 /* template */
-var __vue_template__ = __webpack_require__(1002)
+var __vue_template__ = __webpack_require__(1005)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -6096,13 +5804,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 999 */
+/* 1002 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1000);
+var content = __webpack_require__(1003);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -6122,7 +5830,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1000 */
+/* 1003 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -6136,7 +5844,7 @@ exports.push([module.i, "\n.spinner[data-v-d161cbae] {\n  -webkit-box-sizing: bo
 
 
 /***/ }),
-/* 1001 */
+/* 1004 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6162,7 +5870,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1002 */
+/* 1005 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -6185,19 +5893,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1003 */
+/* 1006 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1004)
+  __webpack_require__(1007)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1006)
+var __vue_script__ = __webpack_require__(1009)
 /* template */
-var __vue_template__ = __webpack_require__(1007)
+var __vue_template__ = __webpack_require__(1010)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -6236,13 +5944,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1004 */
+/* 1007 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1005);
+var content = __webpack_require__(1008);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -6262,7 +5970,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1005 */
+/* 1008 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -6276,7 +5984,7 @@ exports.push([module.i, "\n.spinner[data-v-d1459cac] {\n  -webkit-transform: tra
 
 
 /***/ }),
-/* 1006 */
+/* 1009 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6302,7 +6010,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1007 */
+/* 1010 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -6325,19 +6033,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1008 */
+/* 1011 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1009)
+  __webpack_require__(1012)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1011)
+var __vue_script__ = __webpack_require__(1014)
 /* template */
-var __vue_template__ = __webpack_require__(1012)
+var __vue_template__ = __webpack_require__(1015)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -6376,13 +6084,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1009 */
+/* 1012 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1010);
+var content = __webpack_require__(1013);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -6402,7 +6110,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1010 */
+/* 1013 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -6416,7 +6124,7 @@ exports.push([module.i, "/* Generated with Bounce.js. Edit at http://goo.gl/hYAz
 
 
 /***/ }),
-/* 1011 */
+/* 1014 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6465,7 +6173,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1012 */
+/* 1015 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -6559,19 +6267,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1013 */
+/* 1016 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1014)
+  __webpack_require__(1017)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1016)
+var __vue_script__ = __webpack_require__(1019)
 /* template */
-var __vue_template__ = __webpack_require__(1017)
+var __vue_template__ = __webpack_require__(1020)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -6610,13 +6318,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1014 */
+/* 1017 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1015);
+var content = __webpack_require__(1018);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -6636,7 +6344,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1015 */
+/* 1018 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -6650,7 +6358,7 @@ exports.push([module.i, "\n.spinner[data-v-d10d3ea8] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1016 */
+/* 1019 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6682,7 +6390,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1017 */
+/* 1020 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -6706,19 +6414,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1018 */
+/* 1021 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1019)
+  __webpack_require__(1022)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1021)
+var __vue_script__ = __webpack_require__(1024)
 /* template */
-var __vue_template__ = __webpack_require__(1022)
+var __vue_template__ = __webpack_require__(1025)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -6757,13 +6465,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1019 */
+/* 1022 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1020);
+var content = __webpack_require__(1023);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -6783,7 +6491,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1020 */
+/* 1023 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -6797,7 +6505,7 @@ exports.push([module.i, "\n.spinner[data-v-d0f10fa6] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1021 */
+/* 1024 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6838,7 +6546,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1022 */
+/* 1025 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -6889,19 +6597,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1023 */
+/* 1026 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1024)
+  __webpack_require__(1027)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1026)
+var __vue_script__ = __webpack_require__(1029)
 /* template */
-var __vue_template__ = __webpack_require__(1027)
+var __vue_template__ = __webpack_require__(1030)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -6940,13 +6648,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1024 */
+/* 1027 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1025);
+var content = __webpack_require__(1028);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -6966,7 +6674,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1025 */
+/* 1028 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -6980,7 +6688,7 @@ exports.push([module.i, "\n.spinner[data-v-d0d4e0a4] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1026 */
+/* 1029 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7026,7 +6734,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1027 */
+/* 1030 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7071,19 +6779,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1028 */
+/* 1031 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1029)
+  __webpack_require__(1032)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1031)
+var __vue_script__ = __webpack_require__(1034)
 /* template */
-var __vue_template__ = __webpack_require__(1032)
+var __vue_template__ = __webpack_require__(1035)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -7122,13 +6830,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1029 */
+/* 1032 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1030);
+var content = __webpack_require__(1033);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -7148,7 +6856,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1030 */
+/* 1033 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -7162,7 +6870,7 @@ exports.push([module.i, "\n.spinner[data-v-4d711b7a] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1031 */
+/* 1034 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7198,7 +6906,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1032 */
+/* 1035 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7226,19 +6934,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1033 */
+/* 1036 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1034)
+  __webpack_require__(1037)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1036)
+var __vue_script__ = __webpack_require__(1039)
 /* template */
-var __vue_template__ = __webpack_require__(1037)
+var __vue_template__ = __webpack_require__(1040)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -7277,13 +6985,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1034 */
+/* 1037 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1035);
+var content = __webpack_require__(1038);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -7303,7 +7011,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1035 */
+/* 1038 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -7317,7 +7025,7 @@ exports.push([module.i, "\n.spinner[data-v-4d7f32fb] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1036 */
+/* 1039 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7345,7 +7053,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1037 */
+/* 1040 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7369,19 +7077,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1038 */
+/* 1041 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1039)
+  __webpack_require__(1042)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1041)
+var __vue_script__ = __webpack_require__(1044)
 /* template */
-var __vue_template__ = __webpack_require__(1042)
+var __vue_template__ = __webpack_require__(1045)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -7420,13 +7128,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1039 */
+/* 1042 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1040);
+var content = __webpack_require__(1043);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -7446,7 +7154,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1040 */
+/* 1043 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -7460,7 +7168,7 @@ exports.push([module.i, "\n.spinner[data-v-1be25680] {\n  -webkit-animation: cub
 
 
 /***/ }),
-/* 1041 */
+/* 1044 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7495,7 +7203,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1042 */
+/* 1045 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7518,19 +7226,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1043 */
+/* 1046 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1044)
+  __webpack_require__(1047)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1046)
+var __vue_script__ = __webpack_require__(1049)
 /* template */
-var __vue_template__ = __webpack_require__(1047)
+var __vue_template__ = __webpack_require__(1050)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -7569,13 +7277,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1044 */
+/* 1047 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1045);
+var content = __webpack_require__(1048);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -7595,7 +7303,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1045 */
+/* 1048 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -7609,7 +7317,7 @@ exports.push([module.i, "\n.spinner[data-v-1326e619] {\n  position: relative;\n}
 
 
 /***/ }),
-/* 1046 */
+/* 1049 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7651,7 +7359,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1047 */
+/* 1050 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7681,19 +7389,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1048 */
+/* 1051 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1049)
+  __webpack_require__(1052)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1051)
+var __vue_script__ = __webpack_require__(1054)
 /* template */
-var __vue_template__ = __webpack_require__(1052)
+var __vue_template__ = __webpack_require__(1055)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -7732,13 +7440,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1049 */
+/* 1052 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1050);
+var content = __webpack_require__(1053);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -7758,7 +7466,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1050 */
+/* 1053 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -7772,7 +7480,7 @@ exports.push([module.i, "\n.spinner[data-v-234863c4] {\n  position: relative;\n 
 
 
 /***/ }),
-/* 1051 */
+/* 1054 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7814,7 +7522,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1052 */
+/* 1055 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7842,19 +7550,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1053 */
+/* 1056 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1054)
+  __webpack_require__(1057)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1056)
+var __vue_script__ = __webpack_require__(1059)
 /* template */
-var __vue_template__ = __webpack_require__(1057)
+var __vue_template__ = __webpack_require__(1060)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -7893,13 +7601,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1054 */
+/* 1057 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1055);
+var content = __webpack_require__(1058);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -7919,7 +7627,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1055 */
+/* 1058 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -7933,7 +7641,7 @@ exports.push([module.i, "\n.spinner[data-v-79b2e27e] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1056 */
+/* 1059 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7968,7 +7676,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1057 */
+/* 1060 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7992,19 +7700,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1058 */
+/* 1061 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1059)
+  __webpack_require__(1062)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1061)
+var __vue_script__ = __webpack_require__(1064)
 /* template */
-var __vue_template__ = __webpack_require__(1062)
+var __vue_template__ = __webpack_require__(1065)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -8043,13 +7751,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1059 */
+/* 1062 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1060);
+var content = __webpack_require__(1063);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8069,7 +7777,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1060 */
+/* 1063 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -8083,7 +7791,7 @@ exports.push([module.i, "\n.spinner[data-v-77f8b684] {\n  overflow: hidden;\n  p
 
 
 /***/ }),
-/* 1061 */
+/* 1064 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8109,7 +7817,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1062 */
+/* 1065 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -8132,19 +7840,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1063 */
+/* 1066 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1064)
+  __webpack_require__(1067)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1066)
+var __vue_script__ = __webpack_require__(1069)
 /* template */
-var __vue_template__ = __webpack_require__(1067)
+var __vue_template__ = __webpack_require__(1070)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -8183,13 +7891,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1064 */
+/* 1067 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1065);
+var content = __webpack_require__(1068);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8209,7 +7917,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1065 */
+/* 1068 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -8223,7 +7931,7 @@ exports.push([module.i, "\n.spinner[data-v-643bb4e5] {\n  overflow: hidden;\n}\n
 
 
 /***/ }),
-/* 1066 */
+/* 1069 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8268,7 +7976,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1067 */
+/* 1070 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -8317,19 +8025,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1068 */
+/* 1071 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1069)
+  __webpack_require__(1072)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1071)
+var __vue_script__ = __webpack_require__(1074)
 /* template */
-var __vue_template__ = __webpack_require__(1072)
+var __vue_template__ = __webpack_require__(1075)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -8368,13 +8076,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1069 */
+/* 1072 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1070);
+var content = __webpack_require__(1073);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8394,7 +8102,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1070 */
+/* 1073 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -8408,7 +8116,7 @@ exports.push([module.i, "\n.spinner[data-v-10d6ab7d] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1071 */
+/* 1074 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8448,7 +8156,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1072 */
+/* 1075 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -8503,19 +8211,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1073 */
+/* 1076 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1074)
+  __webpack_require__(1077)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1076)
+var __vue_script__ = __webpack_require__(1079)
 /* template */
-var __vue_template__ = __webpack_require__(1077)
+var __vue_template__ = __webpack_require__(1080)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -8554,13 +8262,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1074 */
+/* 1077 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1075);
+var content = __webpack_require__(1078);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8580,7 +8288,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1075 */
+/* 1078 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -8594,7 +8302,7 @@ exports.push([module.i, "\n.spinner-inner[data-v-89b83e4e] {\n  width: 70px;\n  
 
 
 /***/ }),
-/* 1076 */
+/* 1079 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8634,7 +8342,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1077 */
+/* 1080 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -8658,19 +8366,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1078 */
+/* 1081 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1079)
+  __webpack_require__(1082)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1081)
+var __vue_script__ = __webpack_require__(1084)
 /* template */
-var __vue_template__ = __webpack_require__(1082)
+var __vue_template__ = __webpack_require__(1085)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -8709,13 +8417,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1079 */
+/* 1082 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1080);
+var content = __webpack_require__(1083);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8735,7 +8443,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1080 */
+/* 1083 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -8749,7 +8457,7 @@ exports.push([module.i, "\n.spinner *[data-v-60eab6b4] {\n  line-height: 0;\n  -
 
 
 /***/ }),
-/* 1081 */
+/* 1084 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8779,7 +8487,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1082 */
+/* 1085 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -8803,19 +8511,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1083 */
+/* 1086 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1084)
+  __webpack_require__(1087)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1086)
+var __vue_script__ = __webpack_require__(1089)
 /* template */
-var __vue_template__ = __webpack_require__(1087)
+var __vue_template__ = __webpack_require__(1090)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -8854,13 +8562,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1084 */
+/* 1087 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1085);
+var content = __webpack_require__(1088);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8880,7 +8588,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1085 */
+/* 1088 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -8894,7 +8602,7 @@ exports.push([module.i, "\n.spinner[data-v-c01b2174] {\n  overflow: hidden;\n  d
 
 
 /***/ }),
-/* 1086 */
+/* 1089 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8938,7 +8646,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1087 */
+/* 1090 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -8985,19 +8693,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1088 */
+/* 1091 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1089)
+  __webpack_require__(1092)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1091)
+var __vue_script__ = __webpack_require__(1094)
 /* template */
-var __vue_template__ = __webpack_require__(1092)
+var __vue_template__ = __webpack_require__(1095)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -9036,13 +8744,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1089 */
+/* 1092 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1090);
+var content = __webpack_require__(1093);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9062,7 +8770,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1090 */
+/* 1093 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -9076,7 +8784,7 @@ exports.push([module.i, "\n.spinner[data-v-0ce94dbc] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1091 */
+/* 1094 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9117,7 +8825,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1092 */
+/* 1095 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9160,19 +8868,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1093 */
+/* 1096 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1094)
+  __webpack_require__(1097)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1096)
+var __vue_script__ = __webpack_require__(1099)
 /* template */
-var __vue_template__ = __webpack_require__(1097)
+var __vue_template__ = __webpack_require__(1100)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -9211,13 +8919,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1094 */
+/* 1097 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1095);
+var content = __webpack_require__(1098);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9237,7 +8945,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1095 */
+/* 1098 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -9251,7 +8959,7 @@ exports.push([module.i, "\n@-webkit-keyframes origami-show-1-data-v-5c6658a1 {\n
 
 
 /***/ }),
-/* 1096 */
+/* 1099 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9292,7 +9000,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1097 */
+/* 1100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9334,19 +9042,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1098 */
+/* 1101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1099)
+  __webpack_require__(1102)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1101)
+var __vue_script__ = __webpack_require__(1104)
 /* template */
-var __vue_template__ = __webpack_require__(1102)
+var __vue_template__ = __webpack_require__(1105)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -9385,13 +9093,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1099 */
+/* 1102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1100);
+var content = __webpack_require__(1103);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9411,7 +9119,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1100 */
+/* 1103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -9425,7 +9133,7 @@ exports.push([module.i, "\n.line[data-v-03ab5b58] {\n  -webkit-animation: linePe
 
 
 /***/ }),
-/* 1101 */
+/* 1104 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9463,7 +9171,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1102 */
+/* 1105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9509,19 +9217,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1103 */
+/* 1106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1104)
+  __webpack_require__(1107)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1106)
+var __vue_script__ = __webpack_require__(1109)
 /* template */
-var __vue_template__ = __webpack_require__(1107)
+var __vue_template__ = __webpack_require__(1110)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -9560,13 +9268,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1104 */
+/* 1107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1105);
+var content = __webpack_require__(1108);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9586,7 +9294,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1105 */
+/* 1108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -9600,7 +9308,7 @@ exports.push([module.i, "\n.spinner[data-v-50de8b95] {\n  overflow: hidden;\n  d
 
 
 /***/ }),
-/* 1106 */
+/* 1109 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9644,7 +9352,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1107 */
+/* 1110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9685,19 +9393,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1108 */
+/* 1111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1109)
+  __webpack_require__(1112)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1111)
+var __vue_script__ = __webpack_require__(1114)
 /* template */
-var __vue_template__ = __webpack_require__(1112)
+var __vue_template__ = __webpack_require__(1115)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -9736,13 +9444,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1109 */
+/* 1112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1110);
+var content = __webpack_require__(1113);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9762,7 +9470,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1110 */
+/* 1113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -9776,7 +9484,7 @@ exports.push([module.i, "\n.spinner[data-v-10bd0261] {\n  position: relative;\n 
 
 
 /***/ }),
-/* 1111 */
+/* 1114 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9827,7 +9535,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1112 */
+/* 1115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9884,19 +9592,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1113 */
+/* 1116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1114)
+  __webpack_require__(1117)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1116)
+var __vue_script__ = __webpack_require__(1119)
 /* template */
-var __vue_template__ = __webpack_require__(1117)
+var __vue_template__ = __webpack_require__(1120)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -9935,13 +9643,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1114 */
+/* 1117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1115);
+var content = __webpack_require__(1118);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9961,7 +9669,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1115 */
+/* 1118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -9975,7 +9683,7 @@ exports.push([module.i, "\n.spinner[data-v-9c801e3a] {\n  display: inline-block;
 
 
 /***/ }),
-/* 1116 */
+/* 1119 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10010,7 +9718,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1117 */
+/* 1120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -10033,19 +9741,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1118 */
+/* 1121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1119)
+  __webpack_require__(1122)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1121)
+var __vue_script__ = __webpack_require__(1124)
 /* template */
-var __vue_template__ = __webpack_require__(1122)
+var __vue_template__ = __webpack_require__(1125)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10084,13 +9792,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1119 */
+/* 1122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1120);
+var content = __webpack_require__(1123);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10110,7 +9818,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1120 */
+/* 1123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -10124,7 +9832,7 @@ exports.push([module.i, "\n.spinner[data-v-f3545642] {\n  position: relative;\n}
 
 
 /***/ }),
-/* 1121 */
+/* 1124 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10154,7 +9862,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1122 */
+/* 1125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -10177,19 +9885,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1123 */
+/* 1126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1124)
+  __webpack_require__(1127)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1126)
+var __vue_script__ = __webpack_require__(1129)
 /* template */
-var __vue_template__ = __webpack_require__(1127)
+var __vue_template__ = __webpack_require__(1130)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10228,13 +9936,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1124 */
+/* 1127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1125);
+var content = __webpack_require__(1128);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10254,7 +9962,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1125 */
+/* 1128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -10268,7 +9976,7 @@ exports.push([module.i, "\n.spinner[data-v-f3382740] {\n  height: 40px;\n  width
 
 
 /***/ }),
-/* 1126 */
+/* 1129 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10311,7 +10019,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1127 */
+/* 1130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -10382,19 +10090,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1128 */
+/* 1131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1129)
+  __webpack_require__(1132)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1131)
+var __vue_script__ = __webpack_require__(1134)
 /* template */
-var __vue_template__ = __webpack_require__(1132)
+var __vue_template__ = __webpack_require__(1135)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10433,13 +10141,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1129 */
+/* 1132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1130);
+var content = __webpack_require__(1133);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10459,7 +10167,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1130 */
+/* 1133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -10473,7 +10181,7 @@ exports.push([module.i, "\n.spinner[data-v-f31bf83e] {\n  position: relative;\n 
 
 
 /***/ }),
-/* 1131 */
+/* 1134 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10505,7 +10213,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1132 */
+/* 1135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -10529,19 +10237,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1133 */
+/* 1136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1134)
+  __webpack_require__(1137)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1136)
+var __vue_script__ = __webpack_require__(1139)
 /* template */
-var __vue_template__ = __webpack_require__(1137)
+var __vue_template__ = __webpack_require__(1140)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10580,13 +10288,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1134 */
+/* 1137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1135);
+var content = __webpack_require__(1138);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10606,7 +10314,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1135 */
+/* 1138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -10620,7 +10328,7 @@ exports.push([module.i, "\n.spinner[data-v-f2ffc93c] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1136 */
+/* 1139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10661,7 +10369,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1137 */
+/* 1140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -10693,19 +10401,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1138 */
+/* 1141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1139)
+  __webpack_require__(1142)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1141)
+var __vue_script__ = __webpack_require__(1144)
 /* template */
-var __vue_template__ = __webpack_require__(1142)
+var __vue_template__ = __webpack_require__(1145)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10744,13 +10452,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1139 */
+/* 1142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1140);
+var content = __webpack_require__(1143);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10770,7 +10478,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1140 */
+/* 1143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -10784,7 +10492,7 @@ exports.push([module.i, "\n.spinner[data-v-5d8d1baf] {\n  border-radius: 100%;\n
 
 
 /***/ }),
-/* 1141 */
+/* 1144 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10819,7 +10527,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1142 */
+/* 1145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -10842,19 +10550,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1143 */
+/* 1146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1144)
+  __webpack_require__(1147)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1146)
+var __vue_script__ = __webpack_require__(1149)
 /* template */
-var __vue_template__ = __webpack_require__(1147)
+var __vue_template__ = __webpack_require__(1150)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10893,13 +10601,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1144 */
+/* 1147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1145);
+var content = __webpack_require__(1148);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10919,7 +10627,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1145 */
+/* 1148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -10933,7 +10641,7 @@ exports.push([module.i, "\n.spinner[data-v-55536a84] {\n  overflow: hidden;\n  d
 
 
 /***/ }),
-/* 1146 */
+/* 1149 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11156,7 +10864,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1147 */
+/* 1150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -11701,19 +11409,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1148 */
+/* 1151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1149)
+  __webpack_require__(1152)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1151)
+var __vue_script__ = __webpack_require__(1154)
 /* template */
-var __vue_template__ = __webpack_require__(1152)
+var __vue_template__ = __webpack_require__(1155)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -11752,13 +11460,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1149 */
+/* 1152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1150);
+var content = __webpack_require__(1153);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -11778,7 +11486,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1150 */
+/* 1153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -11792,7 +11500,7 @@ exports.push([module.i, "\n.spinner[data-v-34c4273e] {\n  display: -webkit-box;\
 
 
 /***/ }),
-/* 1151 */
+/* 1154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11838,7 +11546,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1152 */
+/* 1155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -11862,19 +11570,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1153 */
+/* 1156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1154)
+  __webpack_require__(1157)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1156)
+var __vue_script__ = __webpack_require__(1159)
 /* template */
-var __vue_template__ = __webpack_require__(1157)
+var __vue_template__ = __webpack_require__(1160)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -11913,13 +11621,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1154 */
+/* 1157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1155);
+var content = __webpack_require__(1158);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -11939,7 +11647,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1155 */
+/* 1158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -11953,7 +11661,7 @@ exports.push([module.i, "\n.spinner[data-v-3a52d864] {\n  display: inline-block;
 
 
 /***/ }),
-/* 1156 */
+/* 1159 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12002,7 +11710,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1157 */
+/* 1160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -12044,19 +11752,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1158 */
+/* 1161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1159)
+  __webpack_require__(1162)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1161)
+var __vue_script__ = __webpack_require__(1164)
 /* template */
-var __vue_template__ = __webpack_require__(1162)
+var __vue_template__ = __webpack_require__(1165)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -12095,13 +11803,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1159 */
+/* 1162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1160);
+var content = __webpack_require__(1163);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12121,7 +11829,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1160 */
+/* 1163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -12135,7 +11843,7 @@ exports.push([module.i, "\n.spinner[data-v-49ad296c] {\n  display: inline-block;
 
 
 /***/ }),
-/* 1161 */
+/* 1164 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12180,7 +11888,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1162 */
+/* 1165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -12214,19 +11922,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1163 */
+/* 1166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1164)
+  __webpack_require__(1167)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1166)
+var __vue_script__ = __webpack_require__(1169)
 /* template */
-var __vue_template__ = __webpack_require__(1167)
+var __vue_template__ = __webpack_require__(1170)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -12265,13 +11973,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1164 */
+/* 1167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1165);
+var content = __webpack_require__(1168);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12291,7 +11999,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1165 */
+/* 1168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -12305,7 +12013,7 @@ exports.push([module.i, "\n.spinner[data-v-043d4340] {\n  -ms-flex-negative: 0;\
 
 
 /***/ }),
-/* 1166 */
+/* 1169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12331,7 +12039,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1167 */
+/* 1170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -12354,19 +12062,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1168 */
+/* 1171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1169)
+  __webpack_require__(1172)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1171)
+var __vue_script__ = __webpack_require__(1174)
 /* template */
-var __vue_template__ = __webpack_require__(1172)
+var __vue_template__ = __webpack_require__(1175)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -12405,13 +12113,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1169 */
+/* 1172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1170);
+var content = __webpack_require__(1173);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12431,7 +12139,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1170 */
+/* 1173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -12445,7 +12153,7 @@ exports.push([module.i, "\n.spinner[data-v-244e9ae6] {\n  position: relative;\n 
 
 
 /***/ }),
-/* 1171 */
+/* 1174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12490,7 +12198,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1172 */
+/* 1175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -12518,19 +12226,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1173 */
+/* 1176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1174)
+  __webpack_require__(1177)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1176)
+var __vue_script__ = __webpack_require__(1179)
 /* template */
-var __vue_template__ = __webpack_require__(1177)
+var __vue_template__ = __webpack_require__(1180)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -12569,13 +12277,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1174 */
+/* 1177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1175);
+var content = __webpack_require__(1178);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12595,7 +12303,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1175 */
+/* 1178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -12609,7 +12317,7 @@ exports.push([module.i, "\n.spinner[data-v-11876a34] {\n  display: inline-block;
 
 
 /***/ }),
-/* 1176 */
+/* 1179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12652,7 +12360,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1177 */
+/* 1180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -12680,19 +12388,19 @@ if (false) {
 }
 
 /***/ }),
-/* 1178 */
+/* 1181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(1179)
+  __webpack_require__(1182)
 }
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1181)
+var __vue_script__ = __webpack_require__(1184)
 /* template */
-var __vue_template__ = __webpack_require__(1182)
+var __vue_template__ = __webpack_require__(1185)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -12731,13 +12439,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1179 */
+/* 1182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1180);
+var content = __webpack_require__(1183);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12757,7 +12465,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1180 */
+/* 1183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -12771,7 +12479,7 @@ exports.push([module.i, "\n.spinner *[data-v-014107f8] {\n  line-height: 0;\n  -
 
 
 /***/ }),
-/* 1181 */
+/* 1184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12805,7 +12513,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1182 */
+/* 1185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -12829,7 +12537,1074 @@ if (false) {
 }
 
 /***/ }),
-/* 1183 */
+/* 1186 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayReduce = __webpack_require__(1187),
+    deburr = __webpack_require__(1188),
+    words = __webpack_require__(1195);
+
+/** Used to compose unicode capture groups. */
+var rsApos = "['\u2019]";
+
+/** Used to match apostrophes. */
+var reApos = RegExp(rsApos, 'g');
+
+/**
+ * Creates a function like `_.camelCase`.
+ *
+ * @private
+ * @param {Function} callback The function to combine each word.
+ * @returns {Function} Returns the new compounder function.
+ */
+function createCompounder(callback) {
+  return function(string) {
+    return arrayReduce(words(deburr(string).replace(reApos, '')), callback, '');
+  };
+}
+
+module.exports = createCompounder;
+
+
+/***/ }),
+/* 1187 */
+/***/ (function(module, exports) {
+
+/**
+ * A specialized version of `_.reduce` for arrays without support for
+ * iteratee shorthands.
+ *
+ * @private
+ * @param {Array} [array] The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @param {*} [accumulator] The initial value.
+ * @param {boolean} [initAccum] Specify using the first element of `array` as
+ *  the initial value.
+ * @returns {*} Returns the accumulated value.
+ */
+function arrayReduce(array, iteratee, accumulator, initAccum) {
+  var index = -1,
+      length = array == null ? 0 : array.length;
+
+  if (initAccum && length) {
+    accumulator = array[++index];
+  }
+  while (++index < length) {
+    accumulator = iteratee(accumulator, array[index], index, array);
+  }
+  return accumulator;
+}
+
+module.exports = arrayReduce;
+
+
+/***/ }),
+/* 1188 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var deburrLetter = __webpack_require__(1189),
+    toString = __webpack_require__(974);
+
+/** Used to match Latin Unicode letters (excluding mathematical operators). */
+var reLatin = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g;
+
+/** Used to compose unicode character classes. */
+var rsComboMarksRange = '\\u0300-\\u036f',
+    reComboHalfMarksRange = '\\ufe20-\\ufe2f',
+    rsComboSymbolsRange = '\\u20d0-\\u20ff',
+    rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange;
+
+/** Used to compose unicode capture groups. */
+var rsCombo = '[' + rsComboRange + ']';
+
+/**
+ * Used to match [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks) and
+ * [combining diacritical marks for symbols](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_for_Symbols).
+ */
+var reComboMark = RegExp(rsCombo, 'g');
+
+/**
+ * Deburrs `string` by converting
+ * [Latin-1 Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block)#Character_table)
+ * and [Latin Extended-A](https://en.wikipedia.org/wiki/Latin_Extended-A)
+ * letters to basic Latin letters and removing
+ * [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
+ *
+ * @static
+ * @memberOf _
+ * @since 3.0.0
+ * @category String
+ * @param {string} [string=''] The string to deburr.
+ * @returns {string} Returns the deburred string.
+ * @example
+ *
+ * _.deburr('déjà vu');
+ * // => 'deja vu'
+ */
+function deburr(string) {
+  string = toString(string);
+  return string && string.replace(reLatin, deburrLetter).replace(reComboMark, '');
+}
+
+module.exports = deburr;
+
+
+/***/ }),
+/* 1189 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var basePropertyOf = __webpack_require__(1190);
+
+/** Used to map Latin Unicode letters to basic Latin letters. */
+var deburredLetters = {
+  // Latin-1 Supplement block.
+  '\xc0': 'A',  '\xc1': 'A', '\xc2': 'A', '\xc3': 'A', '\xc4': 'A', '\xc5': 'A',
+  '\xe0': 'a',  '\xe1': 'a', '\xe2': 'a', '\xe3': 'a', '\xe4': 'a', '\xe5': 'a',
+  '\xc7': 'C',  '\xe7': 'c',
+  '\xd0': 'D',  '\xf0': 'd',
+  '\xc8': 'E',  '\xc9': 'E', '\xca': 'E', '\xcb': 'E',
+  '\xe8': 'e',  '\xe9': 'e', '\xea': 'e', '\xeb': 'e',
+  '\xcc': 'I',  '\xcd': 'I', '\xce': 'I', '\xcf': 'I',
+  '\xec': 'i',  '\xed': 'i', '\xee': 'i', '\xef': 'i',
+  '\xd1': 'N',  '\xf1': 'n',
+  '\xd2': 'O',  '\xd3': 'O', '\xd4': 'O', '\xd5': 'O', '\xd6': 'O', '\xd8': 'O',
+  '\xf2': 'o',  '\xf3': 'o', '\xf4': 'o', '\xf5': 'o', '\xf6': 'o', '\xf8': 'o',
+  '\xd9': 'U',  '\xda': 'U', '\xdb': 'U', '\xdc': 'U',
+  '\xf9': 'u',  '\xfa': 'u', '\xfb': 'u', '\xfc': 'u',
+  '\xdd': 'Y',  '\xfd': 'y', '\xff': 'y',
+  '\xc6': 'Ae', '\xe6': 'ae',
+  '\xde': 'Th', '\xfe': 'th',
+  '\xdf': 'ss',
+  // Latin Extended-A block.
+  '\u0100': 'A',  '\u0102': 'A', '\u0104': 'A',
+  '\u0101': 'a',  '\u0103': 'a', '\u0105': 'a',
+  '\u0106': 'C',  '\u0108': 'C', '\u010a': 'C', '\u010c': 'C',
+  '\u0107': 'c',  '\u0109': 'c', '\u010b': 'c', '\u010d': 'c',
+  '\u010e': 'D',  '\u0110': 'D', '\u010f': 'd', '\u0111': 'd',
+  '\u0112': 'E',  '\u0114': 'E', '\u0116': 'E', '\u0118': 'E', '\u011a': 'E',
+  '\u0113': 'e',  '\u0115': 'e', '\u0117': 'e', '\u0119': 'e', '\u011b': 'e',
+  '\u011c': 'G',  '\u011e': 'G', '\u0120': 'G', '\u0122': 'G',
+  '\u011d': 'g',  '\u011f': 'g', '\u0121': 'g', '\u0123': 'g',
+  '\u0124': 'H',  '\u0126': 'H', '\u0125': 'h', '\u0127': 'h',
+  '\u0128': 'I',  '\u012a': 'I', '\u012c': 'I', '\u012e': 'I', '\u0130': 'I',
+  '\u0129': 'i',  '\u012b': 'i', '\u012d': 'i', '\u012f': 'i', '\u0131': 'i',
+  '\u0134': 'J',  '\u0135': 'j',
+  '\u0136': 'K',  '\u0137': 'k', '\u0138': 'k',
+  '\u0139': 'L',  '\u013b': 'L', '\u013d': 'L', '\u013f': 'L', '\u0141': 'L',
+  '\u013a': 'l',  '\u013c': 'l', '\u013e': 'l', '\u0140': 'l', '\u0142': 'l',
+  '\u0143': 'N',  '\u0145': 'N', '\u0147': 'N', '\u014a': 'N',
+  '\u0144': 'n',  '\u0146': 'n', '\u0148': 'n', '\u014b': 'n',
+  '\u014c': 'O',  '\u014e': 'O', '\u0150': 'O',
+  '\u014d': 'o',  '\u014f': 'o', '\u0151': 'o',
+  '\u0154': 'R',  '\u0156': 'R', '\u0158': 'R',
+  '\u0155': 'r',  '\u0157': 'r', '\u0159': 'r',
+  '\u015a': 'S',  '\u015c': 'S', '\u015e': 'S', '\u0160': 'S',
+  '\u015b': 's',  '\u015d': 's', '\u015f': 's', '\u0161': 's',
+  '\u0162': 'T',  '\u0164': 'T', '\u0166': 'T',
+  '\u0163': 't',  '\u0165': 't', '\u0167': 't',
+  '\u0168': 'U',  '\u016a': 'U', '\u016c': 'U', '\u016e': 'U', '\u0170': 'U', '\u0172': 'U',
+  '\u0169': 'u',  '\u016b': 'u', '\u016d': 'u', '\u016f': 'u', '\u0171': 'u', '\u0173': 'u',
+  '\u0174': 'W',  '\u0175': 'w',
+  '\u0176': 'Y',  '\u0177': 'y', '\u0178': 'Y',
+  '\u0179': 'Z',  '\u017b': 'Z', '\u017d': 'Z',
+  '\u017a': 'z',  '\u017c': 'z', '\u017e': 'z',
+  '\u0132': 'IJ', '\u0133': 'ij',
+  '\u0152': 'Oe', '\u0153': 'oe',
+  '\u0149': "'n", '\u017f': 's'
+};
+
+/**
+ * Used by `_.deburr` to convert Latin-1 Supplement and Latin Extended-A
+ * letters to basic Latin letters.
+ *
+ * @private
+ * @param {string} letter The matched letter to deburr.
+ * @returns {string} Returns the deburred letter.
+ */
+var deburrLetter = basePropertyOf(deburredLetters);
+
+module.exports = deburrLetter;
+
+
+/***/ }),
+/* 1190 */
+/***/ (function(module, exports) {
+
+/**
+ * The base implementation of `_.propertyOf` without support for deep paths.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Function} Returns the new accessor function.
+ */
+function basePropertyOf(object) {
+  return function(key) {
+    return object == null ? undefined : object[key];
+  };
+}
+
+module.exports = basePropertyOf;
+
+
+/***/ }),
+/* 1191 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Symbol = __webpack_require__(969),
+    arrayMap = __webpack_require__(1192),
+    isArray = __webpack_require__(971),
+    isSymbol = __webpack_require__(976);
+
+/** Used as references for various `Number` constants. */
+var INFINITY = 1 / 0;
+
+/** Used to convert symbols to primitives and strings. */
+var symbolProto = Symbol ? Symbol.prototype : undefined,
+    symbolToString = symbolProto ? symbolProto.toString : undefined;
+
+/**
+ * The base implementation of `_.toString` which doesn't convert nullish
+ * values to empty strings.
+ *
+ * @private
+ * @param {*} value The value to process.
+ * @returns {string} Returns the string.
+ */
+function baseToString(value) {
+  // Exit early for strings to avoid a performance hit in some environments.
+  if (typeof value == 'string') {
+    return value;
+  }
+  if (isArray(value)) {
+    // Recursively convert values (susceptible to call stack limits).
+    return arrayMap(value, baseToString) + '';
+  }
+  if (isSymbol(value)) {
+    return symbolToString ? symbolToString.call(value) : '';
+  }
+  var result = (value + '');
+  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+}
+
+module.exports = baseToString;
+
+
+/***/ }),
+/* 1192 */
+/***/ (function(module, exports) {
+
+/**
+ * A specialized version of `_.map` for arrays without support for iteratee
+ * shorthands.
+ *
+ * @private
+ * @param {Array} [array] The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array} Returns the new mapped array.
+ */
+function arrayMap(array, iteratee) {
+  var index = -1,
+      length = array == null ? 0 : array.length,
+      result = Array(length);
+
+  while (++index < length) {
+    result[index] = iteratee(array[index], index, array);
+  }
+  return result;
+}
+
+module.exports = arrayMap;
+
+
+/***/ }),
+/* 1193 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Symbol = __webpack_require__(969);
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString = objectProto.toString;
+
+/** Built-in value references. */
+var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+/**
+ * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the raw `toStringTag`.
+ */
+function getRawTag(value) {
+  var isOwn = hasOwnProperty.call(value, symToStringTag),
+      tag = value[symToStringTag];
+
+  try {
+    value[symToStringTag] = undefined;
+    var unmasked = true;
+  } catch (e) {}
+
+  var result = nativeObjectToString.call(value);
+  if (unmasked) {
+    if (isOwn) {
+      value[symToStringTag] = tag;
+    } else {
+      delete value[symToStringTag];
+    }
+  }
+  return result;
+}
+
+module.exports = getRawTag;
+
+
+/***/ }),
+/* 1194 */
+/***/ (function(module, exports) {
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString = objectProto.toString;
+
+/**
+ * Converts `value` to a string using `Object.prototype.toString`.
+ *
+ * @private
+ * @param {*} value The value to convert.
+ * @returns {string} Returns the converted string.
+ */
+function objectToString(value) {
+  return nativeObjectToString.call(value);
+}
+
+module.exports = objectToString;
+
+
+/***/ }),
+/* 1195 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var asciiWords = __webpack_require__(1196),
+    hasUnicodeWord = __webpack_require__(1197),
+    toString = __webpack_require__(974),
+    unicodeWords = __webpack_require__(1198);
+
+/**
+ * Splits `string` into an array of its words.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.0.0
+ * @category String
+ * @param {string} [string=''] The string to inspect.
+ * @param {RegExp|string} [pattern] The pattern to match words.
+ * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
+ * @returns {Array} Returns the words of `string`.
+ * @example
+ *
+ * _.words('fred, barney, & pebbles');
+ * // => ['fred', 'barney', 'pebbles']
+ *
+ * _.words('fred, barney, & pebbles', /[^, ]+/g);
+ * // => ['fred', 'barney', '&', 'pebbles']
+ */
+function words(string, pattern, guard) {
+  string = toString(string);
+  pattern = guard ? undefined : pattern;
+
+  if (pattern === undefined) {
+    return hasUnicodeWord(string) ? unicodeWords(string) : asciiWords(string);
+  }
+  return string.match(pattern) || [];
+}
+
+module.exports = words;
+
+
+/***/ }),
+/* 1196 */
+/***/ (function(module, exports) {
+
+/** Used to match words composed of alphanumeric characters. */
+var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+
+/**
+ * Splits an ASCII `string` into an array of its words.
+ *
+ * @private
+ * @param {string} The string to inspect.
+ * @returns {Array} Returns the words of `string`.
+ */
+function asciiWords(string) {
+  return string.match(reAsciiWord) || [];
+}
+
+module.exports = asciiWords;
+
+
+/***/ }),
+/* 1197 */
+/***/ (function(module, exports) {
+
+/** Used to detect strings that need a more robust regexp to match words. */
+var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2,}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
+
+/**
+ * Checks if `string` contains a word composed of Unicode symbols.
+ *
+ * @private
+ * @param {string} string The string to inspect.
+ * @returns {boolean} Returns `true` if a word is found, else `false`.
+ */
+function hasUnicodeWord(string) {
+  return reHasUnicodeWord.test(string);
+}
+
+module.exports = hasUnicodeWord;
+
+
+/***/ }),
+/* 1198 */
+/***/ (function(module, exports) {
+
+/** Used to compose unicode character classes. */
+var rsAstralRange = '\\ud800-\\udfff',
+    rsComboMarksRange = '\\u0300-\\u036f',
+    reComboHalfMarksRange = '\\ufe20-\\ufe2f',
+    rsComboSymbolsRange = '\\u20d0-\\u20ff',
+    rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
+    rsDingbatRange = '\\u2700-\\u27bf',
+    rsLowerRange = 'a-z\\xdf-\\xf6\\xf8-\\xff',
+    rsMathOpRange = '\\xac\\xb1\\xd7\\xf7',
+    rsNonCharRange = '\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf',
+    rsPunctuationRange = '\\u2000-\\u206f',
+    rsSpaceRange = ' \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000',
+    rsUpperRange = 'A-Z\\xc0-\\xd6\\xd8-\\xde',
+    rsVarRange = '\\ufe0e\\ufe0f',
+    rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
+
+/** Used to compose unicode capture groups. */
+var rsApos = "['\u2019]",
+    rsBreak = '[' + rsBreakRange + ']',
+    rsCombo = '[' + rsComboRange + ']',
+    rsDigits = '\\d+',
+    rsDingbat = '[' + rsDingbatRange + ']',
+    rsLower = '[' + rsLowerRange + ']',
+    rsMisc = '[^' + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + ']',
+    rsFitz = '\\ud83c[\\udffb-\\udfff]',
+    rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')',
+    rsNonAstral = '[^' + rsAstralRange + ']',
+    rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}',
+    rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]',
+    rsUpper = '[' + rsUpperRange + ']',
+    rsZWJ = '\\u200d';
+
+/** Used to compose unicode regexes. */
+var rsMiscLower = '(?:' + rsLower + '|' + rsMisc + ')',
+    rsMiscUpper = '(?:' + rsUpper + '|' + rsMisc + ')',
+    rsOptContrLower = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
+    rsOptContrUpper = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
+    reOptMod = rsModifier + '?',
+    rsOptVar = '[' + rsVarRange + ']?',
+    rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
+    rsOrdLower = '\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])',
+    rsOrdUpper = '\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])',
+    rsSeq = rsOptVar + reOptMod + rsOptJoin,
+    rsEmoji = '(?:' + [rsDingbat, rsRegional, rsSurrPair].join('|') + ')' + rsSeq;
+
+/** Used to match complex or compound words. */
+var reUnicodeWord = RegExp([
+  rsUpper + '?' + rsLower + '+' + rsOptContrLower + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
+  rsMiscUpper + '+' + rsOptContrUpper + '(?=' + [rsBreak, rsUpper + rsMiscLower, '$'].join('|') + ')',
+  rsUpper + '?' + rsMiscLower + '+' + rsOptContrLower,
+  rsUpper + '+' + rsOptContrUpper,
+  rsOrdUpper,
+  rsOrdLower,
+  rsDigits,
+  rsEmoji
+].join('|'), 'g');
+
+/**
+ * Splits a Unicode `string` into an array of its words.
+ *
+ * @private
+ * @param {string} The string to inspect.
+ * @returns {Array} Returns the words of `string`.
+ */
+function unicodeWords(string) {
+  return string.match(reUnicodeWord) || [];
+}
+
+module.exports = unicodeWords;
+
+
+/***/ }),
+/* 1199 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var helpers = __webpack_require__(965);
+
+function filterByPosition(array, position) {
+	return helpers.where(array, function(v) {
+		return v.position === position;
+	});
+}
+
+function sortByWeight(array, reverse) {
+	array.forEach(function(v, i) {
+		v._tmpIndex_ = i;
+		return v;
+	});
+	array.sort(function(a, b) {
+		var v0 = reverse ? b : a;
+		var v1 = reverse ? a : b;
+		return v0.weight === v1.weight ?
+			v0._tmpIndex_ - v1._tmpIndex_ :
+			v0.weight - v1.weight;
+	});
+	array.forEach(function(v) {
+		delete v._tmpIndex_;
+	});
+}
+
+/**
+ * @interface ILayoutItem
+ * @prop {String} position - The position of the item in the chart layout. Possible values are
+ * 'left', 'top', 'right', 'bottom', and 'chartArea'
+ * @prop {Number} weight - The weight used to sort the item. Higher weights are further away from the chart area
+ * @prop {Boolean} fullWidth - if true, and the item is horizontal, then push vertical boxes down
+ * @prop {Function} isHorizontal - returns true if the layout item is horizontal (ie. top or bottom)
+ * @prop {Function} update - Takes two parameters: width and height. Returns size of item
+ * @prop {Function} getPadding -  Returns an object with padding on the edges
+ * @prop {Number} width - Width of item. Must be valid after update()
+ * @prop {Number} height - Height of item. Must be valid after update()
+ * @prop {Number} left - Left edge of the item. Set by layout system and cannot be used in update
+ * @prop {Number} top - Top edge of the item. Set by layout system and cannot be used in update
+ * @prop {Number} right - Right edge of the item. Set by layout system and cannot be used in update
+ * @prop {Number} bottom - Bottom edge of the item. Set by layout system and cannot be used in update
+ */
+
+// The layout service is very self explanatory.  It's responsible for the layout within a chart.
+// Scales, Legends and Plugins all rely on the layout service and can easily register to be placed anywhere they need
+// It is this service's responsibility of carrying out that layout.
+module.exports = {
+	defaults: {},
+
+	/**
+	 * Register a box to a chart.
+	 * A box is simply a reference to an object that requires layout. eg. Scales, Legend, Title.
+	 * @param {Chart} chart - the chart to use
+	 * @param {ILayoutItem} item - the item to add to be layed out
+	 */
+	addBox: function(chart, item) {
+		if (!chart.boxes) {
+			chart.boxes = [];
+		}
+
+		// initialize item with default values
+		item.fullWidth = item.fullWidth || false;
+		item.position = item.position || 'top';
+		item.weight = item.weight || 0;
+
+		chart.boxes.push(item);
+	},
+
+	/**
+	 * Remove a layoutItem from a chart
+	 * @param {Chart} chart - the chart to remove the box from
+	 * @param {Object} layoutItem - the item to remove from the layout
+	 */
+	removeBox: function(chart, layoutItem) {
+		var index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
+		if (index !== -1) {
+			chart.boxes.splice(index, 1);
+		}
+	},
+
+	/**
+	 * Sets (or updates) options on the given `item`.
+	 * @param {Chart} chart - the chart in which the item lives (or will be added to)
+	 * @param {Object} item - the item to configure with the given options
+	 * @param {Object} options - the new item options.
+	 */
+	configure: function(chart, item, options) {
+		var props = ['fullWidth', 'position', 'weight'];
+		var ilen = props.length;
+		var i = 0;
+		var prop;
+
+		for (; i < ilen; ++i) {
+			prop = props[i];
+			if (options.hasOwnProperty(prop)) {
+				item[prop] = options[prop];
+			}
+		}
+	},
+
+	/**
+	 * Fits boxes of the given chart into the given size by having each box measure itself
+	 * then running a fitting algorithm
+	 * @param {Chart} chart - the chart
+	 * @param {Number} width - the width to fit into
+	 * @param {Number} height - the height to fit into
+	 */
+	update: function(chart, width, height) {
+		if (!chart) {
+			return;
+		}
+
+		var layoutOptions = chart.options.layout || {};
+		var padding = helpers.options.toPadding(layoutOptions.padding);
+		var leftPadding = padding.left;
+		var rightPadding = padding.right;
+		var topPadding = padding.top;
+		var bottomPadding = padding.bottom;
+
+		var leftBoxes = filterByPosition(chart.boxes, 'left');
+		var rightBoxes = filterByPosition(chart.boxes, 'right');
+		var topBoxes = filterByPosition(chart.boxes, 'top');
+		var bottomBoxes = filterByPosition(chart.boxes, 'bottom');
+		var chartAreaBoxes = filterByPosition(chart.boxes, 'chartArea');
+
+		// Sort boxes by weight. A higher weight is further away from the chart area
+		sortByWeight(leftBoxes, true);
+		sortByWeight(rightBoxes, false);
+		sortByWeight(topBoxes, true);
+		sortByWeight(bottomBoxes, false);
+
+		// Essentially we now have any number of boxes on each of the 4 sides.
+		// Our canvas looks like the following.
+		// The areas L1 and L2 are the left axes. R1 is the right axis, T1 is the top axis and
+		// B1 is the bottom axis
+		// There are also 4 quadrant-like locations (left to right instead of clockwise) reserved for chart overlays
+		// These locations are single-box locations only, when trying to register a chartArea location that is already taken,
+		// an error will be thrown.
+		//
+		// |----------------------------------------------------|
+		// |                  T1 (Full Width)                   |
+		// |----------------------------------------------------|
+		// |    |    |                 T2                  |    |
+		// |    |----|-------------------------------------|----|
+		// |    |    | C1 |                           | C2 |    |
+		// |    |    |----|                           |----|    |
+		// |    |    |                                     |    |
+		// | L1 | L2 |           ChartArea (C0)            | R1 |
+		// |    |    |                                     |    |
+		// |    |    |----|                           |----|    |
+		// |    |    | C3 |                           | C4 |    |
+		// |    |----|-------------------------------------|----|
+		// |    |    |                 B1                  |    |
+		// |----------------------------------------------------|
+		// |                  B2 (Full Width)                   |
+		// |----------------------------------------------------|
+		//
+		// What we do to find the best sizing, we do the following
+		// 1. Determine the minimum size of the chart area.
+		// 2. Split the remaining width equally between each vertical axis
+		// 3. Split the remaining height equally between each horizontal axis
+		// 4. Give each layout the maximum size it can be. The layout will return it's minimum size
+		// 5. Adjust the sizes of each axis based on it's minimum reported size.
+		// 6. Refit each axis
+		// 7. Position each axis in the final location
+		// 8. Tell the chart the final location of the chart area
+		// 9. Tell any axes that overlay the chart area the positions of the chart area
+
+		// Step 1
+		var chartWidth = width - leftPadding - rightPadding;
+		var chartHeight = height - topPadding - bottomPadding;
+		var chartAreaWidth = chartWidth / 2; // min 50%
+		var chartAreaHeight = chartHeight / 2; // min 50%
+
+		// Step 2
+		var verticalBoxWidth = (width - chartAreaWidth) / (leftBoxes.length + rightBoxes.length);
+
+		// Step 3
+		var horizontalBoxHeight = (height - chartAreaHeight) / (topBoxes.length + bottomBoxes.length);
+
+		// Step 4
+		var maxChartAreaWidth = chartWidth;
+		var maxChartAreaHeight = chartHeight;
+		var minBoxSizes = [];
+
+		function getMinimumBoxSize(box) {
+			var minSize;
+			var isHorizontal = box.isHorizontal();
+
+			if (isHorizontal) {
+				minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, horizontalBoxHeight);
+				maxChartAreaHeight -= minSize.height;
+			} else {
+				minSize = box.update(verticalBoxWidth, maxChartAreaHeight);
+				maxChartAreaWidth -= minSize.width;
+			}
+
+			minBoxSizes.push({
+				horizontal: isHorizontal,
+				minSize: minSize,
+				box: box,
+			});
+		}
+
+		helpers.each(leftBoxes.concat(rightBoxes, topBoxes, bottomBoxes), getMinimumBoxSize);
+
+		// If a horizontal box has padding, we move the left boxes over to avoid ugly charts (see issue #2478)
+		var maxHorizontalLeftPadding = 0;
+		var maxHorizontalRightPadding = 0;
+		var maxVerticalTopPadding = 0;
+		var maxVerticalBottomPadding = 0;
+
+		helpers.each(topBoxes.concat(bottomBoxes), function(horizontalBox) {
+			if (horizontalBox.getPadding) {
+				var boxPadding = horizontalBox.getPadding();
+				maxHorizontalLeftPadding = Math.max(maxHorizontalLeftPadding, boxPadding.left);
+				maxHorizontalRightPadding = Math.max(maxHorizontalRightPadding, boxPadding.right);
+			}
+		});
+
+		helpers.each(leftBoxes.concat(rightBoxes), function(verticalBox) {
+			if (verticalBox.getPadding) {
+				var boxPadding = verticalBox.getPadding();
+				maxVerticalTopPadding = Math.max(maxVerticalTopPadding, boxPadding.top);
+				maxVerticalBottomPadding = Math.max(maxVerticalBottomPadding, boxPadding.bottom);
+			}
+		});
+
+		// At this point, maxChartAreaHeight and maxChartAreaWidth are the size the chart area could
+		// be if the axes are drawn at their minimum sizes.
+		// Steps 5 & 6
+		var totalLeftBoxesWidth = leftPadding;
+		var totalRightBoxesWidth = rightPadding;
+		var totalTopBoxesHeight = topPadding;
+		var totalBottomBoxesHeight = bottomPadding;
+
+		// Function to fit a box
+		function fitBox(box) {
+			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minBox) {
+				return minBox.box === box;
+			});
+
+			if (minBoxSize) {
+				if (box.isHorizontal()) {
+					var scaleMargin = {
+						left: Math.max(totalLeftBoxesWidth, maxHorizontalLeftPadding),
+						right: Math.max(totalRightBoxesWidth, maxHorizontalRightPadding),
+						top: 0,
+						bottom: 0
+					};
+
+					// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
+					// on the margin. Sometimes they need to increase in size slightly
+					box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
+				} else {
+					box.update(minBoxSize.minSize.width, maxChartAreaHeight);
+				}
+			}
+		}
+
+		// Update, and calculate the left and right margins for the horizontal boxes
+		helpers.each(leftBoxes.concat(rightBoxes), fitBox);
+
+		helpers.each(leftBoxes, function(box) {
+			totalLeftBoxesWidth += box.width;
+		});
+
+		helpers.each(rightBoxes, function(box) {
+			totalRightBoxesWidth += box.width;
+		});
+
+		// Set the Left and Right margins for the horizontal boxes
+		helpers.each(topBoxes.concat(bottomBoxes), fitBox);
+
+		// Figure out how much margin is on the top and bottom of the vertical boxes
+		helpers.each(topBoxes, function(box) {
+			totalTopBoxesHeight += box.height;
+		});
+
+		helpers.each(bottomBoxes, function(box) {
+			totalBottomBoxesHeight += box.height;
+		});
+
+		function finalFitVerticalBox(box) {
+			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minSize) {
+				return minSize.box === box;
+			});
+
+			var scaleMargin = {
+				left: 0,
+				right: 0,
+				top: totalTopBoxesHeight,
+				bottom: totalBottomBoxesHeight
+			};
+
+			if (minBoxSize) {
+				box.update(minBoxSize.minSize.width, maxChartAreaHeight, scaleMargin);
+			}
+		}
+
+		// Let the left layout know the final margin
+		helpers.each(leftBoxes.concat(rightBoxes), finalFitVerticalBox);
+
+		// Recalculate because the size of each layout might have changed slightly due to the margins (label rotation for instance)
+		totalLeftBoxesWidth = leftPadding;
+		totalRightBoxesWidth = rightPadding;
+		totalTopBoxesHeight = topPadding;
+		totalBottomBoxesHeight = bottomPadding;
+
+		helpers.each(leftBoxes, function(box) {
+			totalLeftBoxesWidth += box.width;
+		});
+
+		helpers.each(rightBoxes, function(box) {
+			totalRightBoxesWidth += box.width;
+		});
+
+		helpers.each(topBoxes, function(box) {
+			totalTopBoxesHeight += box.height;
+		});
+		helpers.each(bottomBoxes, function(box) {
+			totalBottomBoxesHeight += box.height;
+		});
+
+		// We may be adding some padding to account for rotated x axis labels
+		var leftPaddingAddition = Math.max(maxHorizontalLeftPadding - totalLeftBoxesWidth, 0);
+		totalLeftBoxesWidth += leftPaddingAddition;
+		totalRightBoxesWidth += Math.max(maxHorizontalRightPadding - totalRightBoxesWidth, 0);
+
+		var topPaddingAddition = Math.max(maxVerticalTopPadding - totalTopBoxesHeight, 0);
+		totalTopBoxesHeight += topPaddingAddition;
+		totalBottomBoxesHeight += Math.max(maxVerticalBottomPadding - totalBottomBoxesHeight, 0);
+
+		// Figure out if our chart area changed. This would occur if the dataset layout label rotation
+		// changed due to the application of the margins in step 6. Since we can only get bigger, this is safe to do
+		// without calling `fit` again
+		var newMaxChartAreaHeight = height - totalTopBoxesHeight - totalBottomBoxesHeight;
+		var newMaxChartAreaWidth = width - totalLeftBoxesWidth - totalRightBoxesWidth;
+
+		if (newMaxChartAreaWidth !== maxChartAreaWidth || newMaxChartAreaHeight !== maxChartAreaHeight) {
+			helpers.each(leftBoxes, function(box) {
+				box.height = newMaxChartAreaHeight;
+			});
+
+			helpers.each(rightBoxes, function(box) {
+				box.height = newMaxChartAreaHeight;
+			});
+
+			helpers.each(topBoxes, function(box) {
+				if (!box.fullWidth) {
+					box.width = newMaxChartAreaWidth;
+				}
+			});
+
+			helpers.each(bottomBoxes, function(box) {
+				if (!box.fullWidth) {
+					box.width = newMaxChartAreaWidth;
+				}
+			});
+
+			maxChartAreaHeight = newMaxChartAreaHeight;
+			maxChartAreaWidth = newMaxChartAreaWidth;
+		}
+
+		// Step 7 - Position the boxes
+		var left = leftPadding + leftPaddingAddition;
+		var top = topPadding + topPaddingAddition;
+
+		function placeBox(box) {
+			if (box.isHorizontal()) {
+				box.left = box.fullWidth ? leftPadding : totalLeftBoxesWidth;
+				box.right = box.fullWidth ? width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
+				box.top = top;
+				box.bottom = top + box.height;
+
+				// Move to next point
+				top = box.bottom;
+
+			} else {
+
+				box.left = left;
+				box.right = left + box.width;
+				box.top = totalTopBoxesHeight;
+				box.bottom = totalTopBoxesHeight + maxChartAreaHeight;
+
+				// Move to next point
+				left = box.right;
+			}
+		}
+
+		helpers.each(leftBoxes.concat(topBoxes), placeBox);
+
+		// Account for chart width and height
+		left += maxChartAreaWidth;
+		top += maxChartAreaHeight;
+
+		helpers.each(rightBoxes, placeBox);
+		helpers.each(bottomBoxes, placeBox);
+
+		// Step 8
+		chart.chartArea = {
+			left: totalLeftBoxesWidth,
+			top: totalTopBoxesHeight,
+			right: totalLeftBoxesWidth + maxChartAreaWidth,
+			bottom: totalTopBoxesHeight + maxChartAreaHeight
+		};
+
+		// Step 9
+		helpers.each(chartAreaBoxes, function(box) {
+			box.left = chart.chartArea.left;
+			box.top = chart.chartArea.top;
+			box.right = chart.chartArea.right;
+			box.bottom = chart.chartArea.bottom;
+
+			box.update(maxChartAreaWidth, maxChartAreaHeight);
+		});
+	}
+};
+
+
+/***/ }),
+/* 1200 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var helpers = __webpack_require__(965);
+
+/**
+ * Namespace to hold static tick generation functions
+ * @namespace Chart.Ticks
+ */
+module.exports = {
+	/**
+	 * Namespace to hold formatters for different types of ticks
+	 * @namespace Chart.Ticks.formatters
+	 */
+	formatters: {
+		/**
+		 * Formatter for value labels
+		 * @method Chart.Ticks.formatters.values
+		 * @param value the value to display
+		 * @return {String|Array} the label to display
+		 */
+		values: function(value) {
+			return helpers.isArray(value) ? value : '' + value;
+		},
+
+		/**
+		 * Formatter for linear numeric ticks
+		 * @method Chart.Ticks.formatters.linear
+		 * @param tickValue {Number} the value to be formatted
+		 * @param index {Number} the position of the tickValue parameter in the ticks array
+		 * @param ticks {Array<Number>} the list of ticks being converted
+		 * @return {String} string representation of the tickValue parameter
+		 */
+		linear: function(tickValue, index, ticks) {
+			// If we have lots of ticks, don't use the ones
+			var delta = ticks.length > 3 ? ticks[2] - ticks[1] : ticks[1] - ticks[0];
+
+			// If we have a number like 2.5 as the delta, figure out how many decimal places we need
+			if (Math.abs(delta) > 1) {
+				if (tickValue !== Math.floor(tickValue)) {
+					// not an integer
+					delta = tickValue - Math.floor(tickValue);
+				}
+			}
+
+			var logDelta = helpers.log10(Math.abs(delta));
+			var tickString = '';
+
+			if (tickValue !== 0) {
+				var numDecimal = -1 * Math.floor(logDelta);
+				numDecimal = Math.max(Math.min(numDecimal, 20), 0); // toFixed has a max of 20 decimal places
+				tickString = tickValue.toFixed(numDecimal);
+			} else {
+				tickString = '0'; // never show decimal places for 0
+			}
+
+			return tickString;
+		},
+
+		logarithmic: function(tickValue, index, ticks) {
+			var remain = tickValue / (Math.pow(10, Math.floor(helpers.log10(tickValue))));
+
+			if (tickValue === 0) {
+				return '0';
+			} else if (remain === 1 || remain === 2 || remain === 5 || index === 0 || index === ticks.length - 1) {
+				return tickValue.toExponential();
+			}
+			return '';
+		}
+	}
+};
+
+
+/***/ }),
+/* 1201 */,
+/* 1202 */,
+/* 1203 */,
+/* 1204 */,
+/* 1205 */,
+/* 1206 */,
+/* 1207 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export VueCharts */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__ = __webpack_require__(1400);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseCharts__ = __webpack_require__(1401);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a"]; });
+/* unused harmony reexport HorizontalBar */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h"]; });
+/* unused harmony reexport Bubble */
+/* unused harmony reexport Scatter */
+/* unused harmony reexport mixins */
+/* unused harmony reexport generateChart */
+
+
+var VueCharts = {
+  Bar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a" /* Bar */],
+  HorizontalBar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["d" /* HorizontalBar */],
+  Doughnut: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c" /* Doughnut */],
+  Line: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e" /* Line */],
+  Pie: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f" /* Pie */],
+  PolarArea: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g" /* PolarArea */],
+  Radar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h" /* Radar */],
+  Bubble: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["b" /* Bubble */],
+  Scatter: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["i" /* Scatter */],
+  mixins: __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__["a" /* default */],
+  generateChart: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["j" /* generateChart */],
+  render: function render() {
+    return console.error('[vue-chartjs]: This is not a vue component. It is the whole object containing all vue components. Please import the named export or access the components over the dot notation. For more info visit https://vue-chartjs.org/#/home?id=quick-start');
+  }
+};
+/* unused harmony default export */ var _unused_webpack_default_export = (VueCharts);
+
+
+/***/ }),
+/* 1208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13175,7 +13950,7 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1184 */
+/* 1209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -13316,22 +14091,24 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1185 */,
-/* 1186 */,
-/* 1187 */,
-/* 1188 */,
-/* 1189 */,
-/* 1190 */,
-/* 1191 */,
-/* 1192 */,
-/* 1193 */,
-/* 1194 */
+/* 1210 */,
+/* 1211 */,
+/* 1212 */,
+/* 1213 */,
+/* 1214 */,
+/* 1215 */,
+/* 1216 */,
+/* 1217 */,
+/* 1218 */,
+/* 1219 */,
+/* 1220 */,
+/* 1221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -13402,13 +14179,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1195 */
+/* 1222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -13541,13 +14318,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1196 */
+/* 1223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -13604,13 +14381,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1197 */
+/* 1224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -13667,13 +14444,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1198 */
+/* 1225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -13793,13 +14570,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1199 */
+/* 1226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -13856,13 +14633,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1200 */
+/* 1227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -13964,13 +14741,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1201 */
+/* 1228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14027,13 +14804,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1202 */
+/* 1229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14136,13 +14913,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1203 */
+/* 1230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14272,13 +15049,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1204 */
+/* 1231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14366,13 +15143,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1205 */
+/* 1232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14428,13 +15205,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1206 */
+/* 1233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14551,13 +15328,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1207 */
+/* 1234 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14674,13 +15451,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1208 */
+/* 1235 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14786,13 +15563,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1209 */
+/* 1236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -14941,13 +15718,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1210 */
+/* 1237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15033,13 +15810,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1211 */
+/* 1238 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15216,13 +15993,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1212 */
+/* 1239 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15283,13 +16060,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1213 */
+/* 1240 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15367,13 +16144,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1214 */
+/* 1241 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15431,13 +16208,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1215 */
+/* 1242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15511,13 +16288,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1216 */
+/* 1243 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15591,13 +16368,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1217 */
+/* 1244 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15671,13 +16448,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1218 */
+/* 1245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15774,13 +16551,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1219 */
+/* 1246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15878,13 +16655,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1220 */
+/* 1247 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -15949,13 +16726,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1221 */
+/* 1248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16016,13 +16793,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1222 */
+/* 1249 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16087,13 +16864,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1223 */
+/* 1250 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16158,13 +16935,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1224 */
+/* 1251 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16224,13 +17001,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1225 */
+/* 1252 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16295,13 +17072,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1226 */
+/* 1253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16370,13 +17147,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1227 */
+/* 1254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16466,13 +17243,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1228 */
+/* 1255 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16562,13 +17339,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1229 */
+/* 1256 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16649,13 +17426,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1230 */
+/* 1257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16733,13 +17510,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1231 */
+/* 1258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16803,13 +17580,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1232 */
+/* 1259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -16913,13 +17690,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1233 */
+/* 1260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17026,13 +17803,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1234 */
+/* 1261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17090,13 +17867,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1235 */
+/* 1262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17177,13 +17954,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1236 */
+/* 1263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17255,13 +18032,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1237 */
+/* 1264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17337,13 +18114,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1238 */
+/* 1265 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17416,13 +18193,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1239 */
+/* 1266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17496,13 +18273,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1240 */
+/* 1267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17577,13 +18354,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1241 */
+/* 1268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17704,13 +18481,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1242 */
+/* 1269 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17832,13 +18609,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1243 */
+/* 1270 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -17933,13 +18710,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1244 */
+/* 1271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18061,13 +18838,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1245 */
+/* 1272 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18219,13 +18996,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1246 */
+/* 1273 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18333,13 +19110,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1247 */
+/* 1274 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18432,13 +19209,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1248 */
+/* 1275 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18518,13 +19295,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1249 */
+/* 1276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18654,13 +19431,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1250 */
+/* 1277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18727,13 +19504,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1251 */
+/* 1278 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18823,13 +19600,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1252 */
+/* 1279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -18909,13 +19686,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1253 */
+/* 1280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19002,13 +19779,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1254 */
+/* 1281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19093,13 +19870,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1255 */
+/* 1282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19207,13 +19984,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1256 */
+/* 1283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19337,13 +20114,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1257 */
+/* 1284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19422,13 +20199,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1258 */
+/* 1285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19513,13 +20290,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1259 */
+/* 1286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19653,13 +20430,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1260 */
+/* 1287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19727,13 +20504,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1261 */
+/* 1288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19849,13 +20626,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1262 */
+/* 1289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -19950,13 +20727,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1263 */
+/* 1290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20066,13 +20843,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1264 */
+/* 1291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20134,13 +20911,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1265 */
+/* 1292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20228,13 +21005,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1266 */
+/* 1293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20313,13 +21090,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1267 */
+/* 1294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20421,13 +21198,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1268 */
+/* 1295 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20585,13 +21362,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1269 */
+/* 1296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20671,13 +21448,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1270 */
+/* 1297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20757,13 +21534,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1271 */
+/* 1298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20821,13 +21598,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1272 */
+/* 1299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20918,13 +21695,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1273 */
+/* 1300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -20984,13 +21761,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1274 */
+/* 1301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21111,13 +21888,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1275 */
+/* 1302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21202,13 +21979,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1276 */
+/* 1303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21293,13 +22070,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1277 */
+/* 1304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21357,13 +22134,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1278 */
+/* 1305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21485,13 +22262,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1279 */
+/* 1306 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21615,13 +22392,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1280 */
+/* 1307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21684,13 +22461,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1281 */
+/* 1308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21749,13 +22526,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1282 */
+/* 1309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -21828,13 +22605,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1283 */
+/* 1310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22014,13 +22791,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1284 */
+/* 1311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22116,13 +22893,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1285 */
+/* 1312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22180,13 +22957,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1286 */
+/* 1313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22255,13 +23032,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1287 */
+/* 1314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22415,13 +23192,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1288 */
+/* 1315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22592,13 +23369,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1289 */
+/* 1316 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22664,13 +23441,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1290 */
+/* 1317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22779,13 +23556,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1291 */
+/* 1318 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22894,13 +23671,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1292 */
+/* 1319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -22986,13 +23763,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1293 */
+/* 1320 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23059,13 +23836,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1294 */
+/* 1321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23122,13 +23899,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1295 */
+/* 1322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23255,13 +24032,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1296 */
+/* 1323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23348,13 +24125,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1297 */
+/* 1324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23419,13 +24196,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1298 */
+/* 1325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23539,13 +24316,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1299 */
+/* 1326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23610,13 +24387,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1300 */
+/* 1327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23676,13 +24453,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1301 */
+/* 1328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23802,12 +24579,12 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1302 */
+/* 1329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23900,13 +24677,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1303 */
+/* 1330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -23995,13 +24772,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1304 */
+/* 1331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24057,13 +24834,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1305 */
+/* 1332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24119,13 +24896,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1306 */
+/* 1333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js language configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24242,13 +25019,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1307 */
+/* 1334 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24397,13 +25174,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1308 */
+/* 1335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24499,13 +25276,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1309 */
+/* 1336 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24561,13 +25338,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1310 */
+/* 1337 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24623,13 +25400,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1311 */
+/* 1338 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24706,13 +25483,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1312 */
+/* 1339 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24778,13 +25555,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1313 */
+/* 1340 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24842,13 +25619,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1314 */
+/* 1341 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -24956,13 +25733,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1315 */
+/* 1342 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -25063,13 +25840,13 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1316 */
+/* 1343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(963)) :
+    true ? factory(__webpack_require__(964)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -25170,33 +25947,6 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 1317 */,
-/* 1318 */,
-/* 1319 */,
-/* 1320 */,
-/* 1321 */,
-/* 1322 */,
-/* 1323 */,
-/* 1324 */,
-/* 1325 */,
-/* 1326 */,
-/* 1327 */,
-/* 1328 */,
-/* 1329 */,
-/* 1330 */,
-/* 1331 */,
-/* 1332 */,
-/* 1333 */,
-/* 1334 */,
-/* 1335 */,
-/* 1336 */,
-/* 1337 */,
-/* 1338 */,
-/* 1339 */,
-/* 1340 */,
-/* 1341 */,
-/* 1342 */,
-/* 1343 */,
 /* 1344 */,
 /* 1345 */,
 /* 1346 */,
@@ -25220,12 +25970,26 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 /* 1364 */,
 /* 1365 */,
 /* 1366 */,
-/* 1367 */
+/* 1367 */,
+/* 1368 */,
+/* 1369 */,
+/* 1370 */,
+/* 1371 */,
+/* 1372 */,
+/* 1373 */,
+/* 1374 */,
+/* 1375 */,
+/* 1376 */,
+/* 1377 */,
+/* 1378 */,
+/* 1379 */,
+/* 1380 */,
+/* 1381 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* MIT license */
-var convert = __webpack_require__(1393);
-var string = __webpack_require__(1395);
+var convert = __webpack_require__(1408);
+var string = __webpack_require__(1410);
 
 var Color = function (obj) {
 	if (obj instanceof Color) {
@@ -25711,13 +26475,13 @@ module.exports = Color;
 
 
 /***/ }),
-/* 1368 */
+/* 1382 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 /**
  * Helper function to get relative position for an event
@@ -26048,15 +26812,15 @@ module.exports = {
 
 
 /***/ }),
-/* 1369 */
+/* 1383 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
-var basic = __webpack_require__(1401);
-var dom = __webpack_require__(1402);
+var helpers = __webpack_require__(965);
+var basic = __webpack_require__(1416);
+var dom = __webpack_require__(1417);
 
 // @TODO Make possible to select another platform at build time.
 var implementation = dom._enabled ? dom : basic;
@@ -26129,14 +26893,14 @@ module.exports = helpers.extend({
 
 
 /***/ }),
-/* 1370 */
+/* 1384 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	plugins: {}
@@ -26518,7 +27282,7 @@ module.exports = {
 
 
 /***/ }),
-/* 1371 */
+/* 1385 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -26712,8 +27476,8 @@ module.exports = {
 
 
 /***/ }),
-/* 1372 */,
-/* 1373 */
+/* 1386 */,
+/* 1387 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26738,9 +27502,9 @@ module.exports = {
 /* unused harmony export SidebarNavTitle */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return SidebarToggler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return Switch; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_clickaway__ = __webpack_require__(1383);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_clickaway__ = __webpack_require__(1398);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_clickaway___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_clickaway__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_perfect_scrollbar__ = __webpack_require__(1384);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_perfect_scrollbar__ = __webpack_require__(1399);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_perfect_scrollbar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_perfect_scrollbar__);
 
 
@@ -30569,256 +31333,256 @@ var LibraryModule = {
 
 
 /***/ }),
-/* 1374 */
+/* 1388 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 1194,
-	"./af.js": 1194,
-	"./ar": 1195,
-	"./ar-dz": 1196,
-	"./ar-dz.js": 1196,
-	"./ar-kw": 1197,
-	"./ar-kw.js": 1197,
-	"./ar-ly": 1198,
-	"./ar-ly.js": 1198,
-	"./ar-ma": 1199,
-	"./ar-ma.js": 1199,
-	"./ar-sa": 1200,
-	"./ar-sa.js": 1200,
-	"./ar-tn": 1201,
-	"./ar-tn.js": 1201,
-	"./ar.js": 1195,
-	"./az": 1202,
-	"./az.js": 1202,
-	"./be": 1203,
-	"./be.js": 1203,
-	"./bg": 1204,
-	"./bg.js": 1204,
-	"./bm": 1205,
-	"./bm.js": 1205,
-	"./bn": 1206,
-	"./bn.js": 1206,
-	"./bo": 1207,
-	"./bo.js": 1207,
-	"./br": 1208,
-	"./br.js": 1208,
-	"./bs": 1209,
-	"./bs.js": 1209,
-	"./ca": 1210,
-	"./ca.js": 1210,
-	"./cs": 1211,
-	"./cs.js": 1211,
-	"./cv": 1212,
-	"./cv.js": 1212,
-	"./cy": 1213,
-	"./cy.js": 1213,
-	"./da": 1214,
-	"./da.js": 1214,
-	"./de": 1215,
-	"./de-at": 1216,
-	"./de-at.js": 1216,
-	"./de-ch": 1217,
-	"./de-ch.js": 1217,
-	"./de.js": 1215,
-	"./dv": 1218,
-	"./dv.js": 1218,
-	"./el": 1219,
-	"./el.js": 1219,
-	"./en-au": 1220,
-	"./en-au.js": 1220,
-	"./en-ca": 1221,
-	"./en-ca.js": 1221,
-	"./en-gb": 1222,
-	"./en-gb.js": 1222,
-	"./en-ie": 1223,
-	"./en-ie.js": 1223,
-	"./en-il": 1224,
-	"./en-il.js": 1224,
-	"./en-nz": 1225,
-	"./en-nz.js": 1225,
-	"./eo": 1226,
-	"./eo.js": 1226,
-	"./es": 1227,
-	"./es-do": 1228,
-	"./es-do.js": 1228,
-	"./es-us": 1229,
-	"./es-us.js": 1229,
-	"./es.js": 1227,
-	"./et": 1230,
-	"./et.js": 1230,
-	"./eu": 1231,
-	"./eu.js": 1231,
-	"./fa": 1232,
-	"./fa.js": 1232,
-	"./fi": 1233,
-	"./fi.js": 1233,
-	"./fo": 1234,
-	"./fo.js": 1234,
-	"./fr": 1235,
-	"./fr-ca": 1236,
-	"./fr-ca.js": 1236,
-	"./fr-ch": 1237,
-	"./fr-ch.js": 1237,
-	"./fr.js": 1235,
-	"./fy": 1238,
-	"./fy.js": 1238,
-	"./gd": 1239,
-	"./gd.js": 1239,
-	"./gl": 1240,
-	"./gl.js": 1240,
-	"./gom-latn": 1241,
-	"./gom-latn.js": 1241,
-	"./gu": 1242,
-	"./gu.js": 1242,
-	"./he": 1243,
-	"./he.js": 1243,
-	"./hi": 1244,
-	"./hi.js": 1244,
-	"./hr": 1245,
-	"./hr.js": 1245,
-	"./hu": 1246,
-	"./hu.js": 1246,
-	"./hy-am": 1247,
-	"./hy-am.js": 1247,
-	"./id": 1248,
-	"./id.js": 1248,
-	"./is": 1249,
-	"./is.js": 1249,
-	"./it": 1250,
-	"./it.js": 1250,
-	"./ja": 1251,
-	"./ja.js": 1251,
-	"./jv": 1252,
-	"./jv.js": 1252,
-	"./ka": 1253,
-	"./ka.js": 1253,
-	"./kk": 1254,
-	"./kk.js": 1254,
-	"./km": 1255,
-	"./km.js": 1255,
-	"./kn": 1256,
-	"./kn.js": 1256,
-	"./ko": 1257,
-	"./ko.js": 1257,
-	"./ky": 1258,
-	"./ky.js": 1258,
-	"./lb": 1259,
-	"./lb.js": 1259,
-	"./lo": 1260,
-	"./lo.js": 1260,
-	"./lt": 1261,
-	"./lt.js": 1261,
-	"./lv": 1262,
-	"./lv.js": 1262,
-	"./me": 1263,
-	"./me.js": 1263,
-	"./mi": 1264,
-	"./mi.js": 1264,
-	"./mk": 1265,
-	"./mk.js": 1265,
-	"./ml": 1266,
-	"./ml.js": 1266,
-	"./mn": 1267,
-	"./mn.js": 1267,
-	"./mr": 1268,
-	"./mr.js": 1268,
-	"./ms": 1269,
-	"./ms-my": 1270,
-	"./ms-my.js": 1270,
-	"./ms.js": 1269,
-	"./mt": 1271,
-	"./mt.js": 1271,
-	"./my": 1272,
-	"./my.js": 1272,
-	"./nb": 1273,
-	"./nb.js": 1273,
-	"./ne": 1274,
-	"./ne.js": 1274,
-	"./nl": 1275,
-	"./nl-be": 1276,
-	"./nl-be.js": 1276,
-	"./nl.js": 1275,
-	"./nn": 1277,
-	"./nn.js": 1277,
-	"./pa-in": 1278,
-	"./pa-in.js": 1278,
-	"./pl": 1279,
-	"./pl.js": 1279,
-	"./pt": 1280,
-	"./pt-br": 1281,
-	"./pt-br.js": 1281,
-	"./pt.js": 1280,
-	"./ro": 1282,
-	"./ro.js": 1282,
-	"./ru": 1283,
-	"./ru.js": 1283,
-	"./sd": 1284,
-	"./sd.js": 1284,
-	"./se": 1285,
-	"./se.js": 1285,
-	"./si": 1286,
-	"./si.js": 1286,
-	"./sk": 1287,
-	"./sk.js": 1287,
-	"./sl": 1288,
-	"./sl.js": 1288,
-	"./sq": 1289,
-	"./sq.js": 1289,
-	"./sr": 1290,
-	"./sr-cyrl": 1291,
-	"./sr-cyrl.js": 1291,
-	"./sr.js": 1290,
-	"./ss": 1292,
-	"./ss.js": 1292,
-	"./sv": 1293,
-	"./sv.js": 1293,
-	"./sw": 1294,
-	"./sw.js": 1294,
-	"./ta": 1295,
-	"./ta.js": 1295,
-	"./te": 1296,
-	"./te.js": 1296,
-	"./tet": 1297,
-	"./tet.js": 1297,
-	"./tg": 1298,
-	"./tg.js": 1298,
-	"./th": 1299,
-	"./th.js": 1299,
-	"./tl-ph": 1300,
-	"./tl-ph.js": 1300,
-	"./tlh": 1301,
-	"./tlh.js": 1301,
-	"./tr": 1302,
-	"./tr.js": 1302,
-	"./tzl": 1303,
-	"./tzl.js": 1303,
-	"./tzm": 1304,
-	"./tzm-latn": 1305,
-	"./tzm-latn.js": 1305,
-	"./tzm.js": 1304,
-	"./ug-cn": 1306,
-	"./ug-cn.js": 1306,
-	"./uk": 1307,
-	"./uk.js": 1307,
-	"./ur": 1308,
-	"./ur.js": 1308,
-	"./uz": 1309,
-	"./uz-latn": 1310,
-	"./uz-latn.js": 1310,
-	"./uz.js": 1309,
-	"./vi": 1311,
-	"./vi.js": 1311,
-	"./x-pseudo": 1312,
-	"./x-pseudo.js": 1312,
-	"./yo": 1313,
-	"./yo.js": 1313,
-	"./zh-cn": 1314,
-	"./zh-cn.js": 1314,
-	"./zh-hk": 1315,
-	"./zh-hk.js": 1315,
-	"./zh-tw": 1316,
-	"./zh-tw.js": 1316
+	"./af": 1221,
+	"./af.js": 1221,
+	"./ar": 1222,
+	"./ar-dz": 1223,
+	"./ar-dz.js": 1223,
+	"./ar-kw": 1224,
+	"./ar-kw.js": 1224,
+	"./ar-ly": 1225,
+	"./ar-ly.js": 1225,
+	"./ar-ma": 1226,
+	"./ar-ma.js": 1226,
+	"./ar-sa": 1227,
+	"./ar-sa.js": 1227,
+	"./ar-tn": 1228,
+	"./ar-tn.js": 1228,
+	"./ar.js": 1222,
+	"./az": 1229,
+	"./az.js": 1229,
+	"./be": 1230,
+	"./be.js": 1230,
+	"./bg": 1231,
+	"./bg.js": 1231,
+	"./bm": 1232,
+	"./bm.js": 1232,
+	"./bn": 1233,
+	"./bn.js": 1233,
+	"./bo": 1234,
+	"./bo.js": 1234,
+	"./br": 1235,
+	"./br.js": 1235,
+	"./bs": 1236,
+	"./bs.js": 1236,
+	"./ca": 1237,
+	"./ca.js": 1237,
+	"./cs": 1238,
+	"./cs.js": 1238,
+	"./cv": 1239,
+	"./cv.js": 1239,
+	"./cy": 1240,
+	"./cy.js": 1240,
+	"./da": 1241,
+	"./da.js": 1241,
+	"./de": 1242,
+	"./de-at": 1243,
+	"./de-at.js": 1243,
+	"./de-ch": 1244,
+	"./de-ch.js": 1244,
+	"./de.js": 1242,
+	"./dv": 1245,
+	"./dv.js": 1245,
+	"./el": 1246,
+	"./el.js": 1246,
+	"./en-au": 1247,
+	"./en-au.js": 1247,
+	"./en-ca": 1248,
+	"./en-ca.js": 1248,
+	"./en-gb": 1249,
+	"./en-gb.js": 1249,
+	"./en-ie": 1250,
+	"./en-ie.js": 1250,
+	"./en-il": 1251,
+	"./en-il.js": 1251,
+	"./en-nz": 1252,
+	"./en-nz.js": 1252,
+	"./eo": 1253,
+	"./eo.js": 1253,
+	"./es": 1254,
+	"./es-do": 1255,
+	"./es-do.js": 1255,
+	"./es-us": 1256,
+	"./es-us.js": 1256,
+	"./es.js": 1254,
+	"./et": 1257,
+	"./et.js": 1257,
+	"./eu": 1258,
+	"./eu.js": 1258,
+	"./fa": 1259,
+	"./fa.js": 1259,
+	"./fi": 1260,
+	"./fi.js": 1260,
+	"./fo": 1261,
+	"./fo.js": 1261,
+	"./fr": 1262,
+	"./fr-ca": 1263,
+	"./fr-ca.js": 1263,
+	"./fr-ch": 1264,
+	"./fr-ch.js": 1264,
+	"./fr.js": 1262,
+	"./fy": 1265,
+	"./fy.js": 1265,
+	"./gd": 1266,
+	"./gd.js": 1266,
+	"./gl": 1267,
+	"./gl.js": 1267,
+	"./gom-latn": 1268,
+	"./gom-latn.js": 1268,
+	"./gu": 1269,
+	"./gu.js": 1269,
+	"./he": 1270,
+	"./he.js": 1270,
+	"./hi": 1271,
+	"./hi.js": 1271,
+	"./hr": 1272,
+	"./hr.js": 1272,
+	"./hu": 1273,
+	"./hu.js": 1273,
+	"./hy-am": 1274,
+	"./hy-am.js": 1274,
+	"./id": 1275,
+	"./id.js": 1275,
+	"./is": 1276,
+	"./is.js": 1276,
+	"./it": 1277,
+	"./it.js": 1277,
+	"./ja": 1278,
+	"./ja.js": 1278,
+	"./jv": 1279,
+	"./jv.js": 1279,
+	"./ka": 1280,
+	"./ka.js": 1280,
+	"./kk": 1281,
+	"./kk.js": 1281,
+	"./km": 1282,
+	"./km.js": 1282,
+	"./kn": 1283,
+	"./kn.js": 1283,
+	"./ko": 1284,
+	"./ko.js": 1284,
+	"./ky": 1285,
+	"./ky.js": 1285,
+	"./lb": 1286,
+	"./lb.js": 1286,
+	"./lo": 1287,
+	"./lo.js": 1287,
+	"./lt": 1288,
+	"./lt.js": 1288,
+	"./lv": 1289,
+	"./lv.js": 1289,
+	"./me": 1290,
+	"./me.js": 1290,
+	"./mi": 1291,
+	"./mi.js": 1291,
+	"./mk": 1292,
+	"./mk.js": 1292,
+	"./ml": 1293,
+	"./ml.js": 1293,
+	"./mn": 1294,
+	"./mn.js": 1294,
+	"./mr": 1295,
+	"./mr.js": 1295,
+	"./ms": 1296,
+	"./ms-my": 1297,
+	"./ms-my.js": 1297,
+	"./ms.js": 1296,
+	"./mt": 1298,
+	"./mt.js": 1298,
+	"./my": 1299,
+	"./my.js": 1299,
+	"./nb": 1300,
+	"./nb.js": 1300,
+	"./ne": 1301,
+	"./ne.js": 1301,
+	"./nl": 1302,
+	"./nl-be": 1303,
+	"./nl-be.js": 1303,
+	"./nl.js": 1302,
+	"./nn": 1304,
+	"./nn.js": 1304,
+	"./pa-in": 1305,
+	"./pa-in.js": 1305,
+	"./pl": 1306,
+	"./pl.js": 1306,
+	"./pt": 1307,
+	"./pt-br": 1308,
+	"./pt-br.js": 1308,
+	"./pt.js": 1307,
+	"./ro": 1309,
+	"./ro.js": 1309,
+	"./ru": 1310,
+	"./ru.js": 1310,
+	"./sd": 1311,
+	"./sd.js": 1311,
+	"./se": 1312,
+	"./se.js": 1312,
+	"./si": 1313,
+	"./si.js": 1313,
+	"./sk": 1314,
+	"./sk.js": 1314,
+	"./sl": 1315,
+	"./sl.js": 1315,
+	"./sq": 1316,
+	"./sq.js": 1316,
+	"./sr": 1317,
+	"./sr-cyrl": 1318,
+	"./sr-cyrl.js": 1318,
+	"./sr.js": 1317,
+	"./ss": 1319,
+	"./ss.js": 1319,
+	"./sv": 1320,
+	"./sv.js": 1320,
+	"./sw": 1321,
+	"./sw.js": 1321,
+	"./ta": 1322,
+	"./ta.js": 1322,
+	"./te": 1323,
+	"./te.js": 1323,
+	"./tet": 1324,
+	"./tet.js": 1324,
+	"./tg": 1325,
+	"./tg.js": 1325,
+	"./th": 1326,
+	"./th.js": 1326,
+	"./tl-ph": 1327,
+	"./tl-ph.js": 1327,
+	"./tlh": 1328,
+	"./tlh.js": 1328,
+	"./tr": 1329,
+	"./tr.js": 1329,
+	"./tzl": 1330,
+	"./tzl.js": 1330,
+	"./tzm": 1331,
+	"./tzm-latn": 1332,
+	"./tzm-latn.js": 1332,
+	"./tzm.js": 1331,
+	"./ug-cn": 1333,
+	"./ug-cn.js": 1333,
+	"./uk": 1334,
+	"./uk.js": 1334,
+	"./ur": 1335,
+	"./ur.js": 1335,
+	"./uz": 1336,
+	"./uz-latn": 1337,
+	"./uz-latn.js": 1337,
+	"./uz.js": 1336,
+	"./vi": 1338,
+	"./vi.js": 1338,
+	"./x-pseudo": 1339,
+	"./x-pseudo.js": 1339,
+	"./yo": 1340,
+	"./yo.js": 1340,
+	"./zh-cn": 1341,
+	"./zh-cn.js": 1341,
+	"./zh-hk": 1342,
+	"./zh-hk.js": 1342,
+	"./zh-tw": 1343,
+	"./zh-tw.js": 1343
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -30834,18 +31598,19 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 1374;
+webpackContext.id = 1388;
 
 /***/ }),
-/* 1375 */,
-/* 1376 */,
-/* 1377 */,
-/* 1378 */,
-/* 1379 */,
-/* 1380 */,
-/* 1381 */,
-/* 1382 */,
-/* 1383 */
+/* 1389 */,
+/* 1390 */,
+/* 1391 */,
+/* 1392 */,
+/* 1393 */,
+/* 1394 */,
+/* 1395 */,
+/* 1396 */,
+/* 1397 */,
+/* 1398 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30934,14 +31699,14 @@ exports.directive = directive;
 exports.mixin = mixin;
 
 /***/ }),
-/* 1384 */
+/* 1399 */
 /***/ (function(module, exports) {
 
 module.exports=function(t){function e(o){if(r[o])return r[o].exports;var n=r[o]={i:o,l:!1,exports:{}};return t[o].call(n.exports,n,n.exports,e),n.l=!0,n.exports}var r={};return e.m=t,e.c=r,e.i=function(t){return t},e.d=function(t,r,o){e.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:o})},e.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(r,"a",r),r},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="/dist/",e(e.s=6)}([function(t,e,r){"use strict";function o(t,e){function r(){t.classList.add("ps--focus")}function o(){t.classList.remove("ps--focus")}var n=this;n.settings=a();for(var i in e)n.settings[i]=e[i];n.containerWidth=null,n.containerHeight=null,n.contentWidth=null,n.contentHeight=null,n.isRtl="rtl"===c.css(t,"direction"),n.isNegativeScroll=function(){var e=t.scrollLeft,r=null;return t.scrollLeft=-1,r=t.scrollLeft<0,t.scrollLeft=e,r}(),n.negativeScrollAdjustment=n.isNegativeScroll?t.scrollWidth-t.clientWidth:0,n.event=new u,n.ownerDocument=t.ownerDocument||document,n.scrollbarXRail=c.appendTo(c.create("div","ps__scrollbar-x-rail"),t),n.scrollbarX=c.appendTo(c.create("div","ps__scrollbar-x"),n.scrollbarXRail),n.scrollbarX.setAttribute("tabindex",0),n.event.bind(n.scrollbarX,"focus",r),n.event.bind(n.scrollbarX,"blur",o),n.scrollbarXActive=null,n.scrollbarXWidth=null,n.scrollbarXLeft=null,n.scrollbarXBottom=s.toInt(c.css(n.scrollbarXRail,"bottom")),n.isScrollbarXUsingBottom=n.scrollbarXBottom===n.scrollbarXBottom,n.scrollbarXTop=n.isScrollbarXUsingBottom?null:s.toInt(c.css(n.scrollbarXRail,"top")),n.railBorderXWidth=s.toInt(c.css(n.scrollbarXRail,"borderLeftWidth"))+s.toInt(c.css(n.scrollbarXRail,"borderRightWidth")),c.css(n.scrollbarXRail,"display","block"),n.railXMarginWidth=s.toInt(c.css(n.scrollbarXRail,"marginLeft"))+s.toInt(c.css(n.scrollbarXRail,"marginRight")),c.css(n.scrollbarXRail,"display",""),n.railXWidth=null,n.railXRatio=null,n.scrollbarYRail=c.appendTo(c.create("div","ps__scrollbar-y-rail"),t),n.scrollbarY=c.appendTo(c.create("div","ps__scrollbar-y"),n.scrollbarYRail),n.scrollbarY.setAttribute("tabindex",0),n.event.bind(n.scrollbarY,"focus",r),n.event.bind(n.scrollbarY,"blur",o),n.scrollbarYActive=null,n.scrollbarYHeight=null,n.scrollbarYTop=null,n.scrollbarYRight=s.toInt(c.css(n.scrollbarYRail,"right")),n.isScrollbarYUsingRight=n.scrollbarYRight===n.scrollbarYRight,n.scrollbarYLeft=n.isScrollbarYUsingRight?null:s.toInt(c.css(n.scrollbarYRail,"left")),n.scrollbarYOuterWidth=n.isRtl?s.outerWidth(n.scrollbarY):null,n.railBorderYWidth=s.toInt(c.css(n.scrollbarYRail,"borderTopWidth"))+s.toInt(c.css(n.scrollbarYRail,"borderBottomWidth")),c.css(n.scrollbarYRail,"display","block"),n.railYMarginHeight=s.toInt(c.css(n.scrollbarYRail,"marginTop"))+s.toInt(c.css(n.scrollbarYRail,"marginBottom")),c.css(n.scrollbarYRail,"display",""),n.railYHeight=null,n.railYRatio=null}function n(t){return t.getAttribute("data-ps-id")}function i(t,e){t.setAttribute("data-ps-id",e)}function l(t){t.removeAttribute("data-ps-id")}var s=r(2),a=r(14),c=r(4),u=r(11),p=r(12),d={};e.add=function(t,e){var r=p();return i(t,r),d[r]=new o(t,e),d[r]},e.remove=function(t){delete d[n(t)],l(t)},e.get=function(t){return d[n(t)]}},function(t,e,r){"use strict";function o(t,e){return t.settings.minScrollbarLength&&(e=Math.max(e,t.settings.minScrollbarLength)),t.settings.maxScrollbarLength&&(e=Math.min(e,t.settings.maxScrollbarLength)),e}function n(t,e){var r={width:e.railXWidth};e.isRtl?r.left=e.negativeScrollAdjustment+t.scrollLeft+e.containerWidth-e.contentWidth:r.left=t.scrollLeft,e.isScrollbarXUsingBottom?r.bottom=e.scrollbarXBottom-t.scrollTop:r.top=e.scrollbarXTop+t.scrollTop,l.css(e.scrollbarXRail,r);var o={top:t.scrollTop,height:e.railYHeight};e.isScrollbarYUsingRight?e.isRtl?o.right=e.contentWidth-(e.negativeScrollAdjustment+t.scrollLeft)-e.scrollbarYRight-e.scrollbarYOuterWidth:o.right=e.scrollbarYRight-t.scrollLeft:e.isRtl?o.left=e.negativeScrollAdjustment+t.scrollLeft+2*e.containerWidth-e.contentWidth-e.scrollbarYLeft-e.scrollbarYOuterWidth:o.left=e.scrollbarYLeft+t.scrollLeft,l.css(e.scrollbarYRail,o),l.css(e.scrollbarX,{left:e.scrollbarXLeft,width:e.scrollbarXWidth-e.railBorderXWidth}),l.css(e.scrollbarY,{top:e.scrollbarYTop,height:e.scrollbarYHeight-e.railBorderYWidth})}var i=r(2),l=r(4),s=r(0),a=r(3);t.exports=function(t){var e=s.get(t);e.containerWidth=t.clientWidth,e.containerHeight=t.clientHeight,e.contentWidth=t.scrollWidth,e.contentHeight=t.scrollHeight;var r;t.contains(e.scrollbarXRail)||(r=l.queryChildren(t,".ps__scrollbar-x-rail"),r.length>0&&r.forEach(function(t){l.remove(t)}),l.appendTo(e.scrollbarXRail,t)),t.contains(e.scrollbarYRail)||(r=l.queryChildren(t,".ps__scrollbar-y-rail"),r.length>0&&r.forEach(function(t){l.remove(t)}),l.appendTo(e.scrollbarYRail,t)),!e.settings.suppressScrollX&&e.containerWidth+e.settings.scrollXMarginOffset<e.contentWidth?(e.scrollbarXActive=!0,e.railXWidth=e.containerWidth-e.railXMarginWidth,e.railXRatio=e.containerWidth/e.railXWidth,e.scrollbarXWidth=o(e,i.toInt(e.railXWidth*e.containerWidth/e.contentWidth)),e.scrollbarXLeft=i.toInt((e.negativeScrollAdjustment+t.scrollLeft)*(e.railXWidth-e.scrollbarXWidth)/(e.contentWidth-e.containerWidth))):e.scrollbarXActive=!1,!e.settings.suppressScrollY&&e.containerHeight+e.settings.scrollYMarginOffset<e.contentHeight?(e.scrollbarYActive=!0,e.railYHeight=e.containerHeight-e.railYMarginHeight,e.railYRatio=e.containerHeight/e.railYHeight,e.scrollbarYHeight=o(e,i.toInt(e.railYHeight*e.containerHeight/e.contentHeight)),e.scrollbarYTop=i.toInt(t.scrollTop*(e.railYHeight-e.scrollbarYHeight)/(e.contentHeight-e.containerHeight))):e.scrollbarYActive=!1,e.scrollbarXLeft>=e.railXWidth-e.scrollbarXWidth&&(e.scrollbarXLeft=e.railXWidth-e.scrollbarXWidth),e.scrollbarYTop>=e.railYHeight-e.scrollbarYHeight&&(e.scrollbarYTop=e.railYHeight-e.scrollbarYHeight),n(t,e),e.scrollbarXActive?t.classList.add("ps--active-x"):(t.classList.remove("ps--active-x"),e.scrollbarXWidth=0,e.scrollbarXLeft=0,a(t,"left",0)),e.scrollbarYActive?t.classList.add("ps--active-y"):(t.classList.remove("ps--active-y"),e.scrollbarYHeight=0,e.scrollbarYTop=0,a(t,"top",0))}},function(t,e,r){"use strict";function o(t){var e,r=["ps--in-scrolling"];return e=void 0===t?["ps--x","ps--y"]:["ps--"+t],r.concat(e)}var n=r(4),i=e.toInt=function(t){return parseInt(t,10)||0};e.isEditable=function(t){return n.matches(t,"input,[contenteditable]")||n.matches(t,"select,[contenteditable]")||n.matches(t,"textarea,[contenteditable]")||n.matches(t,"button,[contenteditable]")},e.removePsClasses=function(t){for(var e=0;e<t.classList.length;e++){var r=t.classList[e];0===r.indexOf("ps-")&&t.classList.remove(r)}},e.outerWidth=function(t){return i(n.css(t,"width"))+i(n.css(t,"paddingLeft"))+i(n.css(t,"paddingRight"))+i(n.css(t,"borderLeftWidth"))+i(n.css(t,"borderRightWidth"))},e.startScrolling=function(t,e){for(var r=o(e),n=0;n<r.length;n++)t.classList.add(r[n])},e.stopScrolling=function(t,e){for(var r=o(e),n=0;n<r.length;n++)t.classList.remove(r[n])},e.env={isWebKit:"undefined"!=typeof document&&"WebkitAppearance"in document.documentElement.style,supportsTouch:"undefined"!=typeof window&&("ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch),supportsIePointer:"undefined"!=typeof window&&null!==window.navigator.msMaxTouchPoints}},function(t,e,r){"use strict";var o=r(0),n=function(t){var e=document.createEvent("Event");return e.initEvent(t,!0,!0),e};t.exports=function(t,e,r){if(void 0===t)throw"You must provide an element to the update-scroll function";if(void 0===e)throw"You must provide an axis to the update-scroll function";if(void 0===r)throw"You must provide a value to the update-scroll function";"top"===e&&r<=0&&(t.scrollTop=r=0,t.dispatchEvent(n("ps-y-reach-start"))),"left"===e&&r<=0&&(t.scrollLeft=r=0,t.dispatchEvent(n("ps-x-reach-start")));var i=o.get(t);"top"===e&&r>=i.contentHeight-i.containerHeight&&(r=i.contentHeight-i.containerHeight,r-t.scrollTop<=2?r=t.scrollTop:t.scrollTop=r,t.dispatchEvent(n("ps-y-reach-end"))),"left"===e&&r>=i.contentWidth-i.containerWidth&&(r=i.contentWidth-i.containerWidth,r-t.scrollLeft<=2?r=t.scrollLeft:t.scrollLeft=r,t.dispatchEvent(n("ps-x-reach-end"))),void 0===i.lastTop&&(i.lastTop=t.scrollTop),void 0===i.lastLeft&&(i.lastLeft=t.scrollLeft),"top"===e&&r<i.lastTop&&t.dispatchEvent(n("ps-scroll-up")),"top"===e&&r>i.lastTop&&t.dispatchEvent(n("ps-scroll-down")),"left"===e&&r<i.lastLeft&&t.dispatchEvent(n("ps-scroll-left")),"left"===e&&r>i.lastLeft&&t.dispatchEvent(n("ps-scroll-right")),"top"===e&&r!==i.lastTop&&(t.scrollTop=i.lastTop=r,t.dispatchEvent(n("ps-scroll-y"))),"left"===e&&r!==i.lastLeft&&(t.scrollLeft=i.lastLeft=r,t.dispatchEvent(n("ps-scroll-x")))}},function(t,e,r){"use strict";function o(t,e){return window.getComputedStyle(t)[e]}function n(t,e,r){return"number"==typeof r&&(r=r.toString()+"px"),t.style[e]=r,t}function i(t,e){for(var r in e){var o=e[r];"number"==typeof o&&(o=o.toString()+"px"),t.style[r]=o}return t}var l={};l.create=function(t,e){var r=document.createElement(t);return r.className=e,r},l.appendTo=function(t,e){return e.appendChild(t),t},l.css=function(t,e,r){return"object"==typeof e?i(t,e):void 0===r?o(t,e):n(t,e,r)},l.matches=function(t,e){return void 0!==t.matches?t.matches(e):t.msMatchesSelector(e)},l.remove=function(t){void 0!==t.remove?t.remove():t.parentNode&&t.parentNode.removeChild(t)},l.queryChildren=function(t,e){return Array.prototype.filter.call(t.childNodes,function(t){return l.matches(t,e)})},t.exports=l},function(t,e,r){r(28);var o=r(25)(r(7),r(26),null,null);t.exports=o.exports},function(t,e,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var o=r(5),n=r.n(o);e.default=n.a},function(t,e,r){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var o=r(10),n=r.n(o);e.default={name:"vue-perfect-scrollbar",props:{settings:{default:void 0},swicher:{type:Boolean,default:!0},tagname:{type:String,default:"section"}},methods:{scrollHanle:function(t){this.$emit(t.type,t)},update:function(){n.a.update(this.$el)},__init:function(){this.swicher&&(this._ps_inited?this.update(this.$el):(this._ps_inited=!0,n.a.initialize(this.$el,this.settings)))},__uninit:function(){n.a.destroy(this.$el),this._ps_inited=!1}},watch:{swicher:function(t){t&&!this._ps_inited&&this.__init(),!t&&this._ps_inited&&this.__uninit()},$route:function(){this.update()}},mounted:function(){this.__init()},updated:function(){this.$nextTick(this.update)},activated:function(){this.__init()},deactivated:function(){this.__uninit()},beforeDestroy:function(){this.__uninit()}}},function(t,e,r){e=t.exports=r(9)(),e.push([t.i,".ps{-ms-touch-action:auto;touch-action:auto;overflow:hidden!important;-ms-overflow-style:none}@supports (-ms-overflow-style:none){.ps{overflow:auto!important}}@media (-ms-high-contrast:none),screen and (-ms-high-contrast:active){.ps{overflow:auto!important}}.ps.ps--active-x>.ps__scrollbar-x-rail,.ps.ps--active-y>.ps__scrollbar-y-rail{display:block;background-color:transparent}.ps.ps--in-scrolling.ps--x>.ps__scrollbar-x-rail{background-color:#eee;opacity:.9}.ps.ps--in-scrolling.ps--x>.ps__scrollbar-x-rail>.ps__scrollbar-x{background-color:#999;height:11px}.ps.ps--in-scrolling.ps--y>.ps__scrollbar-y-rail{background-color:#eee;opacity:.9}.ps.ps--in-scrolling.ps--y>.ps__scrollbar-y-rail>.ps__scrollbar-y{background-color:#999;width:11px}.ps>.ps__scrollbar-x-rail{display:none;position:absolute;opacity:0;transition:background-color .2s linear,opacity .2s linear;bottom:0;height:15px}.ps>.ps__scrollbar-x-rail>.ps__scrollbar-x{position:absolute;background-color:#aaa;border-radius:6px;transition:background-color .2s linear,height .2s linear,width .2s ease-in-out,border-radius .2s ease-in-out;bottom:2px;height:6px}.ps>.ps__scrollbar-x-rail:active>.ps__scrollbar-x,.ps>.ps__scrollbar-x-rail:hover>.ps__scrollbar-x{height:11px}.ps>.ps__scrollbar-y-rail{display:none;position:absolute;opacity:0;transition:background-color .2s linear,opacity .2s linear;right:0;width:15px}.ps>.ps__scrollbar-y-rail>.ps__scrollbar-y{position:absolute;background-color:#aaa;border-radius:6px;transition:background-color .2s linear,height .2s linear,width .2s ease-in-out,border-radius .2s ease-in-out;right:2px;width:6px}.ps>.ps__scrollbar-y-rail:active>.ps__scrollbar-y,.ps>.ps__scrollbar-y-rail:hover>.ps__scrollbar-y{width:11px}.ps:hover.ps--in-scrolling.ps--x>.ps__scrollbar-x-rail{background-color:#eee;opacity:.9}.ps:hover.ps--in-scrolling.ps--x>.ps__scrollbar-x-rail>.ps__scrollbar-x{background-color:#999;height:11px}.ps:hover.ps--in-scrolling.ps--y>.ps__scrollbar-y-rail{background-color:#eee;opacity:.9}.ps:hover.ps--in-scrolling.ps--y>.ps__scrollbar-y-rail>.ps__scrollbar-y{background-color:#999;width:11px}.ps:hover>.ps__scrollbar-x-rail,.ps:hover>.ps__scrollbar-y-rail{opacity:.6}.ps:hover>.ps__scrollbar-x-rail:hover{background-color:#eee;opacity:.9}.ps:hover>.ps__scrollbar-x-rail:hover>.ps__scrollbar-x{background-color:#999}.ps:hover>.ps__scrollbar-y-rail:hover{background-color:#eee;opacity:.9}.ps:hover>.ps__scrollbar-y-rail:hover>.ps__scrollbar-y{background-color:#999}.ps-container{position:relative}",""])},function(t,e){t.exports=function(){var t=[];return t.toString=function(){for(var t=[],e=0;e<this.length;e++){var r=this[e];r[2]?t.push("@media "+r[2]+"{"+r[1]+"}"):t.push(r[1])}return t.join("")},t.i=function(e,r){"string"==typeof e&&(e=[[null,e,""]]);for(var o={},n=0;n<this.length;n++){var i=this[n][0];"number"==typeof i&&(o[i]=!0)}for(n=0;n<e.length;n++){var l=e[n];"number"==typeof l[0]&&o[l[0]]||(r&&!l[2]?l[2]=r:r&&(l[2]="("+l[2]+") and ("+r+")"),t.push(l))}},t}},function(t,e,r){"use strict";t.exports=r(13)},function(t,e,r){"use strict";var o=function(t){this.element=t,this.events={}};o.prototype.bind=function(t,e){void 0===this.events[t]&&(this.events[t]=[]),this.events[t].push(e),this.element.addEventListener(t,e,!1)},o.prototype.unbind=function(t,e){var r=void 0!==e;this.events[t]=this.events[t].filter(function(o){return!(!r||o===e)||(this.element.removeEventListener(t,o,!1),!1)},this)},o.prototype.unbindAll=function(){for(var t in this.events)this.unbind(t)};var n=function(){this.eventElements=[]};n.prototype.eventElement=function(t){var e=this.eventElements.filter(function(e){return e.element===t})[0];return void 0===e&&(e=new o(t),this.eventElements.push(e)),e},n.prototype.bind=function(t,e,r){this.eventElement(t).bind(e,r)},n.prototype.unbind=function(t,e,r){this.eventElement(t).unbind(e,r)},n.prototype.unbindAll=function(){for(var t=0;t<this.eventElements.length;t++)this.eventElements[t].unbindAll()},n.prototype.once=function(t,e,r){var o=this.eventElement(t),n=function(t){o.unbind(e,n),r(t)};o.bind(e,n)},t.exports=n},function(t,e,r){"use strict";t.exports=function(){function t(){return Math.floor(65536*(1+Math.random())).toString(16).substring(1)}return function(){return t()+t()+"-"+t()+"-"+t()+"-"+t()+"-"+t()+t()+t()}}()},function(t,e,r){"use strict";var o=r(15),n=r(23),i=r(24);t.exports={initialize:n,update:i,destroy:o}},function(t,e,r){"use strict";t.exports=function(){return{handlers:["click-rail","drag-scrollbar","keyboard","wheel","touch"],maxScrollbarLength:null,minScrollbarLength:null,scrollXMarginOffset:0,scrollYMarginOffset:0,suppressScrollX:!1,suppressScrollY:!1,swipePropagation:!0,swipeEasing:!0,useBothWheelAxes:!1,wheelPropagation:!1,wheelSpeed:1,theme:"default"}}},function(t,e,r){"use strict";var o=r(2),n=r(4),i=r(0);t.exports=function(t){var e=i.get(t);e&&(e.event.unbindAll(),n.remove(e.scrollbarX),n.remove(e.scrollbarY),n.remove(e.scrollbarXRail),n.remove(e.scrollbarYRail),o.removePsClasses(t),i.remove(t))}},function(t,e,r){"use strict";function o(t,e){function r(t){return t.getBoundingClientRect()}var o=function(t){t.stopPropagation()};e.event.bind(e.scrollbarY,"click",o),e.event.bind(e.scrollbarYRail,"click",function(o){var n=o.pageY-window.pageYOffset-r(e.scrollbarYRail).top,s=n>e.scrollbarYTop?1:-1;l(t,"top",t.scrollTop+s*e.containerHeight),i(t),o.stopPropagation()}),e.event.bind(e.scrollbarX,"click",o),e.event.bind(e.scrollbarXRail,"click",function(o){var n=o.pageX-window.pageXOffset-r(e.scrollbarXRail).left,s=n>e.scrollbarXLeft?1:-1;l(t,"left",t.scrollLeft+s*e.containerWidth),i(t),o.stopPropagation()})}var n=r(0),i=r(1),l=r(3);t.exports=function(t){o(t,n.get(t))}},function(t,e,r){"use strict";function o(t,e){function r(r){var n=o+r*e.railXRatio,l=Math.max(0,e.scrollbarXRail.getBoundingClientRect().left)+e.railXRatio*(e.railXWidth-e.scrollbarXWidth);e.scrollbarXLeft=n<0?0:n>l?l:n;var s=i.toInt(e.scrollbarXLeft*(e.contentWidth-e.containerWidth)/(e.containerWidth-e.railXRatio*e.scrollbarXWidth))-e.negativeScrollAdjustment;c(t,"left",s)}var o=null,n=null,s=function(e){r(e.pageX-n),a(t),e.stopPropagation(),e.preventDefault()},u=function(){i.stopScrolling(t,"x"),e.event.unbind(e.ownerDocument,"mousemove",s)};e.event.bind(e.scrollbarX,"mousedown",function(r){n=r.pageX,o=i.toInt(l.css(e.scrollbarX,"left"))*e.railXRatio,i.startScrolling(t,"x"),e.event.bind(e.ownerDocument,"mousemove",s),e.event.once(e.ownerDocument,"mouseup",u),r.stopPropagation(),r.preventDefault()})}function n(t,e){function r(r){var n=o+r*e.railYRatio,l=Math.max(0,e.scrollbarYRail.getBoundingClientRect().top)+e.railYRatio*(e.railYHeight-e.scrollbarYHeight);e.scrollbarYTop=n<0?0:n>l?l:n;var s=i.toInt(e.scrollbarYTop*(e.contentHeight-e.containerHeight)/(e.containerHeight-e.railYRatio*e.scrollbarYHeight));c(t,"top",s)}var o=null,n=null,s=function(e){r(e.pageY-n),a(t),e.stopPropagation(),e.preventDefault()},u=function(){i.stopScrolling(t,"y"),e.event.unbind(e.ownerDocument,"mousemove",s)};e.event.bind(e.scrollbarY,"mousedown",function(r){n=r.pageY,o=i.toInt(l.css(e.scrollbarY,"top"))*e.railYRatio,i.startScrolling(t,"y"),e.event.bind(e.ownerDocument,"mousemove",s),e.event.once(e.ownerDocument,"mouseup",u),r.stopPropagation(),r.preventDefault()})}var i=r(2),l=r(4),s=r(0),a=r(1),c=r(3);t.exports=function(t){var e=s.get(t);o(t,e),n(t,e)}},function(t,e,r){"use strict";function o(t,e){function r(r,o){var n=t.scrollTop;if(0===r){if(!e.scrollbarYActive)return!1;if(0===n&&o>0||n>=e.contentHeight-e.containerHeight&&o<0)return!e.settings.wheelPropagation}var i=t.scrollLeft;if(0===o){if(!e.scrollbarXActive)return!1;if(0===i&&r<0||i>=e.contentWidth-e.containerWidth&&r>0)return!e.settings.wheelPropagation}return!0}var o=!1;e.event.bind(t,"mouseenter",function(){o=!0}),e.event.bind(t,"mouseleave",function(){o=!1});var l=!1;e.event.bind(e.ownerDocument,"keydown",function(c){if(!(c.isDefaultPrevented&&c.isDefaultPrevented()||c.defaultPrevented)){var u=i.matches(e.scrollbarX,":focus")||i.matches(e.scrollbarY,":focus");if(o||u){var p=document.activeElement?document.activeElement:e.ownerDocument.activeElement;if(p){if("IFRAME"===p.tagName)p=p.contentDocument.activeElement;else for(;p.shadowRoot;)p=p.shadowRoot.activeElement;if(n.isEditable(p))return}var d=0,f=0;switch(c.which){case 37:d=c.metaKey?-e.contentWidth:c.altKey?-e.containerWidth:-30;break;case 38:f=c.metaKey?e.contentHeight:c.altKey?e.containerHeight:30;break;case 39:d=c.metaKey?e.contentWidth:c.altKey?e.containerWidth:30;break;case 40:f=c.metaKey?-e.contentHeight:c.altKey?-e.containerHeight:-30;break;case 33:f=90;break;case 32:f=c.shiftKey?90:-90;break;case 34:f=-90;break;case 35:f=c.ctrlKey?-e.contentHeight:-e.containerHeight;break;case 36:f=c.ctrlKey?t.scrollTop:e.containerHeight;break;default:return}a(t,"top",t.scrollTop-f),a(t,"left",t.scrollLeft+d),s(t),l=r(d,f),l&&c.preventDefault()}}})}var n=r(2),i=r(4),l=r(0),s=r(1),a=r(3);t.exports=function(t){o(t,l.get(t))}},function(t,e,r){"use strict";function o(t,e){function r(r,o){var n=t.scrollTop;if(0===r){if(!e.scrollbarYActive)return!1;if(0===n&&o>0||n>=e.contentHeight-e.containerHeight&&o<0)return!e.settings.wheelPropagation}var i=t.scrollLeft;if(0===o){if(!e.scrollbarXActive)return!1;if(0===i&&r<0||i>=e.contentWidth-e.containerWidth&&r>0)return!e.settings.wheelPropagation}return!0}function o(t){var e=t.deltaX,r=-1*t.deltaY;return void 0!==e&&void 0!==r||(e=-1*t.wheelDeltaX/6,r=t.wheelDeltaY/6),t.deltaMode&&1===t.deltaMode&&(e*=10,r*=10),e!==e&&r!==r&&(e=0,r=t.wheelDelta),t.shiftKey?[-r,-e]:[e,r]}function n(e,r){var o=t.querySelector("textarea:hover, select[multiple]:hover, .ps-child:hover");if(o){var n=window.getComputedStyle(o);if(![n.overflow,n.overflowX,n.overflowY].join("").match(/(scroll|auto)/))return!1;var i=o.scrollHeight-o.clientHeight;if(i>0&&!(0===o.scrollTop&&r>0||o.scrollTop===i&&r<0))return!0;var l=o.scrollLeft-o.clientWidth;if(l>0&&!(0===o.scrollLeft&&e<0||o.scrollLeft===l&&e>0))return!0}return!1}function s(s){var c=o(s),u=c[0],p=c[1];n(u,p)||(a=!1,e.settings.useBothWheelAxes?e.scrollbarYActive&&!e.scrollbarXActive?(p?l(t,"top",t.scrollTop-p*e.settings.wheelSpeed):l(t,"top",t.scrollTop+u*e.settings.wheelSpeed),a=!0):e.scrollbarXActive&&!e.scrollbarYActive&&(u?l(t,"left",t.scrollLeft+u*e.settings.wheelSpeed):l(t,"left",t.scrollLeft-p*e.settings.wheelSpeed),a=!0):(l(t,"top",t.scrollTop-p*e.settings.wheelSpeed),l(t,"left",t.scrollLeft+u*e.settings.wheelSpeed)),i(t),(a=a||r(u,p))&&(s.stopPropagation(),s.preventDefault()))}var a=!1;void 0!==window.onwheel?e.event.bind(t,"wheel",s):void 0!==window.onmousewheel&&e.event.bind(t,"mousewheel",s)}var n=r(0),i=r(1),l=r(3);t.exports=function(t){o(t,n.get(t))}},function(t,e,r){"use strict";function o(t,e){e.event.bind(t,"scroll",function(){i(t)})}var n=r(0),i=r(1);t.exports=function(t){o(t,n.get(t))}},function(t,e,r){"use strict";function o(t,e){function r(){var t=window.getSelection?window.getSelection():document.getSelection?document.getSelection():"";return 0===t.toString().length?null:t.getRangeAt(0).commonAncestorContainer}function o(){c||(c=setInterval(function(){if(!i.get(t))return void clearInterval(c);s(t,"top",t.scrollTop+u.top),s(t,"left",t.scrollLeft+u.left),l(t)},50))}function a(){c&&(clearInterval(c),c=null),n.stopScrolling(t)}var c=null,u={top:0,left:0},p=!1;e.event.bind(e.ownerDocument,"selectionchange",function(){t.contains(r())?p=!0:(p=!1,a())}),e.event.bind(window,"mouseup",function(){p&&(p=!1,a())}),e.event.bind(window,"keyup",function(){p&&(p=!1,a())}),e.event.bind(window,"mousemove",function(e){if(p){var r={x:e.pageX,y:e.pageY},i={left:t.offsetLeft,right:t.offsetLeft+t.offsetWidth,top:t.offsetTop,bottom:t.offsetTop+t.offsetHeight};r.x<i.left+3?(u.left=-5,n.startScrolling(t,"x")):r.x>i.right-3?(u.left=5,n.startScrolling(t,"x")):u.left=0,r.y<i.top+3?(u.top=i.top+3-r.y<5?-5:-20,n.startScrolling(t,"y")):r.y>i.bottom-3?(u.top=r.y-i.bottom+3<5?5:20,n.startScrolling(t,"y")):u.top=0,0===u.top&&0===u.left?a():o()}})}var n=r(2),i=r(0),l=r(1),s=r(3);t.exports=function(t){o(t,i.get(t))}},function(t,e,r){"use strict";function o(t,e,r,o){function n(r,o){var n=t.scrollTop,i=t.scrollLeft,l=Math.abs(r),s=Math.abs(o);if(s>l){if(o<0&&n===e.contentHeight-e.containerHeight||o>0&&0===n)return!e.settings.swipePropagation}else if(l>s&&(r<0&&i===e.contentWidth-e.containerWidth||r>0&&0===i))return!e.settings.swipePropagation;return!0}function a(e,r){s(t,"top",t.scrollTop-r),s(t,"left",t.scrollLeft-e),l(t)}function c(){w=!0}function u(){w=!1}function p(t){return t.targetTouches?t.targetTouches[0]:t}function d(t){return(!t.pointerType||"pen"!==t.pointerType||0!==t.buttons)&&(!(!t.targetTouches||1!==t.targetTouches.length)||!(!t.pointerType||"mouse"===t.pointerType||t.pointerType===t.MSPOINTER_TYPE_MOUSE))}function f(t){if(d(t)){_=!0;var e=p(t);b.pageX=e.pageX,b.pageY=e.pageY,g=(new Date).getTime(),null!==y&&clearInterval(y),t.stopPropagation()}}function h(t){if(!_&&e.settings.swipePropagation&&f(t),!w&&_&&d(t)){var r=p(t),o={pageX:r.pageX,pageY:r.pageY},i=o.pageX-b.pageX,l=o.pageY-b.pageY;a(i,l),b=o;var s=(new Date).getTime(),c=s-g;c>0&&(m.x=i/c,m.y=l/c,g=s),n(i,l)&&(t.stopPropagation(),t.preventDefault())}}function v(){!w&&_&&(_=!1,e.settings.swipeEasing&&(clearInterval(y),y=setInterval(function(){return i.get(t)&&(m.x||m.y)?Math.abs(m.x)<.01&&Math.abs(m.y)<.01?void clearInterval(y):(a(30*m.x,30*m.y),m.x*=.8,void(m.y*=.8)):void clearInterval(y)},10)))}var b={},g=0,m={},y=null,w=!1,_=!1;r?(e.event.bind(window,"touchstart",c),e.event.bind(window,"touchend",u),e.event.bind(t,"touchstart",f),e.event.bind(t,"touchmove",h),e.event.bind(t,"touchend",v)):o&&(window.PointerEvent?(e.event.bind(window,"pointerdown",c),e.event.bind(window,"pointerup",u),e.event.bind(t,"pointerdown",f),e.event.bind(t,"pointermove",h),e.event.bind(t,"pointerup",v)):window.MSPointerEvent&&(e.event.bind(window,"MSPointerDown",c),e.event.bind(window,"MSPointerUp",u),e.event.bind(t,"MSPointerDown",f),e.event.bind(t,"MSPointerMove",h),e.event.bind(t,"MSPointerUp",v)))}var n=r(2),i=r(0),l=r(1),s=r(3);t.exports=function(t){if(n.env.supportsTouch||n.env.supportsIePointer){o(t,i.get(t),n.env.supportsTouch,n.env.supportsIePointer)}}},function(t,e,r){"use strict";var o=r(0),n=r(1),i={"click-rail":r(16),"drag-scrollbar":r(17),keyboard:r(18),wheel:r(19),touch:r(22),selection:r(21)},l=r(20);t.exports=function(t,e){t.classList.add("ps");var r=o.add(t,"object"==typeof e?e:{});t.classList.add("ps--theme_"+r.settings.theme),r.settings.handlers.forEach(function(e){i[e](t)}),l(t),n(t)}},function(t,e,r){"use strict";var o=r(2),n=r(4),i=r(0),l=r(1),s=r(3);t.exports=function(t){var e=i.get(t);e&&(e.negativeScrollAdjustment=e.isNegativeScroll?t.scrollWidth-t.clientWidth:0,n.css(e.scrollbarXRail,"display","block"),n.css(e.scrollbarYRail,"display","block"),e.railXMarginWidth=o.toInt(n.css(e.scrollbarXRail,"marginLeft"))+o.toInt(n.css(e.scrollbarXRail,"marginRight")),e.railYMarginHeight=o.toInt(n.css(e.scrollbarYRail,"marginTop"))+o.toInt(n.css(e.scrollbarYRail,"marginBottom")),n.css(e.scrollbarXRail,"display","none"),n.css(e.scrollbarYRail,"display","none"),l(t),s(t,"top",t.scrollTop),s(t,"left",t.scrollLeft),n.css(e.scrollbarXRail,"display",""),n.css(e.scrollbarYRail,"display",""))}},function(t,e){t.exports=function(t,e,r,o){var n,i=t=t||{},l=typeof t.default;"object"!==l&&"function"!==l||(n=t,i=t.default);var s="function"==typeof i?i.options:i;if(e&&(s.render=e.render,s.staticRenderFns=e.staticRenderFns),r&&(s._scopeId=r),o){var a=s.computed||(s.computed={});Object.keys(o).forEach(function(t){var e=o[t];a[t]=function(){return e}})}return{esModule:n,exports:i,options:s}}},function(t,e){t.exports={render:function(){var t=this,e=t.$createElement;return(t._self._c||e)(t.$props.tagname,{tag:"section",staticClass:"ps-container",on:{"~mouseover":function(e){t.update(e)},"ps-scroll-y":t.scrollHanle,"ps-scroll-x":t.scrollHanle,"ps-scroll-up":t.scrollHanle,"ps-scroll-down":t.scrollHanle,"ps-scroll-left":t.scrollHanle,"ps-scroll-right":t.scrollHanle,"ps-y-reach-start":t.scrollHanle,"ps-y-reach-end":t.scrollHanle,"ps-x-reach-start":t.scrollHanle,"ps-x-reach-end":t.scrollHanle}},[t._t("default")],2)},staticRenderFns:[]}},function(t,e){function r(t,e){for(var r=0;r<t.length;r++){var o=t[r],n=u[o.id];if(n){n.refs++;for(var i=0;i<n.parts.length;i++)n.parts[i](o.parts[i]);for(;i<o.parts.length;i++)n.parts.push(s(o.parts[i],e))}else{for(var l=[],i=0;i<o.parts.length;i++)l.push(s(o.parts[i],e));u[o.id]={id:o.id,refs:1,parts:l}}}}function o(t){for(var e=[],r={},o=0;o<t.length;o++){var n=t[o],i=n[0],l=n[1],s=n[2],a=n[3],c={css:l,media:s,sourceMap:a};r[i]?r[i].parts.push(c):e.push(r[i]={id:i,parts:[c]})}return e}function n(t,e){var r=f(),o=b[b.length-1];if("top"===t.insertAt)o?o.nextSibling?r.insertBefore(e,o.nextSibling):r.appendChild(e):r.insertBefore(e,r.firstChild),b.push(e);else{if("bottom"!==t.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");r.appendChild(e)}}function i(t){t.parentNode.removeChild(t);var e=b.indexOf(t);e>=0&&b.splice(e,1)}function l(t){var e=document.createElement("style");return e.type="text/css",n(t,e),e}function s(t,e){var r,o,n;if(e.singleton){var s=v++;r=h||(h=l(e)),o=a.bind(null,r,s,!1),n=a.bind(null,r,s,!0)}else r=l(e),o=c.bind(null,r),n=function(){i(r)};return o(t),function(e){if(e){if(e.css===t.css&&e.media===t.media&&e.sourceMap===t.sourceMap)return;o(t=e)}else n()}}function a(t,e,r,o){var n=r?"":o.css;if(t.styleSheet)t.styleSheet.cssText=g(e,n);else{var i=document.createTextNode(n),l=t.childNodes;l[e]&&t.removeChild(l[e]),l.length?t.insertBefore(i,l[e]):t.appendChild(i)}}function c(t,e){var r=e.css,o=e.media,n=e.sourceMap;if(o&&t.setAttribute("media",o),n&&(r+="\n/*# sourceURL="+n.sources[0]+" */",r+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(n))))+" */"),t.styleSheet)t.styleSheet.cssText=r;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(r))}}var u={},p=function(t){var e;return function(){return void 0===e&&(e=t.apply(this,arguments)),e}},d=p(function(){return/msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase())}),f=p(function(){return document.head||document.getElementsByTagName("head")[0]}),h=null,v=0,b=[];t.exports=function(t,e){if("undefined"!=typeof DEBUG&&DEBUG&&"object"!=typeof document)throw new Error("The style-loader cannot be used in a non-browser environment");e=e||{},void 0===e.singleton&&(e.singleton=d()),void 0===e.insertAt&&(e.insertAt="bottom");var n=o(t);return r(n,e),function(t){for(var i=[],l=0;l<n.length;l++){var s=n[l],a=u[s.id];a.refs--,i.push(a)}if(t){r(o(t),e)}for(var l=0;l<i.length;l++){var a=i[l];if(0===a.refs){for(var c=0;c<a.parts.length;c++)a.parts[c]();delete u[a.id]}}}};var g=function(){var t=[];return function(e,r){return t[e]=r,t.filter(Boolean).join("\n")}}()},function(t,e,r){var o=r(8);"string"==typeof o&&(o=[[t.i,o,""]]);r(27)(o,{});o.locals&&(t.exports=o.locals)}]);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 1385 */
+/* 1400 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31041,7 +31806,7 @@ var reactiveProp = {
 });
 
 /***/ }),
-/* 1386 */
+/* 1401 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31055,7 +31820,7 @@ var reactiveProp = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Radar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Bubble; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Scatter; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(1387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(1402);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_chart_js__);
 
 function generateChart(chartId, chartType) {
@@ -31154,62 +31919,62 @@ var Scatter = generateChart('scatter-chart', 'scatter');
 });
 
 /***/ }),
-/* 1387 */
+/* 1402 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @namespace Chart
  */
-var Chart = __webpack_require__(1388)();
+var Chart = __webpack_require__(1403)();
 
-Chart.helpers = __webpack_require__(964);
+Chart.helpers = __webpack_require__(965);
 
 // @todo dispatch these helpers into appropriated helpers/helpers.* file and write unit tests!
-__webpack_require__(1392)(Chart);
-
-Chart.defaults = __webpack_require__(965);
-Chart.Element = __webpack_require__(966);
-Chart.elements = __webpack_require__(969);
-Chart.Interaction = __webpack_require__(1368);
-Chart.layouts = __webpack_require__(976);
-Chart.platform = __webpack_require__(1369);
-Chart.plugins = __webpack_require__(1370);
-Chart.Ticks = __webpack_require__(977);
-
-__webpack_require__(1403)(Chart);
-__webpack_require__(1404)(Chart);
-__webpack_require__(1405)(Chart);
-__webpack_require__(1406)(Chart);
 __webpack_require__(1407)(Chart);
-__webpack_require__(1408)(Chart);
 
-__webpack_require__(1409)(Chart);
-__webpack_require__(1410)(Chart);
-__webpack_require__(1411)(Chart);
-__webpack_require__(1412)(Chart);
-__webpack_require__(1413)(Chart);
-__webpack_require__(1414)(Chart);
+Chart.defaults = __webpack_require__(966);
+Chart.Element = __webpack_require__(972);
+Chart.elements = __webpack_require__(975);
+Chart.Interaction = __webpack_require__(1382);
+Chart.layouts = __webpack_require__(1199);
+Chart.platform = __webpack_require__(1383);
+Chart.plugins = __webpack_require__(1384);
+Chart.Ticks = __webpack_require__(1200);
 
-// Controllers must be loaded after elements
-// See Chart.core.datasetController.dataElementType
-__webpack_require__(1415)(Chart);
-__webpack_require__(1416)(Chart);
-__webpack_require__(1417)(Chart);
 __webpack_require__(1418)(Chart);
 __webpack_require__(1419)(Chart);
 __webpack_require__(1420)(Chart);
 __webpack_require__(1421)(Chart);
-
 __webpack_require__(1422)(Chart);
 __webpack_require__(1423)(Chart);
+
 __webpack_require__(1424)(Chart);
 __webpack_require__(1425)(Chart);
 __webpack_require__(1426)(Chart);
 __webpack_require__(1427)(Chart);
 __webpack_require__(1428)(Chart);
+__webpack_require__(1429)(Chart);
+
+// Controllers must be loaded after elements
+// See Chart.core.datasetController.dataElementType
+__webpack_require__(1430)(Chart);
+__webpack_require__(1431)(Chart);
+__webpack_require__(1432)(Chart);
+__webpack_require__(1433)(Chart);
+__webpack_require__(1434)(Chart);
+__webpack_require__(1435)(Chart);
+__webpack_require__(1436)(Chart);
+
+__webpack_require__(1437)(Chart);
+__webpack_require__(1438)(Chart);
+__webpack_require__(1439)(Chart);
+__webpack_require__(1440)(Chart);
+__webpack_require__(1441)(Chart);
+__webpack_require__(1442)(Chart);
+__webpack_require__(1443)(Chart);
 
 // Loading built-it plugins
-var plugins = __webpack_require__(1429);
+var plugins = __webpack_require__(1444);
 for (var k in plugins) {
 	if (plugins.hasOwnProperty(k)) {
 		Chart.plugins.register(plugins[k]);
@@ -31282,13 +32047,13 @@ Chart.layoutService = Chart.layouts;
 
 
 /***/ }),
-/* 1388 */
+/* 1403 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
+var defaults = __webpack_require__(966);
 
 defaults._set('global', {
 	responsive: true,
@@ -31338,13 +32103,13 @@ module.exports = function() {
 
 
 /***/ }),
-/* 1389 */
+/* 1404 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(1183);
+var helpers = __webpack_require__(1208);
 
 /**
  * Easing functions adapted from Robert Penner's easing equations.
@@ -31595,13 +32360,13 @@ helpers.easingEffects = effects;
 
 
 /***/ }),
-/* 1390 */
+/* 1405 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(1183);
+var helpers = __webpack_require__(1208);
 
 /**
  * @namespace Chart.helpers.canvas
@@ -31816,13 +32581,13 @@ helpers.drawRoundedRectangle = function(ctx) {
 
 
 /***/ }),
-/* 1391 */
+/* 1406 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(1183);
+var helpers = __webpack_require__(1208);
 
 /**
  * @alias Chart.helpers.options
@@ -31919,7 +32684,7 @@ module.exports = {
 
 
 /***/ }),
-/* 1392 */
+/* 1407 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31927,9 +32692,9 @@ module.exports = {
 /* global document: false */
 
 
-var color = __webpack_require__(1367);
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
+var color = __webpack_require__(1381);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
 
 module.exports = function(Chart) {
 
@@ -32537,10 +33302,10 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1393 */
+/* 1408 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var conversions = __webpack_require__(1394);
+var conversions = __webpack_require__(1409);
 
 var convert = function() {
    return new Converter();
@@ -32634,7 +33399,7 @@ Converter.prototype.getValues = function(space) {
 module.exports = convert;
 
 /***/ }),
-/* 1394 */
+/* 1409 */
 /***/ (function(module, exports) {
 
 /* MIT license */
@@ -33338,11 +34103,11 @@ for (var key in cssKeywords) {
 
 
 /***/ }),
-/* 1395 */
+/* 1410 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* MIT license */
-var colorNames = __webpack_require__(1396);
+var colorNames = __webpack_require__(1411);
 
 module.exports = {
    getRgba: getRgba,
@@ -33565,7 +34330,7 @@ for (var name in colorNames) {
 
 
 /***/ }),
-/* 1396 */
+/* 1411 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -33720,15 +34485,15 @@ module.exports = {
 };
 
 /***/ }),
-/* 1397 */
+/* 1412 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	elements: {
@@ -33834,15 +34599,15 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 1398 */
+/* 1413 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 var globalDefaults = defaults.global;
 
@@ -33932,15 +34697,15 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 1399 */
+/* 1414 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 var defaultColor = defaults.global.defaultColor;
 
@@ -34045,14 +34810,14 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 1400 */
+/* 1415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
 
 defaults._set('global', {
 	elements: {
@@ -34269,7 +35034,7 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 1401 */
+/* 1416 */
 /***/ (function(module, exports) {
 
 /**
@@ -34290,7 +35055,7 @@ module.exports = {
 
 
 /***/ }),
-/* 1402 */
+/* 1417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34300,7 +35065,7 @@ module.exports = {
 
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 var EXPANDO_KEY = '$chartjs';
 var CSS_PREFIX = 'chartjs-';
@@ -34754,16 +35519,16 @@ helpers.removeEvent = removeEventListener;
 
 
 /***/ }),
-/* 1403 */
+/* 1418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* global window: false */
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	animation: {
@@ -34933,18 +35698,18 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1404 */
+/* 1419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var Interaction = __webpack_require__(1368);
-var layouts = __webpack_require__(976);
-var platform = __webpack_require__(1369);
-var plugins = __webpack_require__(1370);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var Interaction = __webpack_require__(1382);
+var layouts = __webpack_require__(1199);
+var platform = __webpack_require__(1383);
+var plugins = __webpack_require__(1384);
 
 module.exports = function(Chart) {
 
@@ -35887,13 +36652,13 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1405 */
+/* 1420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 module.exports = function(Chart) {
 
@@ -36224,15 +36989,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1406 */
+/* 1421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var layouts = __webpack_require__(976);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var layouts = __webpack_require__(1199);
 
 module.exports = function(Chart) {
 
@@ -36277,16 +37042,16 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1407 */
+/* 1422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 defaults._set('scale', {
 	display: true,
@@ -37220,15 +37985,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1408 */
+/* 1423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	tooltips: {
@@ -38175,13 +38940,13 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1409 */
+/* 1424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
+var helpers = __webpack_require__(965);
 
 /**
  * Generate a set of linear ticks
@@ -38368,7 +39133,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1410 */
+/* 1425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38508,15 +39273,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1411 */
+/* 1426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 module.exports = function(Chart) {
 
@@ -38706,14 +39471,14 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1412 */
+/* 1427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 /**
  * Generate a set of logarithmic ticks
@@ -39060,15 +39825,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1413 */
+/* 1428 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
-var Ticks = __webpack_require__(977);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
+var Ticks = __webpack_require__(1200);
 
 module.exports = function(Chart) {
 
@@ -39596,18 +40361,18 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1414 */
+/* 1429 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* global window: false */
 
 
-var moment = __webpack_require__(963);
+var moment = __webpack_require__(964);
 moment = typeof moment === 'function' ? moment : window.moment;
 
-var defaults = __webpack_require__(965);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var helpers = __webpack_require__(965);
 
 // Integer constants are from the ES6 spec.
 var MIN_INTEGER = Number.MIN_SAFE_INTEGER || -9007199254740991;
@@ -40386,15 +41151,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1415 */
+/* 1430 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('bar', {
 	hover: {
@@ -40897,15 +41662,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1416 */
+/* 1431 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('bubble', {
 	hover: {
@@ -41084,15 +41849,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1417 */
+/* 1432 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('doughnut', {
 	animation: {
@@ -41390,15 +42155,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1418 */
+/* 1433 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('line', {
 	showLines: true,
@@ -41730,15 +42495,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1419 */
+/* 1434 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('polarArea', {
 	scale: {
@@ -41959,15 +42724,15 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1420 */
+/* 1435 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('radar', {
 	scale: {
@@ -42134,13 +42899,13 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1421 */
+/* 1436 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
+var defaults = __webpack_require__(966);
 
 defaults._set('scatter', {
 	hover: {
@@ -42183,7 +42948,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1422 */
+/* 1437 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42201,7 +42966,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1423 */
+/* 1438 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42218,7 +42983,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1424 */
+/* 1439 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42236,7 +43001,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1425 */
+/* 1440 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42254,7 +43019,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1426 */
+/* 1441 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42272,7 +43037,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1427 */
+/* 1442 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42290,7 +43055,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1428 */
+/* 1443 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42305,20 +43070,20 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 1429 */
+/* 1444 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 module.exports = {};
-module.exports.filler = __webpack_require__(1430);
-module.exports.legend = __webpack_require__(1431);
-module.exports.title = __webpack_require__(1432);
+module.exports.filler = __webpack_require__(1445);
+module.exports.legend = __webpack_require__(1446);
+module.exports.title = __webpack_require__(1447);
 
 
 /***/ }),
-/* 1430 */
+/* 1445 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42330,9 +43095,9 @@ module.exports.title = __webpack_require__(1432);
 
 
 
-var defaults = __webpack_require__(965);
-var elements = __webpack_require__(969);
-var helpers = __webpack_require__(964);
+var defaults = __webpack_require__(966);
+var elements = __webpack_require__(975);
+var helpers = __webpack_require__(965);
 
 defaults._set('global', {
 	plugins: {
@@ -42643,16 +43408,16 @@ module.exports = {
 
 
 /***/ }),
-/* 1431 */
+/* 1446 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
-var layouts = __webpack_require__(976);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
+var layouts = __webpack_require__(1199);
 
 var noop = helpers.noop;
 
@@ -43226,16 +43991,16 @@ module.exports = {
 
 
 /***/ }),
-/* 1432 */
+/* 1447 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(965);
-var Element = __webpack_require__(966);
-var helpers = __webpack_require__(964);
-var layouts = __webpack_require__(976);
+var defaults = __webpack_require__(966);
+var Element = __webpack_require__(972);
+var helpers = __webpack_require__(965);
+var layouts = __webpack_require__(1199);
 
 var noop = helpers.noop;
 
@@ -43485,23 +44250,29 @@ module.exports = {
 
 
 /***/ }),
-/* 1433 */,
-/* 1434 */,
-/* 1435 */,
-/* 1436 */,
-/* 1437 */,
-/* 1438 */,
-/* 1439 */,
-/* 1440 */,
-/* 1441 */,
-/* 1442 */,
-/* 1443 */
+/* 1448 */,
+/* 1449 */,
+/* 1450 */,
+/* 1451 */,
+/* 1452 */,
+/* 1453 */,
+/* 1454 */,
+/* 1455 */,
+/* 1456 */,
+/* 1457 */,
+/* 1458 */,
+/* 1459 */,
+/* 1460 */,
+/* 1461 */,
+/* 1462 */,
+/* 1463 */,
+/* 1464 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1444)
+var __vue_script__ = __webpack_require__(1465)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -43542,13 +44313,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1444 */
+/* 1465 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__);
 
 
@@ -43609,27 +44380,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1445 */,
-/* 1446 */,
-/* 1447 */,
-/* 1448 */,
-/* 1449 */,
-/* 1450 */,
-/* 1451 */,
-/* 1452 */,
-/* 1453 */,
-/* 1454 */,
-/* 1455 */,
-/* 1456 */,
-/* 1457 */,
-/* 1458 */,
-/* 1459 */,
-/* 1460 */,
-/* 1461 */,
-/* 1462 */,
-/* 1463 */,
-/* 1464 */,
-/* 1465 */,
 /* 1466 */,
 /* 1467 */,
 /* 1468 */,
@@ -43663,13 +44413,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* 1496 */,
 /* 1497 */,
 /* 1498 */,
-/* 1499 */
+/* 1499 */,
+/* 1500 */,
+/* 1501 */,
+/* 1502 */,
+/* 1503 */,
+/* 1504 */,
+/* 1505 */,
+/* 1506 */,
+/* 1507 */,
+/* 1508 */,
+/* 1509 */,
+/* 1510 */,
+/* 1511 */,
+/* 1512 */,
+/* 1513 */,
+/* 1514 */,
+/* 1515 */,
+/* 1516 */,
+/* 1517 */,
+/* 1518 */,
+/* 1519 */,
+/* 1520 */,
+/* 1521 */,
+/* 1522 */,
+/* 1523 */,
+/* 1524 */,
+/* 1525 */,
+/* 1526 */,
+/* 1527 */,
+/* 1528 */,
+/* 1529 */,
+/* 1530 */,
+/* 1531 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1500);
+var content = __webpack_require__(1532);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -43689,7 +44471,7 @@ if(false) {
 }
 
 /***/ }),
-/* 1500 */
+/* 1532 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(12)(false);
@@ -43703,27 +44485,27 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ }),
-/* 1501 */
+/* 1533 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_CardLine1ChartExample__ = __webpack_require__(1502);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_CardLine1ChartExample__ = __webpack_require__(1534);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_CardLine1ChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__dashboard_CardLine1ChartExample__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dashboard_CardLine2ChartExample__ = __webpack_require__(1504);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dashboard_CardLine2ChartExample__ = __webpack_require__(1536);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dashboard_CardLine2ChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__dashboard_CardLine2ChartExample__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dashboard_CardLine3ChartExample__ = __webpack_require__(1506);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dashboard_CardLine3ChartExample__ = __webpack_require__(1538);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dashboard_CardLine3ChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__dashboard_CardLine3ChartExample__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__dashboard_CardBarChartExample__ = __webpack_require__(1508);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__dashboard_CardBarChartExample__ = __webpack_require__(1540);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__dashboard_CardBarChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__dashboard_CardBarChartExample__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dashboard_MainChartExample__ = __webpack_require__(1510);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dashboard_MainChartExample__ = __webpack_require__(1542);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dashboard_MainChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__dashboard_MainChartExample__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dashboard_SocialBoxChartExample__ = __webpack_require__(1443);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dashboard_SocialBoxChartExample__ = __webpack_require__(1464);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__dashboard_SocialBoxChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__dashboard_SocialBoxChartExample__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__dashboard_CalloutChartExample__ = __webpack_require__(1512);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__dashboard_CalloutChartExample__ = __webpack_require__(1544);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__dashboard_CalloutChartExample___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__dashboard_CalloutChartExample__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__coreui_vue__ = __webpack_require__(1373);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_helper__ = __webpack_require__(974);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__coreui_vue__ = __webpack_require__(1387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_helper__ = __webpack_require__(980);
 //
 //
 //
@@ -44290,13 +45072,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1502 */
+/* 1534 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1503)
+var __vue_script__ = __webpack_require__(1535)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -44337,15 +45119,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1503 */
+/* 1535 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1371);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1385);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__);
 
 
@@ -44411,13 +45193,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1504 */
+/* 1536 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1505)
+var __vue_script__ = __webpack_require__(1537)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -44458,15 +45240,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1505 */
+/* 1537 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1371);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1385);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__);
 
 
@@ -44533,13 +45315,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1506 */
+/* 1538 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1507)
+var __vue_script__ = __webpack_require__(1539)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -44580,13 +45362,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1507 */
+/* 1539 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__);
 
 
@@ -44637,13 +45419,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1508 */
+/* 1540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1509)
+var __vue_script__ = __webpack_require__(1541)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -44684,13 +45466,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1509 */
+/* 1541 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__);
 
 
@@ -44733,13 +45515,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1510 */
+/* 1542 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1511)
+var __vue_script__ = __webpack_require__(1543)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -44780,15 +45562,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1511 */
+/* 1543 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1371);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1385);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_dist_js_coreui_utilities___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_dist_js_coreui_utilities__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__coreui_coreui_plugin_chartjs_custom_tooltips__);
 
 
@@ -44890,13 +45672,13 @@ function random(min, max) {
 });
 
 /***/ }),
-/* 1512 */
+/* 1544 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(25)
 /* script */
-var __vue_script__ = __webpack_require__(1513)
+var __vue_script__ = __webpack_require__(1545)
 /* template */
 var __vue_template__ = null
 /* template functional */
@@ -44937,15 +45719,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 1513 */
+/* 1545 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(978);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(1207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__ = __webpack_require__(1209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__coreui_coreui_plugin_chartjs_custom_tooltips__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1371);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__ = __webpack_require__(1385);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__coreui_coreui_dist_js_coreui_utilities__);
 
 
@@ -45014,7 +45796,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 1514 */
+/* 1546 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
