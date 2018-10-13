@@ -34,5 +34,6 @@ class Messages
     public static $PATIENT_ADDED = 'Patient added successfully';
 
     public static $BOOKING_COMPLETED = 'Booking Completed Successfully';
+    public static $BOOKING_DELETED = 'Booking Deleted Successfully';
 
 }

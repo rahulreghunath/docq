@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
+/**
+ * Admin Routes
+ */
 Route::post('admin/login', 'API\AdminLoginController@login');
 Route::post('register', 'API\UserController@register');
 Route::group([
@@ -62,7 +65,7 @@ Route::group([
     Route::get('check-doctor-working-session-relations', 'API\AdminDoctorSchedulingController@checkWorkingSessionRelation');
 
     /**
-     * Staff Booking
+     * Staff Bookings
      */
     Route::get('get-staff-booking-form-data', 'API\AdminBookingController@getBookingFormData');
     Route::get('get-staff-booking-clinics', 'API\AdminBookingController@getClinics');
@@ -72,5 +75,18 @@ Route::group([
     Route::post('post-staff-booking-patient', 'API\AdminBookingController@addPatient');
     Route::post('post-staff-booking', 'API\AdminBookingController@addBooking');
     Route::get('get-staff-bookings', 'API\AdminBookingController@getBookings');
+    Route::get('get-staff-bookings-filter-data', 'API\AdminBookingController@getBookingsFilterData');
+    Route::post('delete-staff-booking', 'API\AdminBookingController@deleteBooking');
+
+});
+
+/**
+ * Doctor Routes
+ */
+Route::post('doctor/login', 'API\DoctorLoginController@login');
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix' => 'doctor'
+], function () {
 
 });

@@ -42,7 +42,7 @@ class AdminBookingController extends Controller
     public function getBookingFormData()
     {
         $doctors = DoctorDetails::whereHas('registration', function ($query) {
-            $query->where('status', Constants::$DOCTOR_USER);
+            $query->where('status', Constants::$ACTIVE_USER);
         })->with('registration')->get();
 
         return response()->json(
@@ -201,10 +201,70 @@ class AdminBookingController extends Controller
         );
     }
 
-    public function getBookings()
+    /**
+     * Get booking display page filter data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getBookingsFilterData()
     {
-        $bookings = Booking::orderBy('created_at', 'desc')->paginate(2);
+        $doctors = DoctorDetails::whereHas('registration', function ($query) {
+            $query->where('status', Constants::$ACTIVE_USER);
+        })->with('registration')->get();
+
+        return response()->json(
+            jsonResponse(
+                ['doctors' => DoctorResource::collection($doctors)],
+                Constants::$SUCCESS
+            )
+        );
+    }
+
+    /**
+     * Get Booking details based on filter
+     * @param Request $request
+     * @return BookingResourceCollection
+     */
+    public function getBookings(Request $request)
+    {
+        $bookings = Booking::when($request['doctor'] != '', function ($q) use ($request) {
+            $q->whereHas('booking_slot', function ($query) use ($request) {
+                $query->whereHas('session_date', function ($firstInner) use ($request) {
+                    $firstInner->whereHas('working_session', function ($secondInner) use ($request) {
+                        $secondInner->whereHas('clinic', function ($thirdInner) use ($request) {
+                            $thirdInner->when($request['clinic'] != '', function ($q) use ($request) {
+                                $q->where('id', $request['clinic']);
+                            })->whereHas('doctor_details', function ($forthInner) use ($request) {
+                                $forthInner->where('id', $request['doctor']);
+                            });
+                        });
+                    });
+                });
+            });
+        })->when($request['date'] != '', function ($q) use ($request) {
+            $q->whereHas('booking_slot', function ($query) use ($request) {
+                $query->whereHas('session_date', function ($firstInner) use ($request) {
+                    $firstInner->where('date', $request['date']);
+                });
+            });
+        })->orderBy('created_at', 'desc')->paginate(Constants::$ADMIN_PAGINATION_COUNT);
 
         return BookingResourceCollection::make($bookings)->status(Constants::$SUCCESS);
     }
+
+    public function deleteBooking(Request $request)
+    {
+        $booking = Booking::findOrFail($request['id']);
+        $booking->status = Constants::$DELETED_BOOKING_STATUS;
+        $booking->save();
+
+        return response()->json(
+            jsonResponse(
+                [
+                    'message' => Messages::$BOOKING_DELETED,
+                ],
+                Constants::$SUCCESS
+            )
+        );
+    }
+
 }

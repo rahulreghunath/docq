@@ -11,19 +11,20 @@
 |
 */
 
-Route::get('/', [
-    'uses' => 'HomeController@getHome',
-    'as' => 'home'
-]);
 
 Route::group([
     'prefix' => 'admin'
 ], function () {
     Route::get('/', [
         'uses' => 'API\AdminController@getHome',
-        'as' => 'home'
+        'as' => 'adminHome'
     ]);
 });
+
+Route::get('doctor/', [
+    'uses' => 'API\DoctorController@getHome',
+    'as' => 'doctorHome'
+]);
 
 Route::get('job', [
     'uses' => 'HomeController@getJob',

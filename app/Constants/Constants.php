@@ -32,6 +32,8 @@ class Constants
     public static $BOOKED_SLOT_STATUS = 1;
 
     public static $ACTIVE_BOOKING_STATUS = 1;
+    public static $SUCCESSFUL_BOOKING_STATUS = 2;
+    public static $ABSENT_BOOKING_STATUS = 2;
     public static $DELETED_BOOKING_STATUS = -1;
 
 }
