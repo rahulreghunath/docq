@@ -29,4 +29,5 @@ class WorkingSession extends Model
     {
         return $this->hasMany('App\Models\BookingSlot');
     }
+
 }

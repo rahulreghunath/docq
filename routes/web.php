@@ -16,7 +16,7 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
     Route::get('/', [
-        'uses' => 'API\AdminController@getHome',
+        'uses' => 'API\Admin\AdminController@getHome',
         'as' => 'adminHome'
     ]);
 });

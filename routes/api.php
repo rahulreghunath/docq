@@ -13,80 +13,125 @@ use Illuminate\Http\Request;
 |
 */
 
-/**
- * Admin Routes
- */
-Route::post('admin/login', 'API\AdminLoginController@login');
-Route::post('register', 'API\UserController@register');
 Route::group([
-    'middleware' => 'auth:api',
-    'prefix' => 'admin'
+    'middleware' => ['auth:api', 'cross'], // Middleware for allow cross site request **should be removed in production
 ], function () {
-    Route::post('logout', 'API\AdminLoginController@logout');
 
     /**
-     * Specialisation
+     * Authenticated routes for Admin
      */
-    Route::post('add-specialisation', 'API\AdminController@addSpecialisation');
-    Route::get('get-specialisations', 'API\AdminController@getSpecialisations');
+    Route::group([
+        'middleware' => 'admin',
+        'prefix' => 'admin'
+    ], function () {
+        Route::get('test', 'TestController@test');
+
+        Route::post('logout', 'API\Admin\LoginController@logout');
+
+        /**
+         * Specialisation
+         */
+        Route::post('add-specialisation', 'API\Admin\AdminController@addSpecialisation');
+        Route::get('get-specialisations', 'API\Admin\AdminController@getSpecialisations');
+
+        /**
+         * QualificationResource
+         */
+        Route::post('add-qualification', 'API\Admin\AdminController@addQualification');
+        Route::get('get-qualifications', 'API\Admin\AdminController@getQualifications');
+
+        /**
+         * Add Doctor
+         */
+        Route::get('get-doctor-form-details', 'API\Admin\AdminController@getDoctorFormDetails');
+        Route::post('add-doctor', 'API\Admin\AdminController@addDoctor');
+        Route::get('get-doctor-basic-details-img', 'API\Admin\AdminController@getDoctorBasicDetails');
+        Route::post('add-doctor-profile-image', 'API\Admin\AdminController@uploadDoctorImage');
+
+        /**
+         * Add Clinic
+         */
+        Route::post('add-doctor-clinic', 'API\Admin\AdminController@addDoctorClinic');
+        Route::get('get-doctor-clinic-details', 'API\Admin\AdminController@getClinicDetails');
+
+        /**
+         * View Doctor details
+         */
+        Route::get('get-doctors-details', 'API\Admin\AdminController@getDoctorsDetails');
+
+        /**
+         * Working day scheduling
+         */
+        Route::get('get-working-session-form-details', 'API\Admin\SchedulingController@getWorkingSessionFormDetails');
+        Route::post('add-doctor-working-session', 'API\Admin\SchedulingController@addWorkingSession');
+        Route::get('get-doctor-working-sessions', 'API\Admin\SchedulingController@getWorkingSessions');
+        Route::post('update-doctor-working-session', 'API\Admin\SchedulingController@updateWorkingSession');
+        Route::get('check-doctor-working-session-relations', 'API\Admin\SchedulingController@checkWorkingSessionRelation');
+
+        /**
+         * Staff Bookings
+         */
+        Route::get('get-staff-booking-form-data', 'API\Admin\BookingController@getBookingFormData');
+        Route::get('get-staff-booking-clinics', 'API\Admin\BookingController@getClinics');
+        Route::get('get-staff-booking-sessions', 'API\Admin\BookingController@getSessions');
+        Route::get('get-staff-booking-tokens', 'API\Admin\BookingController@getTokens');
+        Route::get('get-staff-booking-patients', 'API\Admin\BookingController@getPatients');
+        Route::post('post-staff-booking-patient', 'API\Admin\BookingController@addPatient');
+        Route::post('post-staff-booking', 'API\Admin\BookingController@addBooking');
+        Route::get('get-staff-bookings', 'API\Admin\BookingController@getBookings');
+        Route::get('get-staff-bookings-filter-data', 'API\Admin\BookingController@getBookingsFilterData');
+        Route::post('delete-staff-booking', 'API\Admin\BookingController@deleteBooking');
+
+    });
 
     /**
-     * QualificationResource
+     * Authenticated Routes for Doctor
      */
-    Route::post('add-qualification', 'API\AdminController@addQualification');
-    Route::get('get-qualifications', 'API\AdminController@getQualifications');
+    Route::group([
+        'middleware' => 'doctor',
+        'prefix' => 'doctor'
+    ], function () {
+        Route::get('get-profile-data', 'API\Doctor\DoctorController@getProfileDetails');
+        Route::get('get-clinics', 'API\Doctor\DoctorController@getClinics');
+
+        /**
+         * Booking
+         */
+        Route::get('get-bookings', 'API\Doctor\ManageBookingController@getBookings');
+
+        /**
+         * Scheduling
+         */
+        Route::get('get-working-session-form-details', 'API\Doctor\SchedulingController@getWorkingSessionFormDetails');
+        Route::get('get-working-sessions', 'API\Doctor\SchedulingController@getWorkingSessions');
+        Route::post('add-working-session', 'API\Doctor\SchedulingController@addWorkingSession');
+        Route::post('update-working-session', 'API\Doctor\SchedulingController@updateWorkingSession');
+        Route::get('check-working-session-relations', 'API\Doctor\SchedulingController@checkWorkingSessionRelation');
+
+        /**
+         * Add Clinic
+         */
+        Route::post('add-clinic', 'API\Doctor\DoctorController@addClinic');
+        Route::get('get-clinic-details', 'API\Doctor\DoctorController@getClinicDetails');
+    });
 
     /**
-     * Add Doctor
+     * Authenticated routes for all users, used to fetch less secured reusable data
      */
-    Route::get('get-doctor-form-details', 'API\AdminController@getDoctorFormDetails');
-    Route::post('add-doctor', 'API\AdminController@addDoctor');
-    Route::get('get-doctor-basic-details-img', 'API\AdminController@getDoctorBasicDetails');
-    Route::post('add-doctor-profile-image', 'API\AdminController@uploadDoctorImage');
-
-    /**
-     * Add Clinic
-     */
-    Route::post('add-doctor-clinic', 'API\AdminController@addDoctorClinic');
-    Route::get('get-doctor-clinic-details', 'API\AdminController@getClinicDetails');
-
-    /**
-     * View Doctor details
-     */
-    Route::get('get-doctors-details', 'API\AdminController@getDoctorsDetails');
-
-    /**
-     * Working day scheduling
-     */
-    Route::get('get-working-session-form-details', 'API\AdminDoctorSchedulingController@getWorkingSessionFormDetails');
-    Route::post('add-doctor-working-session', 'API\AdminDoctorSchedulingController@addWorkingSession');
-    Route::get('get-doctor-working-sessions', 'API\AdminDoctorSchedulingController@getWorkingSessions');
-    Route::post('update-doctor-working-session', 'API\AdminDoctorSchedulingController@updateWorkingSession');
-    Route::get('check-doctor-working-session-relations', 'API\AdminDoctorSchedulingController@checkWorkingSessionRelation');
-
-    /**
-     * Staff Bookings
-     */
-    Route::get('get-staff-booking-form-data', 'API\AdminBookingController@getBookingFormData');
-    Route::get('get-staff-booking-clinics', 'API\AdminBookingController@getClinics');
-    Route::get('get-staff-booking-sessions', 'API\AdminBookingController@getSessions');
-    Route::get('get-staff-booking-tokens', 'API\AdminBookingController@getTokens');
-    Route::get('get-staff-booking-patients', 'API\AdminBookingController@getPatients');
-    Route::post('post-staff-booking-patient', 'API\AdminBookingController@addPatient');
-    Route::post('post-staff-booking', 'API\AdminBookingController@addBooking');
-    Route::get('get-staff-bookings', 'API\AdminBookingController@getBookings');
-    Route::get('get-staff-bookings-filter-data', 'API\AdminBookingController@getBookingsFilterData');
-    Route::post('delete-staff-booking', 'API\AdminBookingController@deleteBooking');
+    Route::group([
+        'prefix' => 'utils'
+    ], function () {
+        //
+    });
 
 });
 
 /**
- * Doctor Routes
+ * Unauthenticated route
  */
-Route::post('doctor/login', 'API\DoctorLoginController@login');
 Route::group([
-    'middleware' => 'auth:api',
-    'prefix' => 'doctor'
+    'middleware' => ['cross'], // Middleware for allow cross site request **should be removed in production
 ], function () {
-
+    Route::post('admin/login', 'API\Admin\LoginController@login');
+    Route::post('doctor/login', 'API\Doctor\LoginController@login');
 });

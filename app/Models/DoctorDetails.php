@@ -35,4 +35,5 @@ class DoctorDetails extends Model
         return $this->hasMany('App\Models\Clinic');
     }
 
+
 }

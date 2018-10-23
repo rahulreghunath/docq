@@ -18,6 +18,7 @@ class Constants
     public static $ACTIVE_USER = '1';
 
     public static $DOCTOR_USER = '1';
+    public static $ADMIN_USER = '0';
     public static $PATIENT_USER = '2';
 
     public static $SUCCESS = 'success';

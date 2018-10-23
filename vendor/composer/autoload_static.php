@@ -15,6 +15,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'cf97c57bfe0f23854afd2f3818abb7a0' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/create_uploaded_file.php',
         '9bf37a3d0dad93e29cb4e1b1bfab04e9' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_headers_from_sapi.php',
         'ce70dccb4bcc2efc6e94d2ee526e6972' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_method_from_sapi.php',
@@ -23,11 +24,10 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         '0b0974a5566a1077e4f2e111341112c1' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_server.php',
         '1ca3bc274755662169f9629d5412a1da' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_uploaded_files.php',
         '40360c0b9b437e69bcbb7f1349ce029e' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/parse_cookie_header.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         '7f700a2d1037a51da24603302f1fa956' => __DIR__ . '/..' . '/pragmarx/health/src/Support/Throwable.php',
         '95b7d6fde13ad38a018fb3752af71cf2' => __DIR__ . '/..' . '/pragmarx/health/src/Support/helpers.php',
         'b6185d03aa7d3c2139a429dcadd32265' => __DIR__ . '/../..' . '/app/Http/Helper/helper.php',
@@ -143,8 +143,13 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
             'Cron\\' => 5,
             'Carbon\\' => 7,
         ),
+        'B' => 
+        array (
+            'Barryvdh\\Cors\\' => 14,
+        ),
         'A' => 
         array (
+            'Asm89\\Stack\\' => 12,
             'App\\' => 4,
         ),
     );
@@ -157,8 +162,8 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Zend\\Diactoros\\' => 
         array (
@@ -384,6 +389,14 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
         ),
+        'Barryvdh\\Cors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/barryvdh/laravel-cors/src',
+        ),
+        'Asm89\\Stack\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/asm89/stack-cors/src/Asm89/Stack',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -438,6 +451,8 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Http\\Controllers\\API\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/AdminController.php',
         'App\\Http\\Controllers\\API\\AdminDoctorSchedulingController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/AdminDoctorSchedulingController.php',
         'App\\Http\\Controllers\\API\\AdminLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/AdminLoginController.php',
+        'App\\Http\\Controllers\\API\\DoctorController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/DoctorController.php',
+        'App\\Http\\Controllers\\API\\DoctorLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/DoctorLoginController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
@@ -458,6 +473,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Http\\Requests\\WorkingSessionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/WorkingSessionRequest.php',
         'App\\Http\\Resources\\BookingResource' => __DIR__ . '/../..' . '/app/Http/Resources/BookingResource.php',
         'App\\Http\\Resources\\BookingSlotResource' => __DIR__ . '/../..' . '/app/Http/Resources/BookingSlotResource.php',
+        'App\\Http\\Resources\\ClinicResource' => __DIR__ . '/../..' . '/app/Http/Resources/ClinicResource.php',
         'App\\Http\\Resources\\ClinicSessionResource' => __DIR__ . '/../..' . '/app/Http/Resources/ClinicSessionResource.php',
         'App\\Http\\Resources\\Collections\\BookingResourceCollection' => __DIR__ . '/../..' . '/app/Http/Resources/Collections/BookingResourceCollection.php',
         'App\\Http\\Resources\\Collections\\ClinicResourceCollection' => __DIR__ . '/../..' . '/app/Http/Resources/Collections/ClinicResourceCollection.php',
@@ -510,6 +526,12 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Rules\\EditWeekDayStartingTime' => __DIR__ . '/../..' . '/app/Rules/EditWeekDayStartingTime.php',
         'App\\Rules\\WeekDayEndingTime' => __DIR__ . '/../..' . '/app/Rules/WeekDayEndingTime.php',
         'App\\Rules\\WeekDayStartingTime' => __DIR__ . '/../..' . '/app/Rules/WeekDayStartingTime.php',
+        'Asm89\\Stack\\Cors' => __DIR__ . '/..' . '/asm89/stack-cors/src/Asm89/Stack/Cors.php',
+        'Asm89\\Stack\\CorsService' => __DIR__ . '/..' . '/asm89/stack-cors/src/Asm89/Stack/CorsService.php',
+        'Barryvdh\\Cors\\HandleCors' => __DIR__ . '/..' . '/barryvdh/laravel-cors/src/HandleCors.php',
+        'Barryvdh\\Cors\\HandlePreflight' => __DIR__ . '/..' . '/barryvdh/laravel-cors/src/HandlePreflight.php',
+        'Barryvdh\\Cors\\LumenServiceProvider' => __DIR__ . '/..' . '/barryvdh/laravel-cors/src/LumenServiceProvider.php',
+        'Barryvdh\\Cors\\ServiceProvider' => __DIR__ . '/..' . '/barryvdh/laravel-cors/src/ServiceProvider.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\Exceptions\\InvalidDateException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/InvalidDateException.php',

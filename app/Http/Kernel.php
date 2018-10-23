@@ -59,5 +59,8 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'cross' => \App\Http\Middleware\Cross::class,//Custom middleware for cross site request
+        'doctor' => \App\Http\Middleware\CheckDoctor::class,//Custom middleware to check doctor user
+        'admin' => \App\Http\Middleware\CheckAdmin::class,//Custom middleware to check admin user
     ];
 }

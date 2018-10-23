@@ -17,6 +17,7 @@ namespace App\Constants;
 class Messages
 {
     public static $ERROR_MESSAGE = 'Oops! Something went wrong, Please try again';
+    public static $PERMISSION_DENIED = 'Oops! Permission Denied';
 
     public static $QUALIFICATION_ADDED = 'QualificationResource added';
     public static $SPECIALISATION_ADDED = 'SpecializationResource added';

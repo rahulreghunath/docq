@@ -17,4 +17,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Login extends Authenticatable
 {
     use HasApiTokens, Notifiable;
+
+    public function registration()
+    {
+        return $this->belongsTo('App\Models\Registration');
+    }
 }
