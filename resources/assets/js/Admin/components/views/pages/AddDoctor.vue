@@ -6,7 +6,7 @@
                 <b-form @submit.prevent="addDoctor">
                     <b-card>
                         <div slot="header">
-                            <strong>Add Doctor Qualifications</strong>
+                            <strong>Add Doctor</strong>
                         </div>
                         <b-row>
                             <b-col sm="4">

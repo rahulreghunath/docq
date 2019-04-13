@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Constants\Constants;
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BookingResource extends JsonResource

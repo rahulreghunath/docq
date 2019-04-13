@@ -23,7 +23,7 @@ class Constants
 
     public static $SUCCESS = 'success';
     public static $FAILED = 'error';
-    public static $ADMIN_PAGINATION_COUNT = 5;
+    public static $ADMIN_PAGINATION_COUNT = 2;
 
     public static $ACTIVE_SESSION_STATUS = 1;
     public static $DISABLED_SESSION_STATUS = 2;

@@ -241,7 +241,7 @@
                         <b-button type="reset" @click="closeModal" size="sm" variant="danger"><i class="fa fa-ban"></i>
                             Cancel
                         </b-button>
-                    </div>
+                    `</div>
                 </b-form>
             </modal>
         </b-row>

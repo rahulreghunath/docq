@@ -1,5 +1,5 @@
 <template>
-    <div v-if="data.length">
+    <div v-if="data.data.length">
         <ul class="pagination" v-if="data.meta.total > data.meta.per_page">
             <li class="page-item pagination-prev-nav" v-if="data.links.prev">
                 <a class="page-link" href="#" aria-label="Previous" @click.prevent="selectPage(--data.meta.current_page)">

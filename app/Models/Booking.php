@@ -26,4 +26,8 @@ class Booking extends Model
     {
         return $this->belongsTo('App\Models\Registration','registration_id');
     }
+    public function remark()
+    {
+        return $this->hasOne('App\Models\Remark');
+    }
 }

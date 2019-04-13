@@ -113,6 +113,14 @@ Route::group([
          */
         Route::post('add-clinic', 'API\Doctor\DoctorController@addClinic');
         Route::get('get-clinic-details', 'API\Doctor\DoctorController@getClinicDetails');
+
+        /**
+         * Manage Appointments
+         */
+
+        Route::get('get-appointment-details', 'API\Doctor\ManageBookingController@getAppointmentDetails');
+        Route::post('add-prescription-details', 'API\Doctor\ManageBookingController@addPrescription');
+        Route::get('get-remarks', 'API\Doctor\ManageBookingController@getRemarks');
     });
 
     /**

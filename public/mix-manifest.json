@@ -14,11 +14,11 @@
     "/js/lazy-js-components/admin/components/views/theme/Colors.js": "/js/lazy-js-components/admin/components/views/theme/Colors.js",
     "/js/lazy-js-components/admin/components/views/base/Tables.js": "/js/lazy-js-components/admin/components/views/base/Tables.js",
     "/js/lazy-js-components/admin/components/views/users/Users.js": "/js/lazy-js-components/admin/components/views/users/Users.js",
+    "/js/lazy-js-components/admin/components/views/base/Switches.js": "/js/lazy-js-components/admin/components/views/base/Switches.js",
     "/js/lazy-js-components/admin/components/views/buttons/BrandButtons.js": "/js/lazy-js-components/admin/components/views/buttons/BrandButtons.js",
     "/js/lazy-js-components/admin/components/views/base/Forms.js": "/js/lazy-js-components/admin/components/views/base/Forms.js",
     "/js/lazy-js-components/admin/components/views/base/Cards.js": "/js/lazy-js-components/admin/components/views/base/Cards.js",
     "/js/lazy-js-components/admin/components/views/actions/Logout.js": "/js/lazy-js-components/admin/components/views/actions/Logout.js",
-    "/js/lazy-js-components/admin/components/views/base/Switches.js": "/js/lazy-js-components/admin/components/views/base/Switches.js",
     "/js/lazy-js-components/admin/components/views/users/User.js": "/js/lazy-js-components/admin/components/views/users/User.js",
     "/js/lazy-js-components/admin/components/views/theme/Typography.js": "/js/lazy-js-components/admin/components/views/theme/Typography.js",
     "/js/lazy-js-components/admin/components/views/pages/Register.js": "/js/lazy-js-components/admin/components/views/pages/Register.js",
@@ -47,8 +47,6 @@
     "/js/lazy-js-components/admin/components/views/base/Collapses.js": "/js/lazy-js-components/admin/components/views/base/Collapses.js",
     "/js/lazy-js-components/admin/components/views/base/Carousels.js": "/js/lazy-js-components/admin/components/views/base/Carousels.js",
     "/js/lazy-js-components/admin/components/views/base/Breadcrumbs.js": "/js/lazy-js-components/admin/components/views/base/Breadcrumbs.js",
-    "/Doctor/js/app.js": "/Doctor/js/app.js",
-    "/Doctor/css/app.css": "/Doctor/css/app.css",
-    "/Admin/css/app.css": "/Admin/css/app.css",
-    "/Admin/js/app.js": "/Admin/js/app.js"
+    "/Admin/js/app.js": "/Admin/js/app.js",
+    "/Admin/css/app.css": "/Admin/css/app.css"
 }

@@ -13,8 +13,8 @@ let mix = require('laravel-mix');
 /**
  * Entry-Exit points
  */
-mix.js('resources/assets/js/Doctor/app.js', 'public/Doctor/js')
-   .sass('resources/assets/sass/Doctor/app.scss', 'public/Doctor/css');
+// mix.js('resources/assets/js/Doctor/app.js', 'public/Doctor/js')
+//    .sass('resources/assets/sass/Doctor/app.scss', 'public/Doctor/css');
 
 mix.js('resources/assets/js/Admin/app.js', 'public/Admin/js')
    .sass('resources/assets/sass/Admin/app.scss', 'public/Admin/css');
