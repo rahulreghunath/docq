@@ -23,7 +23,7 @@ class Constants
 
     public static $SUCCESS = 'success';
     public static $FAILED = 'error';
-    public static $ADMIN_PAGINATION_COUNT = 2;
+    public static $ADMIN_PAGINATION_COUNT = 10;
 
     public static $ACTIVE_SESSION_STATUS = 1;
     public static $DISABLED_SESSION_STATUS = 2;
@@ -34,7 +34,7 @@ class Constants
 
     public static $ACTIVE_BOOKING_STATUS = 1;
     public static $SUCCESSFUL_BOOKING_STATUS = 2;
-    public static $ABSENT_BOOKING_STATUS = 2;
+    public static $ABSENT_BOOKING_STATUS = 3;
     public static $DELETED_BOOKING_STATUS = -1;
 
 }

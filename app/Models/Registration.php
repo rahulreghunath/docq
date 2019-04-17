@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed gender
  * @property int status
  * @property mixed full_name
+ * @property string user_category_id
+ * @property string profile_picture
  */
 class Registration extends Model
 {
@@ -32,6 +34,11 @@ class Registration extends Model
     public function doctor()
     {
         return $this->hasOne('App\Models\DoctorDetails');
+    }
+
+    public function bookings()
+    {
+        return $this->hasOne('App\Models\Booking');
     }
 
 }

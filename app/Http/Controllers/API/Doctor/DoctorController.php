@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddClinicRequest;
 use App\Http\Resources\Collections\ClinicResourceCollection;
 use App\Services\Doctor\DoctorService;
+use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
@@ -13,7 +14,6 @@ class DoctorController extends Controller
 
     /**
      * DoctorController constructor.
-     * @param $doctorService
      */
     public function __construct()
     {
@@ -60,5 +60,14 @@ class DoctorController extends Controller
     public function getClinicDetails()
     {
         return $this->doctorService->getClinicDetails();
+    }
+
+    public function getPatients(Request $request)
+    {
+        return $this->doctorService->getPatients($request);
+    }
+    public function getPatient(Request $request)
+    {
+        return $this->doctorService->getPatient($request);
     }
 }

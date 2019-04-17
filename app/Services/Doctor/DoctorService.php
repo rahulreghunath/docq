@@ -8,11 +8,13 @@ use App\Constants\Messages;
 use App\Http\Requests\AddClinicRequest;
 use App\Http\Resources\Collections\BookingResourceCollection;
 use App\Http\Resources\Collections\ClinicResourceCollection;
+use App\Http\Resources\Collections\PatientResourceCollection;
 use App\Http\Resources\DoctorRegistrationResource;
 use App\Http\Resources\FormResource\ClinicsResource;
 use App\Models\Booking;
 use App\Models\Clinic;
 use App\Models\DoctorDetails;
+use App\Models\Registration;
 use Exception;
 use Illuminate\Http\Request;
 use App\Services\Service;
@@ -85,6 +87,7 @@ class DoctorService extends Service
             )
         );
     }
+
     public function getClinicDetails()
     {
         $clinics = Clinic::whereHas('doctor_details', function ($query) {
@@ -94,5 +97,27 @@ class DoctorService extends Service
         })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
 
         return ClinicResourceCollection::make($clinics)->status(Constants::$SUCCESS);
+    }
+
+    public function getPatients(Request $request)
+    {
+        $patients = Registration::where('user_category_id', Constants::$PATIENT_USER)->whereHas('bookings', function ($q) {
+            $q->where('doctor_details_id', Service::getDoctor()->id);
+        })->when($request['key'] != '', function ($q1) use ($request) {
+            $q1->where(function ($q) use ($request) {
+                $q->where('full_name', 'like', '%' . $request['key'] . '%')
+                    ->orWhere('address', 'like', '%' . $request['key'] . '%')
+                    ->orWhere('phone', 'like', '%' . $request['key'] . '%');
+            });
+        })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+
+        return PatientResourceCollection::make($patients)->status(Constants::$SUCCESS);
+    }
+
+    public function getPatient(Request $request)
+    {
+        $patient = Registration::where([['id', $request['patientId']], ['user_category_id', Constants::$PATIENT_USER]])->firstOrFail();
+
+        return response()->json(jsonResponse(['patient' => $patient], Constants::$SUCCESS));
     }
 }

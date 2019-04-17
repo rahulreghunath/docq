@@ -41,6 +41,10 @@ class BookingService extends Service
         $remark->followup_description = '';
         $remark->save();
 
+        $booking = Booking::findOrFail($request['bookingId']);
+        $booking->status = Constants::$SUCCESSFUL_BOOKING_STATUS;
+        $booking->save();
+
         return response()->json(jsonResponse([
             'message' => 'Appointment Completed'
         ], Constants::$SUCCESS

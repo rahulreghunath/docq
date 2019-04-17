@@ -112,16 +112,14 @@ class BookingController extends Controller
     public function getPatients(Request $request)
     {
         if ($request['key'] == '') {
-            $patients = Registration::whereHas('login', function ($query) {
-                $query->where('user_category_id', Constants::$PATIENT_USER);
-            })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+            $patients = Registration::where('user_category_id', Constants::$PATIENT_USER)->paginate(Constants::$ADMIN_PAGINATION_COUNT);
         } else {
-            $patients = Registration::whereHas('login', function ($query) {
-                $query->where('user_category_id', Constants::$PATIENT_USER);
-            })->where('full_name', 'like', '%' . $request['key'] . '%')
-                ->orWhere('address', 'like', '%' . $request['key'] . '%')
-                ->orWhere('phone', 'like', '%' . $request['key'] . '%')
-                ->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+            $patients = Registration::where('user_category_id', Constants::$PATIENT_USER)
+                ->where(function ($q) use ($request) {
+                $q->where('full_name', 'like', '%' . $request['key'] . '%')
+                    ->orWhere('address', 'like', '%' . $request['key'] . '%')
+                    ->orWhere('phone', 'like', '%' . $request['key'] . '%');
+            })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
         }
 
         return PatientResourceCollection::make($patients)->status(Constants::$SUCCESS);
@@ -143,6 +141,7 @@ class BookingController extends Controller
         $user->phone = $request['phone'];
         $user->email = $request['email'];
         $user->gender = $request['gender'];
+        $user->user_category_id = Constants::$PATIENT_USER;
         $user->status = Constants::$ACTIVE_USER;
         $user->profile_picture = 'http://localhost:8000/public/default-user.png';
         $user->save();

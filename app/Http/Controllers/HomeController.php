@@ -33,9 +33,7 @@ class HomeController extends Controller
 
     public function getJob()
     {
-        $doctors = Registration::whereHas('login', function ($query) {
-            $query->where('user_category_id', Constants::$DOCTOR_USER);
-        })->get();
+        $doctors = Registration::where('user_category_id', Constants::$DOCTOR_USER)->get();
 
         foreach ($doctors as $doctor) {
             foreach ($doctor->doctor->clinics as $clinic) {
@@ -47,20 +45,24 @@ class HomeController extends Controller
                     $endTime = new Carbon($workingSession->end_time);
                     $slot = $startTime->diffInMinutes($endTime) / $workingSession->no_patients;
 
-                    $sessionDate = new SessionDate();
-                    $sessionDate->working_session_id = $workingSession->id;
-                    $sessionDate->date = $date->format('Y-m-d');
-                    $sessionDate->save();
-
-                    for ($i = 0; $i < $workingSession->no_patients; $i++) {
-                        $bookingSlot = new BookingSlot();
-                        $bookingSlot->session_date_id = $sessionDate->id;
-                        $bookingSlot->start_time = $startTime->format('h:i:s');
-                        $startTime->addMinute($slot);
-                        $bookingSlot->end_time = $startTime->format('h:i:s');
-                        $bookingSlot->token_number = $i + 1;
-                        $bookingSlot->status = Constants::$AVAILABLE_SLOT_STATUS;
-                        $bookingSlot->save();
+                    /**
+                     * Checking if date is past
+                     */
+                    if (!$date->isPast()) {
+                        $sessionDate = new SessionDate();
+                        $sessionDate->working_session_id = $workingSession->id;
+                        $sessionDate->date = $date->format('Y-m-d');
+                        $sessionDate->save();
+                        for ($i = 0; $i < $workingSession->no_patients; $i++) {
+                            $bookingSlot = new BookingSlot();
+                            $bookingSlot->session_date_id = $sessionDate->id;
+                            $bookingSlot->start_time = $startTime->format('h:i:s');
+                            $startTime->addMinute($slot);
+                            $bookingSlot->end_time = $startTime->format('h:i:s');
+                            $bookingSlot->token_number = $i + 1;
+                            $bookingSlot->status = Constants::$AVAILABLE_SLOT_STATUS;
+                            $bookingSlot->save();
+                        }
                     }
                 }
             }

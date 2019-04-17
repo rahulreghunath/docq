@@ -136,6 +136,7 @@ class AdminController extends Controller
         $user->phone = $request['phone'];
         $user->email = $request['email'];
         $user->gender = $request['gender'];
+        $user->user_category_id = Constants::$DOCTOR_USER;
         $user->status = Constants::$ACTIVE_USER;
         $user->profile_picture = 'http://localhost:8000/public/default-user.png';
         $user->save();
