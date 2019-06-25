@@ -19,7 +19,7 @@ class ClinicSessionResource extends JsonResource
             'id' => $this->id,
             'clinic_name' => $this->clinic_name,
             'location' => $this->location,
-            'working_sessions' => WorkingSessionResource::collection($this->working_sessions->where('status', '!=', Constants::$DELETED_SESSION_STATUS)),
+            'working_sessions' => WorkingSessionResource::collection($this->working_sessions->where('status', '!=', Constants::$DELETED_SESSION_STATUS)->where('status', '!=', Constants::$SINGLE_DAY_SESSION_STATUS)),
         ];
     }
 }

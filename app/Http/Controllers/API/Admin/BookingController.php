@@ -22,6 +22,7 @@ use App\Models\Registration;
 use App\Models\SessionDate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class BookingController extends Controller
 {
@@ -79,7 +80,7 @@ class BookingController extends Controller
             $query->whereHas('clinic', function ($innerQuery) use ($request) {
                 $innerQuery->where('id', $request['clinic']);
             });
-        })->whereDate('date', '>=', Carbon::now())->get();
+        })->whereDate('date', '>=', Carbon::now()->format('Y-m-d'))->where('status', Constants::$ACTIVE_SESSION_DATE_STATUS)->get();
 
         return response()->json(jsonResponse(
                 ['sessions' => SessionDateResource::collection($sessionDates)],
@@ -116,10 +117,10 @@ class BookingController extends Controller
         } else {
             $patients = Registration::where('user_category_id', Constants::$PATIENT_USER)
                 ->where(function ($q) use ($request) {
-                $q->where('full_name', 'like', '%' . $request['key'] . '%')
-                    ->orWhere('address', 'like', '%' . $request['key'] . '%')
-                    ->orWhere('phone', 'like', '%' . $request['key'] . '%');
-            })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+                    $q->where('full_name', 'like', '%' . $request['key'] . '%')
+                        ->orWhere('address', 'like', '%' . $request['key'] . '%')
+                        ->orWhere('phone', 'like', '%' . $request['key'] . '%');
+                })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
         }
 
         return PatientResourceCollection::make($patients)->status(Constants::$SUCCESS);
@@ -130,35 +131,53 @@ class BookingController extends Controller
      * @param NewPatientRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addPatient(NewPatientRequest $request)
+    public function addEditPatient(NewPatientRequest $request)
     {
-        $user = new Registration();
-        $user->full_name = $request['name'];
-        $user->age = $request['age'];
-        $user->location = $request['location'];
-        $user->address = $request['address'];
-        $user->pin = $request['pin'];
-        $user->phone = $request['phone'];
-        $user->email = $request['email'];
-        $user->gender = $request['gender'];
-        $user->user_category_id = Constants::$PATIENT_USER;
-        $user->status = Constants::$ACTIVE_USER;
-        $user->profile_picture = 'http://localhost:8000/public/default-user.png';
-        $user->save();
+        if ($request->has('id')) {
+            $user = Registration::findOrFail($request['id']);
+            $user->full_name = $request['name'];
+            $user->age = $request['age'];
+            $user->location = $request['location'];
+            $user->address = $request['address'];
+            $user->pin = $request['pin'];
+            $user->phone = $request['phone'];
+            $user->email = $request['email'];
+            $user->gender = $request['gender'];
+            $user->user_category_id = Constants::$PATIENT_USER;
+            $user->status = Constants::$ACTIVE_USER;
+            $user->profile_picture = 'http://localhost:8000/public/default-user.png';
+            $user->save();
 
-        $login = new Login();
-        $login->registration_id = $user->id;
-        $login->email = $request['email'];
-        $login->phone = $request['phone'];
-        $login->password = bcrypt($request['phone']);
-        $login->user_category_id = Constants::$PATIENT_USER;
-        $login->save();
+            $message = Lang::get('messages.patient_edited');
+        } else {
+            $user = new Registration();
+            $user->full_name = $request['name'];
+            $user->age = $request['age'];
+            $user->location = $request['location'];
+            $user->address = $request['address'];
+            $user->pin = $request['pin'];
+            $user->phone = $request['phone'];
+            $user->email = $request['email'];
+            $user->gender = $request['gender'];
+            $user->user_category_id = Constants::$PATIENT_USER;
+            $user->status = Constants::$ACTIVE_USER;
+            $user->profile_picture = 'http://localhost:8000/public/default-user.png';
+            $user->save();
 
+            $login = new Login();
+            $login->registration_id = $user->id;
+            $login->email = $request['email'];
+            $login->phone = $request['phone'];
+            $login->password = bcrypt($request['phone']);
+            $login->user_category_id = Constants::$PATIENT_USER;
+            $login->save();
+            $message = Lang::get('messages.patient_added');
 
+        }
         return response()->json(
             jsonResponse(
                 [
-                    'message' => Messages::$PATIENT_ADDED,
+                    'message' => $message,
                     'patient' => PatientResource::make($user),
                 ],
                 Constants::$SUCCESS
@@ -254,6 +273,10 @@ class BookingController extends Controller
         $booking->status = Constants::$DELETED_BOOKING_STATUS;
         $booking->save();
 
+        $slot = $booking->booking_slot;
+        $slot->status = Constants::$ACTIVE_BOOKING_STATUS;
+        $slot->save();
+
         return response()->json(
             jsonResponse(
                 [
@@ -264,4 +287,43 @@ class BookingController extends Controller
         );
     }
 
+    public function getCancelledBookings(Request $request)
+    {
+        $bookings = Booking::when($request['doctor'] != '', function ($q) use ($request) {
+            $q->whereHas('booking_slot', function ($query) use ($request) {
+                $query->whereHas('session_date', function ($firstInner) use ($request) {
+                    $firstInner->whereHas('working_session', function ($secondInner) use ($request) {
+                        $secondInner->whereHas('clinic', function ($thirdInner) use ($request) {
+                            $thirdInner->when($request['clinic'] != '', function ($q) use ($request) {
+                                $q->where('id', $request['clinic']);
+                            })->whereHas('doctor_details', function ($forthInner) use ($request) {
+                                $forthInner->where('id', $request['doctor']);
+                            });
+                        });
+                    });
+                });
+            });
+        })->when($request['date'] != '', function ($q) use ($request) {
+            $q->whereHas('booking_slot', function ($query) use ($request) {
+                $query->whereHas('session_date', function ($firstInner) use ($request) {
+                    $firstInner->where('date', $request['date']);
+                });
+            });
+        })->where('status', Constants::$DOCTOR_DELETED_BOOKING_STATUS)->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+
+        return BookingResourceCollection::make($bookings)->status(Constants::$SUCCESS);
+    }
+
+    public function changeBookingStatus(Request $request)
+    {
+        $booking = Booking::findOrFail($request['id']);
+        $booking->status = Constants::$INFORMED_DOCTOR_DELETED_BOOKING_STATUS;
+        $booking->save();
+
+        return response()->json(
+            jsonResponse(['message' => Lang::get('status_update')],
+                Constants::$SUCCESS
+            )
+        );
+    }
 }

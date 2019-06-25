@@ -70,4 +70,12 @@ class DoctorController extends Controller
     {
         return $this->doctorService->getPatient($request);
     }
+    public function getSessionDates(Request $request)
+    {
+        return $this->doctorService->getSessionDates($request);
+    }
+    public function deleteSchedule(Request $request)
+    {
+        return $this->doctorService->deleteSchedule($request);
+    }
 }

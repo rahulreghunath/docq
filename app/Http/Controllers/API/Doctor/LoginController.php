@@ -13,7 +13,7 @@ class LoginController extends Controller
     {
         if (Auth::attempt(['email' => $request['username'], 'password' => $request['password'], 'user_category_id' => Constants::$DOCTOR_USER])) {
             $user = Auth::user();
-            $success['token'] = $user->createToken('MyApp')->accessToken;
+            $success['token'] = $user->createToken('doctor')->accessToken;
             return response()->json($success);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);

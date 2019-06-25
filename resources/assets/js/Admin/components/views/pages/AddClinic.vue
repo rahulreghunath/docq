@@ -81,7 +81,7 @@
                             :center="{lat:10, lng:10}"
                             :zoom="12"
                             map-type-id="terrain"
-                            style="width: 100%; height: 70%"
+                            style="width: 100%; height: 300px"
                     ></GmapMap>
                 </b-modal>
             </b-col>

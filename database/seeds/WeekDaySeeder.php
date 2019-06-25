@@ -39,5 +39,8 @@ class WeekDaySeeder extends Seeder
         $weekDay->week_day = 'Saturday';
         $weekDay->save();
 
+        $weekDay = new \App\Models\WeekDay();
+        $weekDay->week_day = 'Single Day';
+        $weekDay->save();
     }
 }

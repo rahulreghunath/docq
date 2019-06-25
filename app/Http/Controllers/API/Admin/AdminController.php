@@ -9,14 +9,17 @@ use App\Http\Requests\AddClinicRequest;
 use App\Http\Requests\AddDoctorRequest;
 use App\Http\Resources\Collections\ClinicResourceCollection;
 use App\Http\Resources\Collections\DoctorRegistrationCollection;
+use App\Http\Resources\Collections\PatientResourceCollection;
 use App\Http\Resources\Collections\QualificationResourceCollection;
 use App\Http\Resources\FormResource\SpecializationResource;
 use App\Http\Resources\FormResource\QualificationResource;
 use App\Http\Resources\Collections\SpecializationResourceCollection;
+use App\Http\Resources\PatientResource;
 use App\Models\Clinic;
 use App\Models\DoctorDetails;
 use App\Models\DoctorQualification;
 use App\Models\DoctorSpecialization;
+use App\Models\IVRSTokens;
 use App\Models\Login;
 use App\Models\Qualification;
 use App\Models\Registration;
@@ -25,6 +28,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Lcobucci\JWT\Parser;
 
 class AdminController extends Controller
 {
@@ -311,5 +315,62 @@ class AdminController extends Controller
         ])->paginate(Constants::$ADMIN_PAGINATION_COUNT);
 
         return DoctorRegistrationCollection::make($doctors)->status(Constants::$SUCCESS);
+    }
+
+    public function getPatients(Request $request)
+    {
+        $patients = Registration::where('user_category_id', Constants::$PATIENT_USER)->when($request['key'] != '', function ($q1) use ($request) {
+            $q1->where(function ($q) use ($request) {
+                $q->where('full_name', 'like', '%' . $request['key'] . '%')
+                    ->orWhere('address', 'like', '%' . $request['key'] . '%')
+                    ->orWhere('phone', 'like', '%' . $request['key'] . '%');
+            });
+        })->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+
+        return PatientResourceCollection::make($patients)->status(Constants::$SUCCESS);
+    }
+
+    public function getPatient(Request $request)
+    {
+        $patient = Registration::where([['id', $request['patientId']], ['user_category_id', Constants::$PATIENT_USER]])->firstOrFail();
+
+        return response()->json(jsonResponse(['patient' => PatientResource::make($patient)], Constants::$SUCCESS));
+    }
+
+    public function createIVRSToken()
+    {
+        $user = Login::where('user_category_id', Constants::$IVRS)->firstOrfail();
+        $success['token'] = $user->createToken('ivrs')->accessToken;
+
+        $token = new IVRSTokens();
+        $token->token = $success['token'];
+        $token->save();
+
+        return response()->json(jsonResponse(['message' => 'Access token created'], Constants::$SUCCESS));
+    }
+
+    public function deleteIVRSToken(Request $request)
+    {
+        IVRSTokens::findOrFail($request['id'])->delete();
+        $id = (new Parser())->parse($request['token'])->getHeader('jti');
+        $user = Login::where('user_category_id', Constants::$IVRS)->firstOrfail();
+        $token = $user->tokens->find($id);
+        $token->delete();
+
+        return response()->json(jsonResponse(['message' => 'Access token removed'], Constants::$SUCCESS));
+    }
+
+    public function getIVRSToken()
+    {
+        $tokens = IVRSTokens::all();
+        return response(jsonResponse(['tokens' => $tokens], Constants::$SUCCESS));
+    }
+
+    public function getHomePageAnalytics()
+    {
+        $doctors = DoctorDetails::all()->count();
+        $patients = Registration::where('user_category_id', Constants::$PATIENT_USER)->get()->count();
+        $data = compact('doctors', 'patients');
+        return response()->json(jsonResponse($data, Constants::$SUCCESS));
     }
 }

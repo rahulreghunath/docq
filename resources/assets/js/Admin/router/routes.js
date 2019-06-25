@@ -62,6 +62,10 @@ const Doctors = () => import(/* webpackChunkName: "admin/components/views/pages/
 const WorkingSessions = () => import(/* webpackChunkName: "admin/components/views/pages/WorkingSessions" */ '../components/views/pages/WorkingSessions');
 const StaffBooking = () => import(/* webpackChunkName: "admin/components/views/pages/StaffBooking" */ '../components/views/pages/StaffBooking');
 const Bookings = () => import(/* webpackChunkName: "admin/components/views/pages/Bookings" */ '../components/views/pages/Bookings');
+const Patients = () => import(/* webpackChunkName: "admin/components/views/pages/Patients" */ '../components/views/pages/Patients');
+const PatientDetails = () => import(/* webpackChunkName: "admin/components/views/pages/PatientDetails" */ '../components/views/pages/PatientDetails');
+const CancelledBookings = () => import(/* webpackChunkName: "admin/components/views/pages/CancelledBookings" */ '../components/views/pages/CancelledBookings');
+const Ivrs = () => import(/* webpackChunkName: "admin/components/views/pages/Ivrs" */ '../components/views/pages/Ivrs');
 
 // Users
 const Users = () => import(/* webpackChunkName: "admin/components/views/users/Users" */ '../components/views/users/Users');
@@ -153,6 +157,44 @@ export default new Router({
                     ]
                 },
                 {
+                    path: 'ivrs',
+                    name: 'ivrs',
+                    component: Ivrs,
+                    meta: {
+                        label: 'Ivrs',
+                        title: 'Ivrs',
+                    },
+                },
+                {
+                    path: 'patients',
+                    redirect: { name: 'patients' },
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        },
+                    },
+                    children: [
+                        {
+                            path: '/',
+                            name: 'patients',
+                            component: Patients,
+                            meta: {
+                                label: 'Patients',
+                                title: 'Patients',
+                            },
+                        },
+                        {
+                            path: 'details/:id',
+                            name: 'patientDetails',
+                            component: PatientDetails,
+                            meta: {
+                                label: 'Patient Details',
+                                title: 'Patient Details',
+                            },
+                        },
+                    ],
+                },
+                {
                     path: 'booking',
                     name: 'booking',
                     redirect: {name: 'staffNewBooking'},
@@ -178,6 +220,15 @@ export default new Router({
                             meta: {
                                 label: 'All Booking',
                                 title: 'All Bookings'
+                            },
+                        },
+                      {
+                            path: 'cancelled-booking',
+                            name: 'cancelledBookings',
+                            component: CancelledBookings,
+                            meta: {
+                                label: 'Cancelled Booking',
+                                title: 'Cancelled Bookings'
                             },
                         }
                     ]

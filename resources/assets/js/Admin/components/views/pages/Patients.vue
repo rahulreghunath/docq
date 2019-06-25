@@ -66,7 +66,7 @@
   import { dateTimeFormatter, spinner } from '../../../mixins/helper';
   import ListCount from '../../shared/PaginationListCount';
   import Pagination from '../../shared/Pagination';
-  import getConstants from '../../../constants/constantsMixins';
+  import {getConstants} from '../../../constants/constantsMixins';
 
   export default {
     name: 'Patients',

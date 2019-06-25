@@ -1,6 +1,17 @@
 // Variables
 @import 'variables';
 
+/**
+ Reusables
+ */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.r-margin-5 {
+  margin-right: 5px;
+}
+
 .spinner {
   position: fixed;
   z-index: 999;
@@ -37,5 +48,11 @@
   width: 100%;
   border-top: 1px solid #ccc;
   padding: 10px;
+}
 
+.table .btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: bold;
 }

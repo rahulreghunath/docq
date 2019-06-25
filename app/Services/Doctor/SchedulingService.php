@@ -16,21 +16,25 @@ use App\Http\Requests\WorkingSessionRequest;
 use App\Http\Resources\Collections\ClinicSessionCollection;
 use App\Http\Resources\FormResource\ClinicsResource;
 use App\Http\Resources\FormResource\WeekDayResource;
+use App\Http\Resources\SingleDoctorBookingResource;
 use App\Models\Booking;
+use App\Models\BookingSlot;
 use App\Models\Clinic;
+use App\Models\SessionDate;
 use App\Models\WeekDay;
 use App\Models\WorkingSession;
 use App\Services\Service;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 
 class SchedulingService
 {
     public function getWorkingSession()
     {
-        $clinics = Clinic::where('doctor_details_id', Service::getDoctor()->id)
-            ->with('working_sessions', 'working_sessions.week_day')->paginate(1);
+        $clinics = Clinic::where('doctor_details_id', Service::getDoctor()->id)->paginate(1);
 
         return ClinicSessionCollection::make($clinics)->status(Constants::$SUCCESS);
     }
@@ -98,6 +102,8 @@ class SchedulingService
                             });
                         });
                     })->update(['status' => Constants::$DELETED_BOOKING_STATUS]);
+
+                //TODO: add warning in doctor side if change session with active booking and delete bookings if only doctor say so
             }
 
             try {
@@ -127,6 +133,7 @@ class SchedulingService
             return abort(401);
         }
     }
+
     public function checkWorkingSessionRelation(Request $request)
     {
         $bookings = Booking::where('status', Constants::$ACTIVE_BOOKING_STATUS)
@@ -143,5 +150,40 @@ class SchedulingService
         ];
 
         return response()->json(jsonResponse($data, Constants::$SUCCESS));
+    }
+
+    public function addSingleWorkingSession(Request $request)
+    {
+        $workingSession = new WorkingSession();
+        $workingSession->session_title = $request['title'];
+        $workingSession->clinic_id = $request['clinic'];
+        $workingSession->week_day_id = Constants::$SINGLE_DAY_WEEK_DAY_ID;
+        $workingSession->no_patients = $request['noPatients'];
+        $workingSession->start_time = $request['startTime'];
+        $workingSession->end_time = $request['endTime'];
+        $workingSession->status = Constants::$SINGLE_DAY_SESSION_STATUS;
+        $workingSession->save();
+
+        $sessionDate = new SessionDate();
+        $sessionDate->working_session_id = $workingSession->id;
+        $sessionDate->date = Carbon::parse($request['date'])->addDay()->format('Y-m-d');
+        $sessionDate->status = Constants::$ACTIVE_SESSION_DATE_STATUS;
+        $sessionDate->save();
+
+        $startTime = new Carbon($workingSession->start_time);
+        $endTime = new Carbon($workingSession->end_time);
+        $slot = $startTime->diffInMinutes($endTime) / $workingSession->no_patients;
+
+        for ($i = 0; $i < $workingSession->no_patients; $i++) {
+            $bookingSlot = new BookingSlot();
+            $bookingSlot->session_date_id = $sessionDate->id;
+            $bookingSlot->start_time = $startTime->format('h:i:s');
+            $startTime->addMinute($slot);
+            $bookingSlot->end_time = $startTime->format('h:i:s');
+            $bookingSlot->token_number = $i + 1;
+            $bookingSlot->status = Constants::$AVAILABLE_SLOT_STATUS;
+            $bookingSlot->save();
+        }
+        return response()->json(jsonResponse(['message' => Lang::get('messages.schedule_added')], Constants::$SUCCESS));
     }
 }

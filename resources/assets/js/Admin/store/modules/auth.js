@@ -1,5 +1,6 @@
 import axios from "axios";
 import submit from '../../http/http';
+import {ENV} from "../../config/config";
 
 /**
  * Store - authentication module
@@ -29,7 +30,7 @@ const actions = {
 
         return new Promise((resolve, reject) => {
 
-            axios.post('http://localhost:8000/api/admin/login', credentials)
+            axios.post(`${ENV.ADMIN.END_POINT}/login`, credentials)
                 .then((response) => {
                     let token = response.data.token;
                     localStorage.setItem('access_token', token);

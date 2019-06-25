@@ -60,7 +60,7 @@
                                         {{ (bookings.meta.current_page * bookings.meta.per_page) -
                                         bookings.meta.per_page + index + 1}}
                                     </td>
-                                    <td>{{booking.patient.name}}</td>
+                                    <td><router-link :to="{ name: 'patientDetails', params: { id: booking.patient.id }}">{{booking.patient.name}}</router-link></td>
                                     <td>{{booking.patient.phone}}</td>
                                     <td>
                                         {{booking.slot.tokenNo}}
@@ -87,7 +87,7 @@
                                         </b-badge>
                                         <b-badge v-else
                                                  variant="danger">
-                                            Past
+                                            Completed
                                         </b-badge>
 
                                     </td>
@@ -215,7 +215,7 @@
                 });
             },
             editBooking(id) {
-                alert(id);
+
             }
         },
         watch: {

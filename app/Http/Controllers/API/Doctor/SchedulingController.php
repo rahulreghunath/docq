@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\API\Doctor;
 
-use App\Constants\Constants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateWorkingSessionRequest;
 use App\Http\Requests\WorkingSessionRequest;
-use App\Http\Resources\SingleDoctorBookingResource;
-use App\Models\Booking;
 use App\Services\Doctor\DoctorService;
 use App\Services\Doctor\SchedulingService;
 use Illuminate\Http\Request;
@@ -49,5 +46,10 @@ class SchedulingController extends Controller
     public function checkWorkingSessionRelation(Request $request)
     {
         return $this->schedulingService->checkWorkingSessionRelation($request);
+    }
+
+    public function addSingleWorkingSession(Request $request)
+    {
+        return $this->schedulingService->addSingleWorkingSession($request);
     }
 }

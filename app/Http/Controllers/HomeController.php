@@ -48,10 +48,13 @@ class HomeController extends Controller
                     /**
                      * Checking if date is past
                      */
-                    if (!$date->isPast()) {
+
+                    if (!$date->isPast() || $date->isToday()) {
+                        echo "<br>active".$date;
                         $sessionDate = new SessionDate();
                         $sessionDate->working_session_id = $workingSession->id;
                         $sessionDate->date = $date->format('Y-m-d');
+                        $sessionDate->status=Constants::$ACTIVE_SESSION_DATE_STATUS;
                         $sessionDate->save();
                         for ($i = 0; $i < $workingSession->no_patients; $i++) {
                             $bookingSlot = new BookingSlot();
@@ -63,6 +66,8 @@ class HomeController extends Controller
                             $bookingSlot->status = Constants::$AVAILABLE_SLOT_STATUS;
                             $bookingSlot->save();
                         }
+                    }else{
+                        echo "<br>past".$date;
                     }
                 }
             }

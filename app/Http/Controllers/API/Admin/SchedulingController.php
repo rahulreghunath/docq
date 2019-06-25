@@ -12,11 +12,15 @@ use App\Http\Resources\FormResource\ClinicsResource;
 use App\Http\Resources\SingleDoctorBookingResource;
 use App\Http\Resources\FormResource\WeekDayResource;
 use App\Models\Booking;
+use App\Models\BookingSlot;
 use App\Models\Clinic;
+use App\Models\SessionDate;
 use App\Models\WeekDay;
 use App\Models\WorkingSession;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class SchedulingController extends Controller
 {

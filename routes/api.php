@@ -24,9 +24,20 @@ Route::group([
         'middleware' => 'admin',
         'prefix' => 'admin'
     ], function () {
-        Route::get('test', 'TestController@test');
+        /**
+         * IVRS
+         */
+        Route::post('create-ivrs-token', 'API\Admin\AdminController@createIVRSToken');
+        Route::post('delete-ivrs-token', 'API\Admin\AdminController@deleteIVRSToken');
+        Route::get('get-ivrs-token', 'API\Admin\AdminController@getIVRSToken');
+
 
         Route::post('logout', 'API\Admin\LoginController@logout');
+
+        /**
+         * Home page analytic count
+         */
+        Route::get('get-home-analytics', 'API\Admin\AdminController@getHomePageAnalytics');
 
         /**
          * Specialisation
@@ -76,11 +87,19 @@ Route::group([
         Route::get('get-staff-booking-sessions', 'API\Admin\BookingController@getSessions');
         Route::get('get-staff-booking-tokens', 'API\Admin\BookingController@getTokens');
         Route::get('get-staff-booking-patients', 'API\Admin\BookingController@getPatients');
-        Route::post('post-staff-booking-patient', 'API\Admin\BookingController@addPatient');
+        Route::post('post-staff-booking-patient', 'API\Admin\BookingController@addEditPatient');
         Route::post('post-staff-booking', 'API\Admin\BookingController@addBooking');
         Route::get('get-staff-bookings', 'API\Admin\BookingController@getBookings');
         Route::get('get-staff-bookings-filter-data', 'API\Admin\BookingController@getBookingsFilterData');
         Route::post('delete-staff-booking', 'API\Admin\BookingController@deleteBooking');
+        Route::get('get-cancelled-bookings', 'API\Admin\BookingController@getCancelledBookings');
+        Route::post('change-booking-status', 'API\Admin\BookingController@changeBookingStatus');
+
+        /**
+         * Patients
+         */
+        Route::get('get-patients', 'API\Admin\AdminController@getPatients');
+        Route::get('get-patient', 'API\Admin\AdminController@getPatient');
 
     });
 
@@ -91,6 +110,8 @@ Route::group([
         'middleware' => 'doctor',
         'prefix' => 'doctor'
     ], function () {
+
+        Route::post('logout', 'API\Admin\LoginController@logout');
         Route::get('get-profile-data', 'API\Doctor\DoctorController@getProfileDetails');
         Route::get('get-clinics', 'API\Doctor\DoctorController@getClinics');
 
@@ -103,11 +124,13 @@ Route::group([
          * Scheduling
          */
         Route::get('get-working-session-form-details', 'API\Doctor\SchedulingController@getWorkingSessionFormDetails');
-        Route::get('get-working-sessions', 'API\Doctor\SchedulingController@getWorkingSessions');
+        Route::get('get-working-sessions', 'API\Doctor\SchedulingController@getWorkingsessions');
         Route::post('add-working-session', 'API\Doctor\SchedulingController@addWorkingSession');
         Route::post('update-working-session', 'API\Doctor\SchedulingController@updateWorkingSession');
         Route::get('check-working-session-relations', 'API\Doctor\SchedulingController@checkWorkingSessionRelation');
-
+        Route::get('get-session-dates', 'API\Doctor\DoctorController@getSessionDates');
+        Route::post('delete-schedule', 'API\Doctor\DoctorController@deleteSchedule');
+        Route::post('add-single-working-session', 'API\Doctor\SchedulingController@addSingleWorkingSession');
         /**
          * Add Clinic
          */
@@ -126,14 +149,23 @@ Route::group([
     });
 
     /**
+     * Authenticated routes only for IVRS
+     */
+    Route::group([
+        'middleware' => 'ivrs',
+        'prefix' => 'ivrs'
+    ], function () {
+        Route::get('get-patients', 'API\Admin\AdminController@getPatients');
+    });
+
+    /**
      * Authenticated routes for all users, used to fetch less secured reusable data
      */
     Route::group([
         'prefix' => 'utils'
     ], function () {
-        //
-    });
 
+    });
 });
 
 /**

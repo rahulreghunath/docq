@@ -404,6 +404,13 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
     );
 
     public static $prefixesPsr0 = array (
+        'R' => 
+        array (
+            'Rap2hpoutre\\LaravelLogViewer\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src',
+            ),
+        ),
         'P' => 
         array (
             'Prophecy\\' => 
@@ -455,6 +462,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Http\\Controllers\\API\\Doctor\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Doctor/LoginController.php',
         'App\\Http\\Controllers\\API\\Doctor\\ManageBookingController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Doctor/ManageBookingController.php',
         'App\\Http\\Controllers\\API\\Doctor\\SchedulingController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Doctor/SchedulingController.php',
+        'App\\Http\\Controllers\\API\\IVRS\\IVRSApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/IVRS/IVRSApiController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
@@ -466,6 +474,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Http\\Middleware\\CheckAdmin' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckAdmin.php',
         'App\\Http\\Middleware\\CheckDoctor' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckDoctor.php',
         'App\\Http\\Middleware\\CheckForMaintenanceMode' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckForMaintenanceMode.php',
+        'App\\Http\\Middleware\\CheckIvrsRequest' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckIvrsRequest.php',
         'App\\Http\\Middleware\\Cross' => __DIR__ . '/../..' . '/app/Http/Middleware/Cross.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
@@ -488,6 +497,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Http\\Resources\\Collections\\PatientResourceCollection' => __DIR__ . '/../..' . '/app/Http/Resources/Collections/PatientResourceCollection.php',
         'App\\Http\\Resources\\Collections\\QualificationResourceCollection' => __DIR__ . '/../..' . '/app/Http/Resources/Collections/QualificationResourceCollection.php',
         'App\\Http\\Resources\\Collections\\RemarkResourceCollection' => __DIR__ . '/../..' . '/app/Http/Resources/Collections/RemarkResourceCollection.php',
+        'App\\Http\\Resources\\Collections\\SessionDateResourceCollection' => __DIR__ . '/../..' . '/app/Http/Resources/Collections/SessionDateResourceCollection.php',
         'App\\Http\\Resources\\Collections\\SpecializationResourceCollection' => __DIR__ . '/../..' . '/app/Http/Resources/Collections/SpecializationResourceCollection.php',
         'App\\Http\\Resources\\DoctorRegistrationResource' => __DIR__ . '/../..' . '/app/Http/Resources/DoctorRegistrationResource.php',
         'App\\Http\\Resources\\DoctorResource' => __DIR__ . '/../..' . '/app/Http/Resources/DoctorResource.php',
@@ -513,6 +523,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Models\\DoctorQualification' => __DIR__ . '/../..' . '/app/Models/DoctorQualification.php',
         'App\\Models\\DoctorSpecialization' => __DIR__ . '/../..' . '/app/Models/DoctorSpecialization.php',
         'App\\Models\\Document' => __DIR__ . '/../..' . '/app/Models/Document.php',
+        'App\\Models\\IVRSTokens' => __DIR__ . '/../..' . '/app/Models/IVRSTokens.php',
         'App\\Models\\Login' => __DIR__ . '/../..' . '/app/Models/Login.php',
         'App\\Models\\Medicine' => __DIR__ . '/../..' . '/app/Models/Medicine.php',
         'App\\Models\\Prescription' => __DIR__ . '/../..' . '/app/Models/Prescription.php',
@@ -3560,6 +3571,12 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'Ramsey\\Uuid\\UuidFactory' => __DIR__ . '/..' . '/ramsey/uuid/src/UuidFactory.php',
         'Ramsey\\Uuid\\UuidFactoryInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/UuidFactoryInterface.php',
         'Ramsey\\Uuid\\UuidInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/UuidInterface.php',
+        'Rap2hpoutre\\LaravelLogViewer\\BaseController' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/controllers/LogViewerController.php',
+        'Rap2hpoutre\\LaravelLogViewer\\LaravelLogViewer' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/LaravelLogViewer.php',
+        'Rap2hpoutre\\LaravelLogViewer\\LaravelLogViewerServiceProvider' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/LaravelLogViewerServiceProvider.php',
+        'Rap2hpoutre\\LaravelLogViewer\\Level' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/Level.php',
+        'Rap2hpoutre\\LaravelLogViewer\\LogViewerController' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/controllers/LogViewerController.php',
+        'Rap2hpoutre\\LaravelLogViewer\\Pattern' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/Pattern.php',
         'SebastianBergmann\\CodeCoverage\\CodeCoverage' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/CodeCoverage.php',
         'SebastianBergmann\\CodeCoverage\\CoveredCodeNotExecutedException' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Exception/CoveredCodeNotExecutedException.php',
         'SebastianBergmann\\CodeCoverage\\Driver\\Driver' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Driver/Driver.php',

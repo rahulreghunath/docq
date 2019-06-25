@@ -18,7 +18,7 @@ class LoginController extends Controller
     {
         if (Auth::attempt(['email' => $request['username'], 'password' => $request['password'], 'user_category_id' => Constants::$ADMIN_USER])) {
             $user = Auth::user();
-            $success['token'] = $user->createToken('MyApp')->accessToken;
+            $success['token'] = $user->createToken('admin')->accessToken;
             return response()->json($success);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
@@ -36,6 +36,6 @@ class LoginController extends Controller
         $id = (new Parser())->parse($value)->getHeader('jti');
         $token = $request->user()->tokens->find($id);
         $token->delete();
-        return response()->json('Loggedout', 200);
+        return response()->json(jsonResponse([], Constants::$SUCCESS));
     }
 }

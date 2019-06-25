@@ -33,8 +33,8 @@ class Messages
     public static $DOCTOR_IMAGE_UPLOAD_FAILED = 'Can\'t upload image at this time, try again';
 
     public static $PATIENT_ADDED = 'Patient added successfully';
+    public static $PATIENT_EDITED = 'Patient details updated successfully';
 
     public static $BOOKING_COMPLETED = 'Booking Completed Successfully';
     public static $BOOKING_DELETED = 'Booking Deleted Successfully';
-
 }
