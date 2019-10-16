@@ -63,7 +63,7 @@ class DoctorService extends Service
                     $firstInner->where('date', $request['date']);
                 });
             });
-        })->orderBy('created_at', 'desc')->paginate(Constants::$ADMIN_PAGINATION_COUNT);
+        })->/*join('booking_slots', 'bookings.booking_slot_id', '=', 'booking_slots.id')->orderBy('booking_slots.token_number')->*/paginate(Constants::$ADMIN_PAGINATION_COUNT);
 
         return BookingResourceCollection::make($bookings)->status(Constants::$SUCCESS);
     }

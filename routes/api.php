@@ -111,7 +111,7 @@ Route::group([
         'prefix' => 'doctor'
     ], function () {
 
-        Route::post('logout', 'API\Admin\LoginController@logout');
+        Route::post('logout', 'API\Doctor\LoginController@logout');
         Route::get('get-profile-data', 'API\Doctor\DoctorController@getProfileDetails');
         Route::get('get-clinics', 'API\Doctor\DoctorController@getClinics');
 

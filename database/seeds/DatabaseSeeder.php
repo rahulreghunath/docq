@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-//         $this->call(LoginSeeder::class);
+         $this->call(LoginSeeder::class);
          $this->call(WeekDaySeeder::class);
     }
 }

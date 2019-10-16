@@ -14,6 +14,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Psy\Input\CodeArgument;
+use Rahulreghunath\Textlocal\Textlocal;
 
 class HomeController extends Controller
 {
@@ -50,11 +51,11 @@ class HomeController extends Controller
                      */
 
                     if (!$date->isPast() || $date->isToday()) {
-                        echo "<br>active".$date;
+                        echo "<br>active" . $date;
                         $sessionDate = new SessionDate();
                         $sessionDate->working_session_id = $workingSession->id;
                         $sessionDate->date = $date->format('Y-m-d');
-                        $sessionDate->status=Constants::$ACTIVE_SESSION_DATE_STATUS;
+                        $sessionDate->status = Constants::$ACTIVE_SESSION_DATE_STATUS;
                         $sessionDate->save();
                         for ($i = 0; $i < $workingSession->no_patients; $i++) {
                             $bookingSlot = new BookingSlot();
@@ -66,11 +67,62 @@ class HomeController extends Controller
                             $bookingSlot->status = Constants::$AVAILABLE_SLOT_STATUS;
                             $bookingSlot->save();
                         }
-                    }else{
-                        echo "<br>past".$date;
+                    } else {
+                        echo "<br>past" . $date;
                     }
                 }
             }
         }
+    }
+
+    public function sendSms(Request $request)
+    {
+        $msg = new Textlocal();
+        $msg->send('sdfsdf','9037500119');
+        /*$xml_data = '<?xml version="1.0"?>
+            <smslist>
+        
+            <sms>
+        
+            <user>grident</user>
+        
+            <password>612a984bb9XX</password>
+        
+            <message>abcdef</message>
+        
+            <mobiles>9037500119</mobiles>
+        
+            <senderid>DOCQBK</senderid>
+        
+            </sms>
+        
+            </smslist>';
+
+
+        $URL = "http://text.voxbaysolutions.com/sendsms.jsp?";
+
+
+        $ch = curl_init($URL);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $output = curl_exec($ch);
+
+        curl_close($ch);
+
+
+        print_r($output);*/
     }
 }

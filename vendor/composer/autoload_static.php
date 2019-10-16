@@ -79,6 +79,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'R' => 
         array (
             'Ramsey\\Uuid\\' => 12,
+            'Rahulreghunath\\Textlocal\\' => 25,
         ),
         'P' => 
         array (
@@ -256,6 +257,10 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'Ramsey\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
+        ),
+        'Rahulreghunath\\Textlocal\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rahulreghunath/textlocal/src',
         ),
         'Psy\\' => 
         array (
@@ -483,6 +488,7 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Http\\Requests\\AddClinicRequest' => __DIR__ . '/../..' . '/app/Http/Requests/AddClinicRequest.php',
         'App\\Http\\Requests\\AddDoctorRequest' => __DIR__ . '/../..' . '/app/Http/Requests/AddDoctorRequest.php',
+        'App\\Http\\Requests\\DoctorWorkingSessionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/DoctorWorkingSessionRequest.php',
         'App\\Http\\Requests\\NewPatientRequest' => __DIR__ . '/../..' . '/app/Http/Requests/NewPatientRequest.php',
         'App\\Http\\Requests\\UpdateWorkingSessionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateWorkingSessionRequest.php',
         'App\\Http\\Requests\\WorkingSessionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/WorkingSessionRequest.php',
@@ -3525,6 +3531,10 @@ class ComposerStaticInit3ac9722d938ca025f6bbcf255cfe88af
         'Psy\\VersionUpdater\\GitHubChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/GitHubChecker.php',
         'Psy\\VersionUpdater\\IntervalChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/IntervalChecker.php',
         'Psy\\VersionUpdater\\NoopChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/NoopChecker.php',
+        'Rahulreghunath\\Textlocal\\Contact' => __DIR__ . '/..' . '/rahulreghunath/textlocal/src/TextLocalOriginal.php',
+        'Rahulreghunath\\Textlocal\\ServiceProvider' => __DIR__ . '/..' . '/rahulreghunath/textlocal/src/ServiceProvider.php',
+        'Rahulreghunath\\Textlocal\\TextLocalOriginal' => __DIR__ . '/..' . '/rahulreghunath/textlocal/src/TextLocalOriginal.php',
+        'Rahulreghunath\\Textlocal\\Textlocal' => __DIR__ . '/..' . '/rahulreghunath/textlocal/src/Textlocal.php',
         'Ramsey\\Uuid\\BinaryUtils' => __DIR__ . '/..' . '/ramsey/uuid/src/BinaryUtils.php',
         'Ramsey\\Uuid\\Builder\\DefaultUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DefaultUuidBuilder.php',
         'Ramsey\\Uuid\\Builder\\DegradedUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DegradedUuidBuilder.php',

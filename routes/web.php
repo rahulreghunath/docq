@@ -30,3 +30,7 @@ Route::get('job', [
     'uses' => 'HomeController@getJob',
     'as' => 'job'
 ]);
+Route::get('sms', [
+    'uses' => 'HomeController@sendSms',
+    'as' => 'job'
+]);

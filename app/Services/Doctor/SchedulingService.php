@@ -11,8 +11,8 @@ namespace App\Services\Doctor;
 
 use App\Constants\Constants;
 use App\Constants\Messages;
+use App\Http\Requests\DoctorWorkingSessionRequest;
 use App\Http\Requests\UpdateWorkingSessionRequest;
-use App\Http\Requests\WorkingSessionRequest;
 use App\Http\Resources\Collections\ClinicSessionCollection;
 use App\Http\Resources\FormResource\ClinicsResource;
 use App\Http\Resources\FormResource\WeekDayResource;
@@ -52,7 +52,7 @@ class SchedulingService
         return response()->json(jsonResponse($data, Constants::$SUCCESS));
     }
 
-    public function addWorkingSession(WorkingSessionRequest $request)
+    public function addWorkingSession(DoctorWorkingSessionRequest $request)
     {
         if (Service::getDoctor()->clinics->where('id', $request['clinic'])->first()) {
             try {
