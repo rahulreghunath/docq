@@ -60,7 +60,6 @@ class AddForeignKey extends Migration
             $table->foreign('booking_id')->references('id')->on('bookings');
         });
 
-
         Schema::table('documents', function (Blueprint $table) {
             $table->foreign('doctor_details_id')->references('id')->on('doctor_details');
             $table->foreign('registration_id')->references('id')->on('registrations');

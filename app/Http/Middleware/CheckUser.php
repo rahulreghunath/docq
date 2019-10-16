@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Constants\Constants;
 use Closure;
 
-class CheckIvrsRequest
+class CheckUser
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class CheckIvrsRequest
      */
     public function handle($request, Closure $next)
     {
-        if (auth('api')->user()->user_category_id == Constants::$IVRS_USER) {
+        if (auth('api')->user()->user_category_id == Constants::$NORMAL_USER) {
             return $next($request);
         }
         return response()->json(['error' => 'Unauthorised'], 401);

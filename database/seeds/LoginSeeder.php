@@ -41,7 +41,7 @@ class LoginSeeder extends Seeder
         $user->phone = '00';
         $user->email = '00';
         $user->gender = '00';
-        $user->user_category_id = Constants::$IVRS;
+        $user->user_category_id = Constants::$IVRS_USER;
         $user->status = '1';
         $user->save();
 
@@ -49,7 +49,7 @@ class LoginSeeder extends Seeder
         $login->registration_id = $user->id;
         $login->email = 'ivrs';
         $login->password = bcrypt('password');
-        $login->user_category_id = Constants::$IVRS;
+        $login->user_category_id = Constants::$IVRS_USER;
         $login->save();
     }
 }

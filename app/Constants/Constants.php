@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: raksha
- * Date: 4/9/18
- * Time: 6:39 PM
- */
 
 namespace App\Constants;
 
@@ -20,7 +14,8 @@ class Constants
     public static $ADMIN_USER = '0';
     public static $DOCTOR_USER = '1';
     public static $PATIENT_USER = '2';
-    public static $IVRS = '3';
+    public static $IVRS_USER = '3';
+    public static $NORMAL_USER = '4';
 
 
     public static $SUCCESS = 'success';

@@ -339,7 +339,7 @@ class AdminController extends Controller
 
     public function createIVRSToken()
     {
-        $user = Login::where('user_category_id', Constants::$IVRS)->firstOrfail();
+        $user = Login::where('user_category_id', Constants::$IVRS_USER)->firstOrfail();
         $success['token'] = $user->createToken('ivrs')->accessToken;
 
         $token = new IVRSTokens();
@@ -353,7 +353,7 @@ class AdminController extends Controller
     {
         IVRSTokens::findOrFail($request['id'])->delete();
         $id = (new Parser())->parse($request['token'])->getHeader('jti');
-        $user = Login::where('user_category_id', Constants::$IVRS)->firstOrfail();
+        $user = Login::where('user_category_id', Constants::$IVRS_USER)->firstOrfail();
         $token = $user->tokens->find($id);
         $token->delete();
 

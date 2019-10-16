@@ -149,6 +149,16 @@ Route::group([
     });
 
     /**
+     * User routes
+     */
+    Route::group([
+        'middleware' => 'user',
+        'prefix' => 'user'
+    ], function () {
+        Route::get('new-registration', 'API\User\UserController@newRegistration');
+    });
+
+    /**
      * Authenticated routes only for IVRS
      */
     Route::group([

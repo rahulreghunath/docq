@@ -63,5 +63,6 @@ class Kernel extends HttpKernel
         'doctor' => \App\Http\Middleware\CheckDoctor::class,//Custom middleware to check doctor user
         'admin' => \App\Http\Middleware\CheckAdmin::class,//Custom middleware to check admin user
         'ivrs' => \App\Http\Middleware\CheckIvrsRequest::class,//Custom middleware to check ivrs system
+        'user' => \App\Http\Middleware\CheckUser::class,//Custom middleware to check ivrs system
     ];
 }
