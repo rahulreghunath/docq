@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API\IVRS;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRegistrationRequest;
 use App\Services\User\UserService;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -18,8 +18,9 @@ class UserController extends Controller
         $this->userService = new UserService();
     }
 
-    public function newRegistration(Request $request)
+    public function newRegistration()
     {
-        return $this->userService->newRegistration($request);
+        echo 'asda';
+//        return $this->userService->newRegistration($request);
     }
 }

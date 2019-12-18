@@ -34,3 +34,14 @@ Route::get('sms', [
     'uses' => 'HomeController@sendSms',
     'as' => 'job'
 ]);
+
+
+/**
+ * User routes
+ */
+Route::group([
+    'prefix' => 'user',
+     'middleware' => ['cross'], // Middleware for allow cross site request **should be removed in production
+], function () {
+    Route::post('new-registration','User\UserController@newRegistration');
+});

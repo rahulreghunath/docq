@@ -148,15 +148,6 @@ Route::group([
         Route::get('get-patient', 'API\Doctor\DoctorController@getPatient');
     });
 
-    /**
-     * User routes
-     */
-    Route::group([
-        'middleware' => 'user',
-        'prefix' => 'user'
-    ], function () {
-        Route::get('new-registration', 'API\User\UserController@newRegistration');
-    });
 
     /**
      * Authenticated routes only for IVRS
