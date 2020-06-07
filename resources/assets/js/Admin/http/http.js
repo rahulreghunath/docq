@@ -23,7 +23,7 @@ export default function submit({type, url, data = null, config = null, form = fa
      */
 
     axios.defaults.baseURL = ENV.ADMIN.END_POINT;
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.getters.getToken;
+    axios.defaults.headers.common['X-Authorization'] = 'Bearer ' + store.getters.getToken;
 
     return new Promise((resolve, reject) => {
         /*
