@@ -2,10 +2,10 @@ let ENV = {};
 const PRD = {
   MAP_API_KEY: 'AIzaSyBMfwS9dLTDJNCUqkhhVpDTHra_zjZYEvo',
   ADMIN: {
-    END_POINT: 'http://docq-env-1.czc7qz2ba4.us-east-1.elasticbeanstalk.com/api/admin',
+    END_POINT: 'http://docq.gridenttech.com/api/admin',
   },
   DOCTOR: {
-    END_POINT: 'http://docq-env-1.czc7qz2ba4.us-east-1.elasticbeanstalk.com/api/doctor',
+    END_POINT: 'http://docq.gridenttech.com/api/doctor',
   }
 };
 const DEV = {
